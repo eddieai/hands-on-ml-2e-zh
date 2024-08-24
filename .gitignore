@@ -114,5 +114,4 @@ Thumbs.db
 ~$*.docx
 ~$*.doc
 
-# custom
-docs/README.md
+.git

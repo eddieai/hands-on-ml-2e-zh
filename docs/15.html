@@ -1,0 +1,872 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>十五、使用 RNN 和 CNN 处理序列 · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="16.html" />
+    
+    
+    <link rel="prev" href="14.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="0.html">
+            
+                <a href="0.html">
+            
+                    
+                    零、前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="1.html">
+            
+                <a href="1.html">
+            
+                    
+                    一、机器学习概览
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="2.html">
+            
+                <a href="2.html">
+            
+                    
+                    二、端到端的机器学习项目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="3.html">
+            
+                <a href="3.html">
+            
+                    
+                    三、分类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="4.html">
+            
+                <a href="4.html">
+            
+                    
+                    四、训练模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="5.html">
+            
+                <a href="5.html">
+            
+                    
+                    五、支持向量机
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="6.html">
+            
+                <a href="6.html">
+            
+                    
+                    六、决策树
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="7.html">
+            
+                <a href="7.html">
+            
+                    
+                    七、集成学习和随机森林
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="8.html">
+            
+                <a href="8.html">
+            
+                    
+                    八、降维
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="10.html">
+            
+                <a href="10.html">
+            
+                    
+                    十、使用 Keras 搭建人工神经网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="11.html">
+            
+                <a href="11.html">
+            
+                    
+                    十一、训练深度神经网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="12.html">
+            
+                <a href="12.html">
+            
+                    
+                    十二、使用 TensorFlow 自定义模型并训练
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.14" data-path="13.html">
+            
+                <a href="13.html">
+            
+                    
+                    十三、使用 TensorFlow 加载和预处理数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="14.html">
+            
+                <a href="14.html">
+            
+                    
+                    十四、使用卷积神经网络实现深度计算机视觉
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.16" data-path="15.html">
+            
+                <a href="15.html">
+            
+                    
+                    十五、使用 RNN 和 CNN 处理序列
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="16.html">
+            
+                <a href="16.html">
+            
+                    
+                    十六、使用 RNN 和注意力机制进行自然语言处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="17.html">
+            
+                <a href="17.html">
+            
+                    
+                    十七、使用自编码器和 GAN 做表征学习和生成式学习
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="18.html">
+            
+                <a href="18.html">
+            
+                    
+                    十八、强化学习
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="19.html">
+            
+                <a href="19.html">
+            
+                    
+                    十九、规模化训练和部署 TensorFlow 模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >十五、使用 RNN 和 CNN 处理序列</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="十五、使用-rnn-和-cnn-处理序列">十五、使用 RNN 和 CNN 处理序列</h1>
+<blockquote>
+<p>译者：<a href="https://www.jianshu.com/u/130f76596b02" target="_blank">@SeanCheney</a></p>
+</blockquote>
+<p>击球手击出垒球，外场手会立即开始奔跑，并预测球的轨迹。外场手追踪球，不断调整移动步伐，最终在观众的掌声中抓到它。无论是在听完朋友的话还是早餐时预测咖啡的味道，你时刻在做的事就是在预测未来。在本章中，我们将讨论循环神经网络，一类可以预测未来的网络（当然，是到某一点为止）。它们可以分析时间序列数据，比如股票价格，并告诉你什么时候买入和卖出。在自动驾驶系统中，他们可以预测行车轨迹，避免发生事故。更一般地说，它们可在任意长度的序列上工作，而不是截止目前我们讨论的只能在固定长度的输入上工作的网络。举个例子，它们可以将语句，文件，以及语音范本作为输入，应用在在自动翻译，语音到文本的自然语言处理应用中。</p>
+<p>在本章中，我们将学习循环神经网络的基本概念，如何使用时间反向传播训练网络，然后用来预测时间序列。然后，会讨论 RNN 面对的两大难点：</p>
+<ul>
+<li><p>不稳定梯度（换句话说，在第 11 章中讨论的梯度消失/爆炸），可以使用多种方法缓解，包括循环丢弃和循环层归一化。</p>
+</li>
+<li><p>有限的短期记忆，可以通过 LSTM 和 GRU 单元延长。</p>
+</li>
+</ul>
+<p>RNN 不是唯一能处理序列数据的神经网络：对于小序列，常规紧密网络也可以；对于长序列，比如音频或文本，卷积神经网络也可以。我们会讨论这两种方法，本章最后会实现一个 WaveNet：这是一种 CNN 架构，可以处理上万个时间步的序列。在第 16 章，还会继续学习 RNN，如何使用 RNN 来做自然语言处理，和基于注意力机制的新架构。</p>
+<h2 id="循环神经元和层">循环神经元和层</h2>
+<p>到目前为止，我们主要关注的是前馈神经网络，激活仅从输入层到输出层的一个方向流动（附录 E 中的几个网络除外）。 循环神经网络看起来非常像一个前馈神经网络，除了它也有连接指向后方。 让我们看一下最简单的 RNN，由一个神经元接收输入，产生一个输出，并将输出发送回自己，如图 15-1（左）所示。 在每个时间步<code>t</code>（也称为一个帧），这个循环神经元接收输入<code>x[t]</code>以及它自己的前一时间步长<code>y[t - 1]</code>的输出。 因为第一个时间步骤没有上一次的输出，所以是 0。可以用时间轴来表示这个微小的网络，如图 15-1（右）所示。 这被称为随时间展开网络。</p>
+<p><img src="img/0e364b0ec66b501a0e4b3ecc75fadeb5.png" alt=""></img></p>
+<p>图 15-1 循环神经网络（左），随时间展开网络（右）</p>
+<p>你可以轻松创建一个循环神经元层。 在每个时间步<code>t</code>，每个神经元都接收输入向量<code>x[t]</code>和前一个时间步<code>y[t - 1]</code>的输出向量，如图 15-2 所示。 注意，输入和输出都是向量（当只有一个神经元时，输出是一个标量）。</p>
+<p><img src="img/ec64067740737eaef3b1e27ef0792569.png" alt=""></img></p>
+<p>图 15-2 一层循环神经元（左），及其随时间展开（右）</p>
+<p>每个循环神经元有两组权重：一组用于输入<code>x[t]</code>，另一组用于前一时间步长<code>y[t - 1]</code>的输出。 我们称这些权重向量为<code>w[x]</code>和<code>w[y]</code>。如果考虑的是整个循环神经元层，可以将所有权重向量放到两个权重矩阵中，<code>W[x]</code>和<code>W[y]</code>。整个循环神经元层的输出可以用公式 15-1 表示（<code>b</code>是偏差项，<code>φ(·)</code>是激活函数，例如 ReLU）。</p>
+<p><img src="img/7d054b04b86f7184d742ce4fd79ae23e.png" alt=""></img></p>
+<p>公式 15-1 单个实例的循环神经元层的输出</p>
+<p>就像前馈神经网络一样，可以将所有输入和时间步<code>t</code>放到输入矩阵<code>X[t]</code>中，一次计算出整个小批次的输出：（见公式 15-2）。</p>
+<p><img src="img/eb08159cc0b817249b84df1f4e75fad9.png" alt=""></img></p>
+<p>公式 15-2 小批次实例的循环层输出</p>
+<p>在这个公式中：</p>
+<ul>
+<li><code>Y[t]</code>是<code>m × n_neurons</code>矩阵，包含在小批次中每个实例在时间步<code>t</code>的层输出（<code>m</code>是小批次中的实例数，<code>n_neurons</code>是神经元数）。</li>
+<li><code>X[t]</code>是<code>m × n_inputs</code>矩阵，包含所有实例的输入 （<code>n_inputs</code>是输入特征的数量）。</li>
+<li><code>W[x]</code>是<code>n_inputs × n_neurons</code>矩阵，包含当前时间步的输入的连接权重。</li>
+<li><code>W[y]</code>是<code>n_neurons × n_neurons</code>矩阵，包含上一个时间步的输出的连接权重。</li>
+<li><code>b</code>是大小为<code>n_neurons</code>的向量，包含每个神经元的偏置项。</li>
+<li>权重矩阵<code>W[x]</code>和<code>W[y]</code>通常纵向连接成一个权重矩阵<code>W</code>，形状为<code>(n_inputs + n_neurons) × n_neurons</code>（见公式 15-2 的第二行）</li>
+</ul>
+<p>注意，<code>Y[t]</code>是<code>X[t]</code>和<code>Y[t - 1]</code>的函数，<code>Y[t - 1]</code>是<code>X[t - 1]</code>和<code>Y[t - 2]</code>的函数，以此类推。这使得<code>Y[t]</code>是从时间<code>t = 0</code>开始的所有输入（即<code>X[0]</code>，<code>X[1]</code>，...，<code>X[t]</code>）的函数。 在第一个时间步，<code>t = 0</code>，没有以前的输出，所以它们通常被假定为全零。</p>
+<h3 id="记忆单元">记忆单元</h3>
+<p>由于时间<code>t</code>的循环神经元的输出，是由所有先前时间步骤计算出来的的函数，你可以说它有一种记忆形式。神经网络的一部分，保留一些跨越时间步长的状态，称为存储单元（或简称为单元）。单个循环神经元或循环神经元层是非常基本的单元，只能学习短期规律（取决于具体任务，通常是 10 个时间步）。本章后面我们将介绍一些更为复杂和强大的单元，可以学习更长时间步的规律（也取决于具体任务，大概是 100 个时间步）。</p>
+<p>一般情况下，时间步<code>t</code>的单元状态，记为<code>h[t]</code>（<code>h</code>代表“隐藏”），是该时间步的某些输入和前一时间步状态的函数：<code>h[t] = f(h[t - 1], x[t])</code>。 其在时间步<code>t</code>的输出，表示为<code>y[t]</code>，也和前一状态和当前输入的函数有关。 我们已经讨论过的基本单元，输出等于单元状态，但是在更复杂的单元中并不总是如此，如图 15-3 所示。</p>
+<p><img src="img/7412ce440bf5c79fe186f415e7206c4b.png" alt=""></img></p>
+<p>图 15-3 单元的隐藏状态和输出可能不同</p>
+<h2 id="输入和输出序列">输入和输出序列</h2>
+<p>RNN 可以同时输入序列并输出序列（见图 15-4，左上角的网络）。这种序列到序列的网络可以有效预测时间序列（如股票价格）：输入过去<code>N</code>天价格，则输出向未来移动一天的价格（即，从<code>N - 1</code>天前到明天）。</p>
+<p>或者，你可以向网络输入一个序列，忽略除最后一项之外的所有输出（图 15-4 右上角的网络）。 换句话说，这是一个序列到向量的网络。 例如，你可以向网络输入与电影评论相对应的单词序列，网络输出情感评分（例如，从<code>-1 [讨厌]</code>到<code>+1 [喜欢]</code>）。</p>
+<p>相反，可以向网络一遍又一遍输入相同的向量（见图 15-4 的左下角），输出一个序列。这是一个向量到序列的网络。 例如，输入可以是图像（或是 CNN 的结果），输出是该图像的标题。</p>
+<p>最后，可以有一个序列到向量的网络，称为编码器，后面跟着一个称为解码器的向量到序列的网络（见图 15-4 右下角）。 例如，这可以用于将句子从一种语言翻译成另一种语言。 给网络输入一种语言的一句话，编码器会把这个句子转换成单一的向量表征，然后解码器将这个向量解码成另一种语言的句子。 这种称为编码器 - 解码器的两步模型，比用单个序列到序列的 RNN 实时地进行翻译要好得多，因为句子的最后一个单词可以影响翻译的第一句话，所以你需要等到听完整个句子才能翻译。第 16 章还会介绍如何实现编码器-解码器（会比图 15-4 中复杂）</p>
+<p><img src="img/071528c1638f48307509ce23a53f8431.png" alt=""></img></p>
+<p>图 15-4 序列到序列（左上），序列到向量（右上），向量到序列（左下），延迟序列到序列（右下）</p>
+<h2 id="训练-rnn">训练 RNN</h2>
+<p>训练 RNN 诀窍是在时间上展开（就像我们刚刚做的那样），然后只要使用常规反向传播（见图 15-5）。 这个策略被称为时间上的反向传播（BPTT）。</p>
+<p><img src="img/2eb72b6016c50e7bab66a67a1530df86.png" alt=""></img></p>
+<p>图 15-5 随时间反向传播</p>
+<p>就像在正常的反向传播中一样，展开的网络（用虚线箭头表示）中先有一个正向传播（虚线）。然后使用损失函数<code>C(Y[0], Y[1], …Y[T]])</code>评估输出序列（其中<code>T</code>是最大时间步）。这个损失函数会忽略一些输出，见图 15-5（例如，在序列到向量的 RNN 中，除了最后一项，其它的都被忽略了）。损失函数的梯度通过展开的网络反向传播（实线箭头）。最后使用在 BPTT 期间计算的梯度来更新模型参数。注意，梯度在损失函数所使用的所有输出中反向流动，而不仅仅通过最终输出（例如，在图 15-5 中，损失函数使用网络的最后三个输出<code>Y[2]</code>，<code>Y[3]</code>和<code>Y[4]</code>，所以梯度流经这三个输出，但不通过<code>Y[0]</code>和<code>Y[1]</code>。而且，由于在每个时间步骤使用相同的参数<code>W</code>和<code>b</code>，所以反向传播将做正确的事情并对所有时间步求和。</p>
+<p>幸好，<code>tf.keras</code>处理了这些麻烦。</p>
+<h2 id="预测时间序列">预测时间序列</h2>
+<p>假设你在研究网站每小时的活跃用户数，或是所在城市的每日气温，或公司的财务状况，用多种指标做季度衡量。在这些任务中，数据都是一个序列，每步有一个或多个值。这被称为时间序列。在前两个任务中，每个时间步只有一个值，它们是单变量时间序列。在财务状况的任务中，每个时间步有多个值（利润、欠账，等等），所以是多变量时间序列。典型的任务是预测未来值，称为“预测”。另一个任务是填空：预测（或“后测”）过去的缺失值，这被称为“填充”。例如，图 15-6 展示了 3 个单变量时间序列，每个都有 50 个时间步，目标是预测下一个时间步的值（用<code>X</code>表示）。</p>
+<p><img src="img/cdee2dcc8d620310d86fa491e3ea8ffa.png" alt=""></img></p>
+<p>图 15-6 时间序列预测</p>
+<p>简单起见，使用函数<code>generate_time_series()</code>生成的时间序列，如下：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_time_series</span>(<span class="hljs-params">batch_size, n_steps</span>):
+    freq1, freq2, offsets1, offsets2 = np.random.rand(<span class="hljs-number">4</span>, batch_size, <span class="hljs-number">1</span>)
+    time = np.linspace(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, n_steps)
+    series = <span class="hljs-number">0.5</span> * np.sin((time - offsets1) * (freq1 * <span class="hljs-number">10</span> + <span class="hljs-number">10</span>))  <span class="hljs-comment">#   wave 1</span>
+    series += <span class="hljs-number">0.2</span> * np.sin((time - offsets2) * (freq2 * <span class="hljs-number">20</span> + <span class="hljs-number">20</span>)) <span class="hljs-comment"># + wave 2</span>
+    series += <span class="hljs-number">0.1</span> * (np.random.rand(batch_size, n_steps) - <span class="hljs-number">0.5</span>)   <span class="hljs-comment"># + noise</span>
+    <span class="hljs-keyword">return</span> series[..., np.newaxis].astype(np.float32)
+</code></pre>
+<p>这个函数可以根据要求创建出时间序列（通过<code>batch_size</code>参数），长度为<code>n_steps</code>，每个时间步只有 1 个值。函数返回 NumPy 数组，形状是[批次大小, 时间步数, 1]，每个序列是两个正弦波之和（固定强度+随机频率和相位），加一点噪音。</p>
+<blockquote>
+<p>笔记：当处理时间序列时（和其它类型的时间序列），输入特征通常用 3D 数组来表示，其形状是<code>[批次大小, 时间步数, 维度]</code>，对于单变量时间序列，其维度是 1，多变量时间序列的维度是其维度数。</p>
+</blockquote>
+<p>用这个函数来创建训练集、验证集和测试集：</p>
+<pre><code class="lang-py">n_steps = <span class="hljs-number">50</span>
+series = generate_time_series(<span class="hljs-number">10000</span>, n_steps + <span class="hljs-number">1</span>)
+X_train, y_train = series[:<span class="hljs-number">7000</span>, :n_steps], series[:<span class="hljs-number">7000</span>, -<span class="hljs-number">1</span>]
+X_valid, y_valid = series[<span class="hljs-number">7000</span>:<span class="hljs-number">9000</span>, :n_steps], series[<span class="hljs-number">7000</span>:<span class="hljs-number">9000</span>, -<span class="hljs-number">1</span>]
+X_test, y_test = series[<span class="hljs-number">9000</span>:, :n_steps], series[<span class="hljs-number">9000</span>:, -<span class="hljs-number">1</span>]
+</code></pre>
+<p><code>X_train</code>包含 7000 个时间序列（即，形状是 [7000, 50, 1]），<code>X_valid</code>有 2000 个，<code>X_test</code>有 1000 个。因为预测的是单一值，目标值是列向量（<code>y_train</code>的形状是<code>[7000, 1]</code>）。</p>
+<h3 id="基线模型">基线模型</h3>
+<p>使用 RNN 之前，最好有基线指标，否则做出来的模型可能比基线模型还糟。例如，最简单的方法，是预测每个序列的最后一个值。这个方法被称为朴素预测，有时很难被超越。在这个例子中，它的均方误差为 0.020：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>y_pred = X_valid[:, -<span class="hljs-number">1</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>np.mean(keras.losses.mean_squared_error(y_valid, y_pred))
+<span class="hljs-number">0.020211367</span>
+</code></pre>
+<p>另一个简单的方法是使用全连接网络。因为结果要是打平的特征列表，需要加一个<code>Flatten</code>层。使用简单线性回归模型，使预测值是时间序列中每个值的线性组合：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.Flatten(input_shape=[<span class="hljs-number">50</span>, <span class="hljs-number">1</span>]),
+    keras.layers.Dense(<span class="hljs-number">1</span>)
+])
+</code></pre>
+<p>使用 MSE 损失、Adam 优化器编译模型，在训练集上训练 20 个周期，用验证集评估，最终得到的 MSE 值为 0.004。比朴素预测强多了！</p>
+<h3 id="实现一个简单-rnn">实现一个简单 RNN</h3>
+<p>搭建一个简单 RNN 模型：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+  keras.layers.SimpleRNN(<span class="hljs-number">1</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>])
+])
+</code></pre>
+<p>这是能实现的最简单的 RNN。只有 1 个层，1 个神经元，如图 15-1。不用指定输入序列的长度（和之前的模型不同），因为循环神经网络可以处理任意的时间步（这就是为什么将第一个输入维度设为<code>None</code>）。默认时，<code>SimpleRNN</code>使用双曲正切激活函数。和之前看到的一样：初始状态<code>h[init]</code>设为 0，和时间序列的第一个值<code>x[0]</code>一起传递给神经元。神经元计算这两个值的加权和，对结果使用双曲正切激活函数，得到第一个输出<code>y[0]</code>。在简单 RNN 中，这个输出也是新状态<code>h[0]</code>。这个新状态和下一个输入值<code>x[1]</code>，按照这个流程，直到输出最后一个值，<code>y[49]</code>。所有这些都是同时对每个时间序列进行的。</p>
+<blockquote>
+<p>笔记：默认时，Keras 的循环层只返回最后一个输出。要让其返回每个时间步的输出，必须设置<code>return_sequences=True</code>。</p>
+</blockquote>
+<p>用这个模型编译、训练、评估（和之前一样，用 Adam 训练 20 个周期），你会发现它的 MSE 只有 0.014。击败了朴素预测，但不如简单线性模型。对于每个神经元，线性简单模型中每个时间步骤每个输入就有一个参数（前面用过的简单线性模型一共有 51 个参数）。相反，对于简单 RNN 中每个循环神经元，每个输入每个隐藏状态只有一个参数（在简单 RNN 中，就是每层循环神经元的数量），加上一个偏置项。在这个简单 RNN 中，只有三个参数。</p>
+<blockquote>
+<p>趋势和季节性</p>
+<p>还有其它预测时间序列的模型，比如权重移动平均模型或自动回归集成移动平均（ARIMA）模型。某些模型需要先移出趋势和季节性。例如，如果要研究网站的活跃用户数，它每月会增长 10%，就需要去掉这个趋势。训练好模型之后，在做预测时，你可以将趋势加回来做最终的预测。相似的，如果要预测防晒霜的每月销量，会观察到明显的季节性：每年夏天卖的多。需要将季节性从时间序列去除，比如计算每个时间步和前一年的差值（这个方法被称为差分）。然后，当训练好模型，做预测时，可以将季节性加回来，来得到最终结果。</p>
+<p>使用 RNN 时，一般不需要做这些，但在有些任务中可以提高性能，因为模型不是非要学习这些趋势或季节性。</p>
+</blockquote>
+<p>很显然，这个简单 RNN 过于简单了，性能不成。下面就来添加更多的循环层！</p>
+<h3 id="深度-rnn">深度 RNN</h3>
+<p>将多个神经元的层堆起来，见图 15-7。就形成了深度 RNN。</p>
+<p><img src="img/c31153ab45ed5520564b4fc8d2c267a5.png" alt=""></img></p>
+<p>图 15-7 深度 RNN（左）和随时间展开的深度 RNN（右）</p>
+<p>用<code>tf.keras</code>实现深度 RNN 相当容易：将循环层堆起来就成。在这个例子中，我们使用三个<code>SimpleRNN</code>层（也可以添加其它类型的循环层，比如 LSTM 或 GRU）：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.SimpleRNN(<span class="hljs-number">1</span>)
+])
+</code></pre>
+<blockquote>
+<p>警告：所有循环层一定要设置<code>return_sequences=True</code>（除了最后一层，因为最后一层只关心输出）。如果没有设置，输出的是 2D 数组（只有最终时间步的输出），而不是 3D 数组（包含所有时间步的输出），下一个循环层就接收不到 3D 格式的序列数据。</p>
+</blockquote>
+<p>如果对这个模型做编译，训练和评估，其 MSE 值可以达到 0.003。总算打败了线性模型！</p>
+<p>最后一层不够理想：因为要预测单一值，每个时间步只能有一个输出值，最终层只能有一个神经元。但是一个神经元意味着隐藏态只有一个值。RNN 大部分使用其他循环层的隐藏态的所有信息，最后一层的隐藏态不怎么用到。另外，因为<code>SimpleRNN</code>层默认使用 tanh 激活函数，预测值位于 -1 和 1 之间。想使用另一个激活函数该怎么办呢？出于这些原因，最好使用紧密层：运行更快，准确率差不多，可以选择任何激活函数。如果做了替换，要将第二个循环层的<code>return_sequences=True</code>删掉：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>),
+    keras.layers.Dense(<span class="hljs-number">1</span>)
+])
+</code></pre>
+<p>如果训练这个模型，会发现它收敛更快，效果也不错。</p>
+<h3 id="提前预测几个时间步">提前预测几个时间步</h3>
+<p>目前为止我们只是预测下一个时间步的值，但也可以轻易地提前预测几步，只要改变目标就成（例如，要提前预测 10 步，只要将目标变为 10 步就成）。但如果想预测后面的 10 个值呢？</p>
+<p>第一种方法是使用训练好的模型，预测出下一个值，然后将这个值添加到输入中（假设这个预测值真实发生了），使用这个模型再次预测下一个值，依次类推，见如下代码：</p>
+<pre><code class="lang-py">series = generate_time_series(<span class="hljs-number">1</span>, n_steps + <span class="hljs-number">10</span>)
+X_new, Y_new = series[:, :n_steps], series[:, n_steps:]
+X = X_new
+<span class="hljs-keyword">for</span> step_ahead <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):
+    y_pred_one = model.predict(X[:, step_ahead:])[:, np.newaxis, :]
+    X = np.concatenate([X, y_pred_one], axis=<span class="hljs-number">1</span>)
+
+Y_pred = X[:, n_steps:]
+</code></pre>
+<p>想象的到，第一个预测值比后面的更准，因为错误可能会累积（见图 15-8）。如果在验证集上评估这个方法，MSE 值为 0.029。MSE 比之前高多了，但因为任务本身难，这个对比意义不大。将其余朴素预测（预测时间序列可以恒定 10 个步骤）或简单线性模型对比的意义更大。朴素方法效果很差（MSE 值为 0.223），线性简单模型的 MSE 值为 0.0188：比 RNN 的预测效果好，并且还快。如果只想在复杂任务上提前预测几步的话，这个方法就够了。</p>
+<p><img src="img/dcde16e26dd91d0552c1e119c1fcee1e.png" alt=""></img></p>
+<p>图 15-8 提前预测 10 步，每次 1 步</p>
+<p>第二种方法是训练一个 RNN，一次性预测出 10 个值。还可以使用序列到向量模型，但输出的是 10 个值。但是，我们先需要修改向量，时期含有 10 个值：</p>
+<pre><code class="lang-py">series = generate_time_series(<span class="hljs-number">10000</span>, n_steps + <span class="hljs-number">10</span>)
+X_train, Y_train = series[:<span class="hljs-number">7000</span>, :n_steps], series[:<span class="hljs-number">7000</span>, -<span class="hljs-number">10</span>:, <span class="hljs-number">0</span>]
+X_valid, Y_valid = series[<span class="hljs-number">7000</span>:<span class="hljs-number">9000</span>, :n_steps], series[<span class="hljs-number">7000</span>:<span class="hljs-number">9000</span>, -<span class="hljs-number">10</span>:, <span class="hljs-number">0</span>]
+X_test, Y_test = series[<span class="hljs-number">9000</span>:, :n_steps], series[<span class="hljs-number">9000</span>:, -<span class="hljs-number">10</span>:, <span class="hljs-number">0</span>]
+</code></pre>
+<p>然后使输出层有 10 个神经元：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>),
+    keras.layers.Dense(<span class="hljs-number">10</span>)
+])
+</code></pre>
+<p>训练好这个模型之后，就可以一次预测出后面的 10 个值了：</p>
+<pre><code class="lang-py">Y_pred = model.predict(X_new)
+</code></pre>
+<p>这个模型的效果不错：预测 10 个值的 MSE 值为 0.008。比线性模型强多了。但还有继续改善的空间，除了在最后的时间步用训练模型预测接下来的 10 个值，还可以在每个时间步预测接下来的 10 个值。换句话说，可以将这个序列到向量的 RNN 变成序列到序列的 RNN。这种方法的优势，是损失会包含 RNN 的每个时间步的输出项，不仅是最后时间步的输出。这意味着模型中会流动着更多的误差梯度，梯度不必只通过时间流动；还可以从输出流动。这样可以稳定和加速训练。</p>
+<p>更加清楚一点，在时间步 0，模型输出一个包含时间步 1 到 10 的预测向量，在时间步 1，模型输出一个包含时间步 2 到 11 的预测向量，以此类推。因此每个目标必须是一个序列，其长度和输入序列长度相同，每个时间步包含一个 10 维向量。先准备目标序列：</p>
+<pre><code class="lang-py">Y = np.empty((<span class="hljs-number">10000</span>, n_steps, <span class="hljs-number">10</span>)) <span class="hljs-comment"># each target is a sequence of 10D vectors</span>
+<span class="hljs-keyword">for</span> step_ahead <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">10</span> + <span class="hljs-number">1</span>):
+    Y[:, :, step_ahead - <span class="hljs-number">1</span>] = series[:, step_ahead:step_ahead + n_steps, <span class="hljs-number">0</span>]
+Y_train = Y[:<span class="hljs-number">7000</span>]
+Y_valid = Y[<span class="hljs-number">7000</span>:<span class="hljs-number">9000</span>]
+Y_test = Y[<span class="hljs-number">9000</span>:]
+</code></pre>
+<blockquote>
+<p>笔记：目标要包含出现在输入中的值（<code>X_train</code> 和 <code>Y_train</code>有许多重复），听起来很奇怪。这不是作弊吗？其实不是：在每个时间步，模型只知道过去的时间步，不能向前看。这个模型被称为因果模型。</p>
+</blockquote>
+<p>要将模型变成序列到序列的模型，必须给所有循环层（包括最后一个）设置<code>return_sequences=True</code>，还必须在每个时间步添加紧密输出层。出于这个目的，Keras 提供了<code>TimeDistributed</code>层：它将任意层（比如，紧密层）包装起来，然后在输入序列的每个时间步上使用。通过变形输入，将每个时间步处理为独立实例（即，将输入从<code>[批次大小, 时间步数, 输入维度]</code>变形为<code>[批次大小 × 时间步数, 输入维度]</code>；在这个例子中，因为前一<code>SimpleRNN</code>有 20 个神经元，输入的维度数是 20），这个层的效率很高。然后运行紧密层，最后将输出变形为序列（即，将输出从<code>[批次大小 × 时间步数, 输出维度]</code>变形为<code>[批次大小, 时间步数, 输出维度]</code>；在这个例子中，输出维度数是 10，因为紧密层有 10 个神经元）。下面是更新后的模型：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.SimpleRNN(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.TimeDistributed(keras.layers.Dense(<span class="hljs-number">10</span>))
+])
+</code></pre>
+<p>紧密层实际上是支持序列（和更高维度的输入）作为输入的：如同<code>TimeDistributed(Dense(…))</code>一样处理序列，意味着只应用在最后的输入维度上（所有时间步独立）。因此，因此可以将最后一层替换为<code>Dense(10)</code>。但为了能够清晰，我们还是使用<code>TimeDistributed(Dense(10))</code>，因为清楚的展示了紧密层独立应用在了每个时间上，并且模型会输出一个序列，不仅仅是一个单向量。</p>
+<p>训练时需要所有输出，但预测和评估时，只需最后时间步的输出。因此尽管训练时依赖所有输出的 MSE，评估需要一个自定义指标，只计算最后一个时间步输出值的 MSE：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">last_time_step_mse</span>(<span class="hljs-params">Y_true, Y_pred</span>):
+    <span class="hljs-keyword">return</span> keras.metrics.mean_squared_error(Y_true[:, -<span class="hljs-number">1</span>], Y_pred[:, -<span class="hljs-number">1</span>])
+
+optimizer = keras.optimizers.Adam(lr=<span class="hljs-number">0.01</span>)
+model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"mse"</span>, optimizer=optimizer, metrics=[last_time_step_mse])
+</code></pre>
+<p>得到的 MSE 值为 0.006，比前面的模型提高了 25%。可以将这个方法和第一个结合起来：先用这个 RNN 预测接下来的 10 个值，然后将结果和输入序列连起来，再用模型预测接下来的 10 个值，以此类推。使用这个方法，可以预测任意长度的序列。对长期预测可能不那么准确，但用来生成音乐和文字是足够的，第 16 章有例子。</p>
+<blockquote>
+<p>提示：当预测时间序列时，最好给预测加上误差条。要这么做，一个高效的方法是用 MC 丢弃，第 11 章介绍过：给每个记忆单元添加一个 MC 丢弃层丢失部分输入和隐藏状态。训练之后，要预测新的时间序列，可以多次使用模型计算每一步预测值的平均值和标准差。</p>
+</blockquote>
+<p>简单 RNN 在预测时间序列或处理其它类型序列时表现很好，但在长序列上表现不佳。接下来就探究其原因和解决方法。</p>
+<h2 id="处理长序列">处理长序列</h2>
+<p>在训练长序列的 RNN 模型时，必须运行许多时间步，展开的 RNN 变成了一个很深的网络。正如任何深度神经网络一样，它面临不稳定梯度问题（第 11 章讨论过），使训练无法停止，或训练不稳定。另外，当 RNN 处理长序列时，RNN 会逐渐忘掉序列的第一个输入。下面就来看看这两个问题，先是第一个问题。</p>
+<h3 id="应对不稳定梯度">应对不稳定梯度</h3>
+<p>很多之前讨论过的缓解不稳定梯度的技巧都可以应用在 RNN 中：好的参数初始化方式，更快的优化器，丢弃，等等。但是非饱和激活函数（如 ReLU）的帮助不大；事实上，它会导致 RNN 更加不稳定。为什么呢？假设梯度下降更新了权重，可以令第一个时间步的输出提高。因为每个时间步使用的权重相同，第二个时间步的输出也会提高，这样就会导致输出爆炸 —— 不饱和激活函数不能阻止这个问题。要降低爆炸风险，可以使用更小的学习率，更简单的方法是使用一个饱和激活函数，比如双曲正切函数（这就解释了为什么 tanh 是默认选项）。同样的道理，梯度本身也可能爆炸。如果观察到训练不稳定，可以监督梯度的大小（例如，使用 TensorBoard），看情况使用梯度裁剪。</p>
+<p>另外，批归一化也没什么帮助。事实上，不能在时间步骤之间使用批归一化，只能在循环层之间使用。更加准确点，技术上可以将 BN 层添加到记忆单元上（后面会看到），这样就可以应用在每个时间步上了（既对输入使用，也对前一步的隐藏态使用）。但是，每个时间步用 BN 层相同，参数也相同，与输入和隐藏态的大小和偏移无关。在实践中，César Laurent 等人在 2015 年的<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Frnnbn" target="_blank">一篇论文</a>展示，这么做的效果不好：作者发现 BN 层只对输入有用，而对隐藏态没用。换句话说，在循环层之间使用 BN 层时，效果只有一点（即在图 15-7 中垂直使用），在循环层之内使用，效果不大（即，水平使用）。在 Keras 中，可以在每个循环层之前添加<code>BatchNormalization</code>层，但不要期待太高。</p>
+<p>另一种归一化的形式效果好些：层归一化。它是由 Jimmy Lei Ba 等人在 2016 年的<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Flayernorm" target="_blank">一篇论文</a>中提出的：它跟批归一化很像，但不是在批次维度上做归一化，而是在特征维度上归一化。这么做的一个优势是可以独立对每个实例，实时计算所需的统计量。这还意味着训练和测试中的行为是一致的（这点和 BN 相反），且不需要使用指数移动平均来估计训练集中所有实例的特征统计。和 BN 一样，层归一化会学习每个输入的比例和偏移参数。在 RNN 中，层归一化通常用在输入和隐藏态的线型组合之后。</p>
+<p>使用<code>tf.keras</code>在一个简单记忆单元中实现层归一化。要这么做，需要定义一个自定义记忆单元。就像一个常规层一样，<code>call()</code>接收两个参数：当前时间步的<code>inputs</code>和上一时间步的隐藏<code>states</code>。<code>states</code>是一个包含一个或多个张量的列表。在简单 RNN 单元中，<code>states</code>包含一个等于上一时间步输出的张量，但其它单元可能包含多个状态张量（比如<code>LSTMCell</code>有长期状态和短期状态）。单元还必须有一个<code>state_size</code>属性和一个<code>output_size</code>属性。在简单 RNN 中，这两个属性等于神经元的数量。下面的代码实现了一个自定义记忆单元，作用类似于<code>SimpleRNNCell</code>，但会在每个时间步做层归一化：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">LNSimpleRNNCell</span>(keras.layers.Layer):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, units, activation=<span class="hljs-string">"tanh"</span>, **kwargs</span>):
+        <span class="hljs-built_in">super</span>().__init__(**kwargs)
+        <span class="hljs-variable language_">self</span>.state_size = units
+        <span class="hljs-variable language_">self</span>.output_size = units
+        <span class="hljs-variable language_">self</span>.simple_rnn_cell = keras.layers.SimpleRNNCell(units,
+                                                          activation=<span class="hljs-literal">None</span>)
+        <span class="hljs-variable language_">self</span>.layer_norm = keras.layers.LayerNormalization()
+        <span class="hljs-variable language_">self</span>.activation = keras.activations.get(activation)
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">call</span>(<span class="hljs-params">self, inputs, states</span>):
+        outputs, new_states = <span class="hljs-variable language_">self</span>.simple_rnn_cell(inputs, states)
+        norm_outputs = <span class="hljs-variable language_">self</span>.activation(<span class="hljs-variable language_">self</span>.layer_norm(outputs))
+        <span class="hljs-keyword">return</span> norm_outputs, [norm_outputs]
+</code></pre>
+<p>代码不难。和其它自定义类一样，<code>LNSimpleRNNCell</code>继承自<code>keras.layers.Layer</code>。构造器接收单元的数量、激活函数、设置<code>state_size</code> 和<code>output_size</code>属性，创建一个没有激活函数的<code>SimpleRNNCell</code>（因为要在线性运算之后、激活函数之前运行层归一化）。然后构造器创建<code>LayerNormalization</code>层，最终拿到激活函数。<code>call()</code>方法先应用简单 RNN 单元，计算当前输入和上一隐藏态的线性组合，然后返回结果两次（事实上，在<code>SimpleRNNCell</code>中，输入等于隐藏状态：换句话说，<code>new_states[0]</code>等于<code>outputs</code>，因此可以放心地在剩下的<code>call()</code>中忽略<code>new_states</code>）。然后，<code>call()</code>应用层归一化，然后使用激活函数。最后，返回去输出两次（一次作为输出，一次作为新的隐藏态）。要使用这个自定义单元，需要做的是创建一个<code>keras.layers.RNN</code>层，传给其单元实例：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.RNN(LNSimpleRNNCell(<span class="hljs-number">20</span>), return_sequences=<span class="hljs-literal">True</span>,
+                     input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.RNN(LNSimpleRNNCell(<span class="hljs-number">20</span>), return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.TimeDistributed(keras.layers.Dense(<span class="hljs-number">10</span>))
+])
+</code></pre>
+<p>相似地，可以创建一个自定义单元，在时间步之间应用丢弃。但有一个更简单的方法：Keras 提供的所有循环层（除了<code>keras.layers.RNN</code>）和单元都有一个<code>dropout</code>超参数和一个<code>recurrent_dropout</code>超参数：前者定义丢弃率，应用到所有输入上（每个时间步），后者定义丢弃率，应用到隐藏态上（也是每个时间步）。无需在 RNN 中创建自定义单元来应用丢弃。</p>
+<p>有了这些方法，就可以减轻不稳定梯度问题，高效训练 RNN 了。下面来看如何处理短期记忆问题。</p>
+<h3 id="处理短期记忆问题">处理短期记忆问题</h3>
+<p>由于数据在 RNN 中流动时会经历转换，每个时间步都损失了一定信息。一定时间后，第一个输入实际上会在 RNN 的状态中消失。就像一个搅局者。比如《寻找尼莫》中的多莉想翻译一个长句：当她读完这句话时，就把开头忘了。为了解决这个问题，涌现出了各种带有长期记忆的单元。首先了解一下最流行的一种：长短时记忆神经单元 LSTM。</p>
+<h2 id="lstm-单元">LSTM 单元</h2>
+<p>长短时记忆单元在 1997 年<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgoo.gl%2Fj39AGv" target="_blank">由 Sepp Hochreiter 和 Jürgen Schmidhuber 首次提出</a>，并在接下来的几年内经过 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fgraves" target="_blank">Alex Graves</a>、<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2F94" target="_blank">Haşim Sak</a>、<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2F95" target="_blank">Wojciech Zaremba</a> 等人的改进，逐渐完善。如果把 LSTM 单元看作一个黑盒，可以将其当做基本单元一样来使用，但 LSTM 单元比基本单元性能更好：收敛更快，能够感知数据的长时依赖。在 Keras 中，可以将<code>SimpleRNN</code>层，替换为<code>LSTM</code>层：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.LSTM(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.LSTM(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.TimeDistributed(keras.layers.Dense(<span class="hljs-number">10</span>))
+])
+</code></pre>
+<p>或者，可以使用通用的<code>keras.layers.RNN layer</code>，设置<code>LSTMCell</code>参数：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.RNN(keras.layers.LSTMCell(<span class="hljs-number">20</span>), return_sequences=<span class="hljs-literal">True</span>,
+                     input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.RNN(keras.layers.LSTMCell(<span class="hljs-number">20</span>), return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.TimeDistributed(keras.layers.Dense(<span class="hljs-number">10</span>))
+])
+</code></pre>
+<p>但是，当在 GPU 运行时，LSTM 层使用了优化的实现（见第 19 章），所以更应该使用 LSTM 层（<code>RNN</code>大多用来自定义层）。</p>
+<p>LSTM 单元的工作机制是什么呢？图 15-9 展示了 LSTM 单元的结构。</p>
+<p><img src="img/70745cb802d7baf094598d9d5a61e02b.png" alt=""></img></p>
+<p>图 15-9 LSTM 单元</p>
+<p>如果不观察黑箱的内部，LSTM 单元跟常规单元看起来差不多，除了 LSTM 单元的状态分成了两个向量：<code>h[t]</code>和<code>c[t]</code>（<code>c</code>代表 cell）。可以认为<code>h[t]</code>是短期记忆状态，<code>c[t]</code>是长期记忆状态。</p>
+<p>现在打开黑箱。LSTM 单元的核心思想是它能从长期状态中学习该存储什么、丢掉什么、读取什么。当长期状态<code>c[t-1]</code>从左向右在网络中传播，它先经过遗忘门（forget gate），丢弃一些记忆，之后通过添加操作增加一些记忆（从输入门中选择一些记忆）。结果<code>c[t]</code>不经任何转换直接输出。因此，在每个时间步，都有一些记忆被抛弃，也有新的记忆添加进来。另外，添加操作之后，长时状态复制后经过 tanh 激活函数，然后结果被输出门过滤。得到短时状态<code>h[t]</code>（它等于这一时间步的单元输出，<code>y[t]</code>。接下来讨论新的记忆如何产生，门是如何工作的。</p>
+<p>首先，当前的输入向量<code>x[t]</code>和前一时刻的短时状态<code>h[t-1]</code>作为输入，传给四个不同的全连接层，这四个全连接层有不同的目的：</p>
+<ul>
+<li><p>输出<code>g[t]</code>的层是主要层。它的常规任务是分析当前的输入<code>x[t]</code>和前一时刻的短时状态<code>h[t-1]</code>。基本单元中与这种结构一样，直接输出了<code>h[t]</code>和<code>y[t]</code>。相反的，LSTM 单元中的该层的输出不会直接出去，儿是将最重要的部分保存在长期状态中（其余部分丢掉）。</p>
+</li>
+<li><p>其它三个全连接层被是门控制器（gate controller）。其采用 Logistic 作为激活函数，输出范围在 0 到 1 之间。可以看到，这三个层的输出提供给了逐元素乘法操作，当输入为 0 时门关闭，输出为 1 时门打开。具体讲：</p>
+<ul>
+<li><p>遗忘门（由<code>f[t]</code>控制）决定哪些长期记忆需要被删除；</p>
+</li>
+<li><p>输入门（由<code>i[t]</code>控制） 决定哪部分<code>g[t]</code>应该被添加到长时状态中。</p>
+</li>
+<li><p>输出门（由<code>o[t]</code>控制）决定长时状态的哪些部分要读取和输出为<code>h[t]</code>和<code>y[t]</code>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>总而言之，LSTM 单元能够学习识别重要输入（输入门的作用），存储进长时状态，并保存必要的时间（遗忘门功能），并在需要时提取出来。这解释了为什么 LSTM 单元能够如此成功地获取时间序列、长文本、录音等数据中的长期模式。</p>
+<p>公式 15-3 总结了如何计算单元的长时状态，短时状态，和单个实例的在每个时间步的输出（小批次的公式和这个公式很像）。</p>
+<p><img src="img/f40d22d847ea7561418001c057fb9ae7.png" alt=""></img></p>
+<p>公式 15-3 LSTM 计算</p>
+<p>在这个公式中，</p>
+<ul>
+<li><p><code>W[xi]</code>，<code>W[xf]</code>，<code>W[xo]</code>，<code>W[xg]</code>是四个全连接层连接输入向量<code>X[t]</code>的权重。</p>
+</li>
+<li><p><code>W[hi]</code>，<code>W[hf]</code>，<code>W[ho]</code>，<code>W[hg]</code>是四个全连接层连接上一时刻的短时状态<code>h[t - 1]</code>的权重。</p>
+</li>
+<li><p><code>b[i]</code>，<code>b[f]</code>，<code>b[o]</code>，<code>b[g]</code>是全连接层的四个偏置项。需要注意的是 TensorFlow 将<code>b[f]</code>初始化为全 1 向量，而非全 0。这样可以保证在训练状态开始时，忘掉所有东西。</p>
+</li>
+</ul>
+<h3 id="窥孔连接">窥孔连接</h3>
+<p>在基本 LSTM 单元中，门控制器只能观察当前输入<code>x[t]</code>和前一时刻的短时状态<code>h[t - 1]</code>。不妨让各个门控制器窥视一下长时状态，获取一些上下文信息。<a href="https://links.jianshu.com/go?to=ftp.idsia.ch%2Fpub%2Fjuergen%2FTimeCount-IJCNN2000.pdf" target="_blank">该想法</a>由 Felix Gers 和 Jürgen Schmidhuber 在 2000 年提出。他们提出了一个 LSTM 的变体，带有叫做窥孔连接的额外连接：把前一时刻的长时状态<code>c[t - 1]</code>输入给遗忘门和输入门，当前时刻的长时状态<code>c[t]</code>输入给输出门。这么做时常可以提高性能，但不一定每次都能有效，也没有清晰的规律显示哪种任务适合添加窥孔连接。</p>
+<p>Keras 中，<code>LSTM</code>层基于<code>keras.layers.LSTMCell</code>单元，后者目前还不支持窥孔。但是，试验性的<code>tf.keras.experimental.PeepholeLSTMCell</code>支持，所以可以创建一个<code>keras.layers.RNN</code>层，向构造器传入<code>PeepholeLSTMCell</code>。</p>
+<p>LSTM 有多种其它变体，其中特别流行的是 GRU 单元。</p>
+<h3 id="gru-单元">GRU 单元</h3>
+<p><img src="img/6056ca0fed15a10cfa75c2b47e731ce0.png" alt=""></img></p>
+<p>图 15-10 GRU 单元</p>
+<p>门控循环单元（图 15-10）在 2014 年的 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Farxiv.org%2Fpdf%2F1406.1078v3.pdf" target="_blank">Kyunghyun Cho 的论文</a>中提出，并且此文也引入了前文所述的编码器-解码器网络。</p>
+<p>GRU 单元是 LSTM 单元的简化版本，能实现同样的性能（这也说明了为什么它能越来越流行）。简化主要在一下几个方面：</p>
+<ul>
+<li><p>长时状态和短时状态合并为一个向量<code>h[t]</code>。</p>
+</li>
+<li><p>用一个门控制器<code>z[t]</code>控制遗忘门和输入门。如果门控制器输出 1，则遗忘门打开（<code>= 1</code>），输入门关闭（<code>1 - 1 = 0</code>）。如果输出 0，则相反。换句话说，如果当有记忆要存储，那么就必须先在其存储位置删掉该处记忆。这构成了 LSTM 本身的常见变体。</p>
+</li>
+<li><p>GRU 单元取消了输出门，每个时间步输出全态向量。但是，增加了一个控制门<code>r[t]</code>来控制前一状态的哪些部分呈现给主层<code>g[t]</code>。</p>
+</li>
+</ul>
+<p>公式 15-4 总结了如何计算单元对单个实例在每个时间步的状态。</p>
+<p><img src="img/4a588bbd07f62095da42f3e87339926b.png" alt=""></img></p>
+<p>公式 15-4 GRU 计算</p>
+<p>Keras 提供了<code>keras.layers.GRU</code>层（基于<code>keras.layers.GRUCell</code>记忆单元）；使用时，只需将<code>SimpleRNN</code>或<code>LSTM</code>替换为<code>GRU</code>。</p>
+<p>LSTM 和 GRU 是 RNN 取得成功的主要原因之一。尽管它们相比于简单 RNN 可以处理更长的序列了，还是有一定程度的短时记忆，序列超过 100 时，比如音频、长时间序列或长序列，学习长时模式就很困难。应对的方法之一，是使用缩短输入序列，例如使用 1D 卷积层。</p>
+<h3 id="使用-1d-卷积层处理序列">使用 1D 卷积层处理序列</h3>
+<p>在第 14 章中，我们使用 2D 卷积层，通过在图片上滑动几个小核（或过滤器），来产生多个 2D 特征映射（每个核产生一个）。相似的，1D 军几层在序列上滑动几个核，每个核可以产生一个 1D 特征映射。每个核能学到一个非常短序列模式（不会超过核的大小）。如果你是用 10 个核，则输出会包括 10 个 1 维的序列（长度相同），或者可以将输出当做一个 10 维的序列。这意味着，可以搭建一个由循环层和 1D 卷积层（或 1 维池化层）混合组成的神经网络。如果 1D 卷积层的步长是 1，填充为零，则输出序列的长度和输入序列相同。但如果使用<code>"valid"</code>填充，或大于 1 的步长，则输出序列会比输入序列短，所以一定要按照目标作出调整。例如，下面的模型和之前的一样，除了开头是一个步长为 2 的 1D 卷积层，用因子 2 对输入序列降采样。核大小比步长大，所以所有输入会用来计算层的输出，所以模型可以学到保存有用的信息、丢弃不重要信息。通过缩短序列，卷积层可以帮助 GRU 检测长模式。注意，必须裁剪目标中的前三个时间步（因为核大小是 4，卷积层的第一个输出是基于输入时间步 0 到 3），并用因子 2 对目标做降采样：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([
+    keras.layers.Conv1D(filters=<span class="hljs-number">20</span>, kernel_size=<span class="hljs-number">4</span>, strides=<span class="hljs-number">2</span>, padding=<span class="hljs-string">"valid"</span>,
+                        input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]),
+    keras.layers.GRU(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.GRU(<span class="hljs-number">20</span>, return_sequences=<span class="hljs-literal">True</span>),
+    keras.layers.TimeDistributed(keras.layers.Dense(<span class="hljs-number">10</span>))
+])
+
+model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"mse"</span>, optimizer=<span class="hljs-string">"adam"</span>, metrics=[last_time_step_mse])
+history = model.fit(X_train, Y_train[:, <span class="hljs-number">3</span>::<span class="hljs-number">2</span>], epochs=<span class="hljs-number">20</span>,
+                    validation_data=(X_valid, Y_valid[:, <span class="hljs-number">3</span>::<span class="hljs-number">2</span>]))
+</code></pre>
+<p>如果训练并评估这个模型，你会发现它是目前最好的模型。卷积层确实发挥了作用。事实上，可以只使用 1D 卷积层，不用循环层！</p>
+<h3 id="wavenet">WaveNet</h3>
+<p>在一篇 2016 年的<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fwavenet" target="_blank">论文</a>中，Aaron van den Oord 和其它 DeepMind 的研究者，提出了一个名为 WaveNet 的架构。他们将 1D 卷积层叠起来，每一层膨胀率（如何将每个神经元的输入分开）变为 2 倍：第一个卷积层一次只观察两个时间步，，接下来的一层观察四个时间步（感受野是 4 个时间步的长度），下一层观察八个时间步，以此类推（见图 15-11）。用这种方式，底下的层学习短时模式，上面的层学习长时模式。得益于翻倍的膨胀率，这个网络可以非常高效地处理极长的序列。</p>
+<p><img src="img/36df0b6e0bffc722814f35bdd3bb5581.png" alt=""></img></p>
+<p>图 15-11 WaveNet 架构</p>
+<p>在 WaveNet 论文中，作者叠了 10 个卷积层，膨胀率为 1, 2, 4, 8, …, 256, 512，然后又叠了一组 10 个相同的层（膨胀率还是 1, 2, 4, 8, …, 256, 512），然后又是 10 个相同的层。作者解释到，一摞这样的 10 个卷积层，就像一个超高效的核大小为 1024 的卷积层（只是更快、更强、参数更少），所以同样的结构叠了三次。他们还给输入序列左填充了一些 0，以满足每层的膨胀率，使序列长度不变。下面的代码实现了简化的 WaveNet，来处理前面的序列：</p>
+<pre><code class="lang-py">model = keras.models.Sequential()
+model.add(keras.layers.InputLayer(input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">1</span>]))
+<span class="hljs-keyword">for</span> rate <span class="hljs-keyword">in</span> (<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">8</span>) * <span class="hljs-number">2</span>:
+    model.add(keras.layers.Conv1D(filters=<span class="hljs-number">20</span>, kernel_size=<span class="hljs-number">2</span>, padding=<span class="hljs-string">"causal"</span>,
+                                  activation=<span class="hljs-string">"relu"</span>, dilation_rate=rate))
+model.add(keras.layers.Conv1D(filters=<span class="hljs-number">10</span>, kernel_size=<span class="hljs-number">1</span>))
+model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"mse"</span>, optimizer=<span class="hljs-string">"adam"</span>, metrics=[last_time_step_mse])
+history = model.fit(X_train, Y_train, epochs=<span class="hljs-number">20</span>,
+                    validation_data=(X_valid, Y_valid))
+</code></pre>
+<p><code>Sequential</code>模型开头是一个输入层（比只在第一个层上设定<code>input_shape</code>简单的多）；然后是一个 1D 卷积层，使用<code>"causal"</code>填充：这可以保证卷积层在做预测时，不会窥视到未来值（等价于在输入序列的左边用零填充填充合适数量的 0）。然后添加相似的成对的层，膨胀率为 1、2、4、8，接着又是 1、2、4、8。最后，添加输出层：一个有 10 个大小为 1 的过滤器的卷积层，没有激活函数。得益于填充层，每个卷积层输出的序列长度都和输入序列一样，所以训练时的目标可以是完整序列：无需裁剪或降采样。</p>
+<p>最后两个模型的序列预测结果最好！在 WaveNet 论文中，作者在多种音频任务（WaveNet 名字正是源于此）中，包括文本转语音任务（可以输出多种语言极为真实的语音），达到了顶尖的表现。他们还用这个模型生成音乐，每次生成一段音频。每段音频包含上万个时间步（LSTM 和 GRU 无法处理如此长的序列），这是相当了不起的。</p>
+<p>第 16 章，我们会继续探索 RNN，会看到如何用 RNN 处理各种 NLP 任务。</p>
+<h2 id="练习">练习</h2>
+<ol>
+<li><p>你能说出序列到序列 RNN 的几个应用吗？序列到向量的应用？向量到序列的应用？</p>
+</li>
+<li><p>RNN 层的输入要有多少维？每一维表示什么？输出呢？</p>
+</li>
+<li><p>如果搭建深度序列到序列 RNN，哪些 RNN 层要设置<code>return_sequences=True</code>？序列到向量 RNN 又如何？</p>
+</li>
+<li><p>假如有一个每日单变量时间序列，想预测接下来的七天。要使用什么 RNN 架构？</p>
+</li>
+<li><p>训练 RNN 的困难是什么？如何应对？</p>
+</li>
+<li><p>画出 LSTM 单元的架构图？</p>
+</li>
+<li><p>为什么在 RNN 中使用 1D 卷积层？</p>
+</li>
+<li><p>哪种神经网络架构可以用来分类视频？</p>
+</li>
+<li><p>为 SketchRNN 数据集（TensorFlow Datasets 中有），训练一个分类模型。</p>
+</li>
+<li><p>下载 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fbach" target="_blank">Bach chorales</a> 数据集，并解压。它含有 382 首巴赫作曲的赞美歌。每首的长度是 100 到 640 时间步，每个时间步包含 4 个整数，每个整数对应一个钢琴音符索引（除了 0，表示没有音符）。训练一个可以预测下一个时间步（四个音符）的模型，循环、卷积、或混合架构。然后使用这个模型来生成类似巴赫的音乐，每个时间一个音符：可以给模型一首赞美歌的开头，然后让其预测接下来的时间步，然后将输出加到输入上，再让模型继续预测。或者查看 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fcoconet" target="_blank">Google 的 Coconet 模型</a>，它是 Google 来做巴赫曲子的。</p>
+</li>
+</ol>
+<p>参考答案见附录 A。</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="14.html" class="navigation navigation-prev " aria-label="Previous page: 十四、使用卷积神经网络实现深度计算机视觉">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="16.html" class="navigation navigation-next " aria-label="Next page: 十六、使用 RNN 和注意力机制进行自然语言处理">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"十五、使用 RNN 和 CNN 处理序列","level":"1.16","depth":1,"next":{"title":"十六、使用 RNN 和注意力机制进行自然语言处理","level":"1.17","depth":1,"path":"16.md","ref":"./16.md","articles":[]},"previous":{"title":"十四、使用卷积神经网络实现深度计算机视觉","level":"1.15","depth":1,"path":"14.md","ref":"./14.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"15.md","mtime":"2024-08-23T21:05:56.815Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

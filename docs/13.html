@@ -1,0 +1,1110 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>十三、使用 TensorFlow 加载和预处理数据 · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="14.html" />
+    
+    
+    <link rel="prev" href="12.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="0.html">
+            
+                <a href="0.html">
+            
+                    
+                    零、前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="1.html">
+            
+                <a href="1.html">
+            
+                    
+                    一、机器学习概览
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="2.html">
+            
+                <a href="2.html">
+            
+                    
+                    二、端到端的机器学习项目
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="3.html">
+            
+                <a href="3.html">
+            
+                    
+                    三、分类
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="4.html">
+            
+                <a href="4.html">
+            
+                    
+                    四、训练模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="5.html">
+            
+                <a href="5.html">
+            
+                    
+                    五、支持向量机
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="6.html">
+            
+                <a href="6.html">
+            
+                    
+                    六、决策树
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="7.html">
+            
+                <a href="7.html">
+            
+                    
+                    七、集成学习和随机森林
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="8.html">
+            
+                <a href="8.html">
+            
+                    
+                    八、降维
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="10.html">
+            
+                <a href="10.html">
+            
+                    
+                    十、使用 Keras 搭建人工神经网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="11.html">
+            
+                <a href="11.html">
+            
+                    
+                    十一、训练深度神经网络
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="12.html">
+            
+                <a href="12.html">
+            
+                    
+                    十二、使用 TensorFlow 自定义模型并训练
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.14" data-path="13.html">
+            
+                <a href="13.html">
+            
+                    
+                    十三、使用 TensorFlow 加载和预处理数据
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.15" data-path="14.html">
+            
+                <a href="14.html">
+            
+                    
+                    十四、使用卷积神经网络实现深度计算机视觉
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.16" data-path="15.html">
+            
+                <a href="15.html">
+            
+                    
+                    十五、使用 RNN 和 CNN 处理序列
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.17" data-path="16.html">
+            
+                <a href="16.html">
+            
+                    
+                    十六、使用 RNN 和注意力机制进行自然语言处理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.18" data-path="17.html">
+            
+                <a href="17.html">
+            
+                    
+                    十七、使用自编码器和 GAN 做表征学习和生成式学习
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.19" data-path="18.html">
+            
+                <a href="18.html">
+            
+                    
+                    十八、强化学习
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.20" data-path="19.html">
+            
+                <a href="19.html">
+            
+                    
+                    十九、规模化训练和部署 TensorFlow 模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >十三、使用 TensorFlow 加载和预处理数据</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="十三、使用-tensorflow-加载和预处理数据">十三、使用 TensorFlow 加载和预处理数据</h1>
+<blockquote>
+<p>译者：<a href="https://www.jianshu.com/u/130f76596b02" target="_blank">@SeanCheney</a></p>
+</blockquote>
+<p>目前为止，我们只是使用了存放在内存中的数据集，但深度学习系统经常需要在大数据集上训练，而内存放不下大数据集。其它的深度学习库通过对大数据集做预处理，绕过了内存限制，但 TensorFlow 通过 Data API，使一切都容易了：只需要创建一个数据集对象，告诉它去哪里拿数据，以及如何做转换就行。TensorFlow 负责所有的实现细节，比如多线程、队列、批次和预提取。另外，Data API 和<code>tf.keras</code>可以无缝配合！</p>
+<p>Data API 还可以从现成的文件（比如 CSV 文件）、固定大小的二进制文件、使用 TensorFlow 的 TFRecord 格式的文件（支持大小可变的记录）读取数据。TFRecord 是一个灵活高效的二进制格式，基于 Protocol Buffers（一个开源二进制格式）。Data API 还支持从 SQL 数据库读取数据。另外，许多开源插件也可以用来从各种数据源读取数据，包括谷歌的 BigQuery。</p>
+<p>高效读取大数据集不是唯一的难点：数据还需要进行预处理，通常是归一化。另外，数据集中并不是只有数值字段：可能还有文本特征、类型特征，等等。这些特征需要编码，比如使用独热编码或嵌入（后面会看到，嵌入嵌入是用来标识类型或标记的紧密向量）。预处理的一种方式是写自己的自定义预处理层，另一种是使用 Kera 的标准预处理层。</p>
+<p>本章中，我们会介绍 Data API，TFRecord 格式，以及如何创建自定义预处理层，和使用 Keras 的预处理层。还会快速学习 TensorFlow 生态的一些项目：</p>
+<ul>
+<li><p>TF Transform (<code>tf.Transform</code>)：可以用来编写单独的预处理函数，它可以在真正训练前，运行在完整训练集的批模式中，然后输出到 TF 函数，插入到训练好的模型中。只要模型在生产环境中部署好了，就能随时预处理新的实例。</p>
+</li>
+<li><p>TF Datasets (TFDS)。提供了下载许多常见数据集的函数，包括 ImageNet，和数据集对象（可用 Data API 操作）。</p>
+</li>
+</ul>
+<h2 id="data-api">Data API</h2>
+<p>整个 Data API 都是围绕数据集<code>dataset</code>的概念展开的：可以猜得到，数据集表示一连串数据项。通常你是用的数据集是从硬盘里逐次读取数据的，简单起见，我们是用<code>tf.data.Dataset.from_tensor_slices()</code>创建一个存储于内存中的数据集：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>X = tf.<span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>)  <span class="hljs-comment"># any data tensor</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>dataset = tf.data.Dataset.from_tensor_slices(X)
+<span class="hljs-meta">&gt;&gt;&gt; </span>dataset
+&lt;TensorSliceDataset shapes: (), types: tf.int32&gt;
+</code></pre>
+<p>函数<code>from_tensor_slices()</code>取出一个张量，创建了一个<code>tf.data.Dataset</code>，它的元素是<code>X</code>的全部切片，因此这个数据集包括 10 项：张量 0、1、2、...、9。在这个例子中，使用<code>tf.data.Dataset.range(10)</code>也能达到同样的效果。</p>
+<p>可以像下面这样对这个数据集迭代：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> dataset:
+<span class="hljs-meta">... </span>    <span class="hljs-built_in">print</span>(item)
+...
+tf.Tensor(<span class="hljs-number">0</span>, shape=(), dtype=int32)
+tf.Tensor(<span class="hljs-number">1</span>, shape=(), dtype=int32)
+tf.Tensor(<span class="hljs-number">2</span>, shape=(), dtype=int32)
+[...]
+tf.Tensor(<span class="hljs-number">9</span>, shape=(), dtype=int32)
+</code></pre>
+<h3 id="链式转换">链式转换</h3>
+<p>有了数据集之后，通过调用转换方法，可以对数据集做各种转换。每个方法会返回一个新的数据集，因此可以将转换像下面这样链接起来（见图 13-1）：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>dataset = dataset.repeat(<span class="hljs-number">3</span>).batch(<span class="hljs-number">7</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> dataset:
+<span class="hljs-meta">... </span>    <span class="hljs-built_in">print</span>(item)
+...
+tf.Tensor([<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span>], shape=(<span class="hljs-number">7</span>,), dtype=int32)
+tf.Tensor([<span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>], shape=(<span class="hljs-number">7</span>,), dtype=int32)
+tf.Tensor([<span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">0</span>], shape=(<span class="hljs-number">7</span>,), dtype=int32)
+tf.Tensor([<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span>], shape=(<span class="hljs-number">7</span>,), dtype=int32)
+tf.Tensor([<span class="hljs-number">8</span> <span class="hljs-number">9</span>], shape=(<span class="hljs-number">2</span>,), dtype=int32)
+</code></pre>
+<p><img src="img/252e2a32408349522b1f991945ebc47b.png" alt=""></img></p>
+<p>图 13-1 链接数据集转换</p>
+<p>在这个例子中，我们先在原始数据集上调用了<code>repeat()</code>方法，返回了一个重复了原始数据集 3 次的新数据集。当然，这步不会复制数据集中的数据三次（如果调用这个方法时没有加参数，新数据集会一直重复源数据集，必须让迭代代码决定何时退出）。然后我们在新数据集上调用了<code>batch()</code>方法，这步又产生了一个新数据集。这一步会将上一个数据集的分成 7 个一批次。最后，做一下迭代。可以看到，最后的批次只有两个元素，可以设置<code>drop_remainder=True</code>，丢弃最后的两项，将数据对齐。</p>
+<blockquote>
+<p>警告：数据集方法不修改数据集，只是生成新的数据集而已，所以要做新数据集的赋值（即使用<code>dataset = ...</code>）。</p>
+</blockquote>
+<p>还可以通过<code>map()</code>方法转换元素。比如，下面的代码创建了一个每个元素都翻倍的新数据集：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>dataset = dataset.<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> x: x * <span class="hljs-number">2</span>) <span class="hljs-comment"># Items: [0,2,4,6,8,10,12]</span>
+</code></pre>
+<p>这个函数可以用来对数据做预处理。有时可能会涉及复杂的计算，比如改变形状或旋转图片，所以通常需要多线程来加速：只需设置参数<code>num_parallel_calls</code>就行。注意，传递给<code>map()</code>方法的函数必须是可以转换为 TF 函数。</p>
+<p><code>map()</code>方法是对每个元素做转换的，<code>apply()</code>方法是对数据整体做转换的。例如，下面的代码对数据集应用了<code>unbatch()</code>函数（这个函数目前是试验性的，但很有可能加入到以后的版本中）。新数据集中的每个元素都是一个单整数张量，而不是批次大小为 7 的整数。</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>dataset = dataset.apply(tf.data.experimental.unbatch()) <span class="hljs-comment"># Items: 0,2,4,...</span>
+</code></pre>
+<p>还可以用<code>filter()</code>方法做过滤：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>dataset = dataset.<span class="hljs-built_in">filter</span>(<span class="hljs-keyword">lambda</span> x: x &lt; <span class="hljs-number">10</span>) <span class="hljs-comment"># Items: 0 2 4 6 8 0 2 4 6...</span>
+</code></pre>
+<p><code>take()</code>方法可以用来查看数据：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> dataset.take(<span class="hljs-number">3</span>):
+<span class="hljs-meta">... </span>    <span class="hljs-built_in">print</span>(item)
+...
+tf.Tensor(<span class="hljs-number">0</span>, shape=(), dtype=int64)
+tf.Tensor(<span class="hljs-number">2</span>, shape=(), dtype=int64)
+tf.Tensor(<span class="hljs-number">4</span>, shape=(), dtype=int64)
+</code></pre>
+<h3 id="打散数据">打散数据</h3>
+<p>当训练集中的实例是独立同分布时，梯度下降的效果最好（见第 4 章）。实现独立同分布的一个简单方法是使用<code>shuffle()</code>方法。它能创建一个新数据集，新数据集的前面是一个缓存，缓存中是源数据集的开头元素。然后，无论什么时候取元素，就会从缓存中随便随机取出一个元素，从源数据集中取一个新元素替换。从缓冲器取元素，直到缓存为空。必须要指定缓存的大小，最好大一点，否则随机效果不明显。不要查出内存大小，即使内存够用，缓存超过数据集也是没有意义的。可以提供一个随机种子，如果希望随机的顺序是固定的。例如，下面的代码创建并显示了一个包括 0 到 9 的数据集，重复 3 次，用大小为 5 的缓存做随机，随机种子是 42，批次大小是 7：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>dataset = tf.data.Dataset.<span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>).repeat(<span class="hljs-number">3</span>) <span class="hljs-comment"># 0 to 9, three times</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>dataset = dataset.shuffle(buffer_size=<span class="hljs-number">5</span>, seed=<span class="hljs-number">42</span>).batch(<span class="hljs-number">7</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> dataset:
+<span class="hljs-meta">... </span>    <span class="hljs-built_in">print</span>(item)
+...
+tf.Tensor([<span class="hljs-number">0</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span> <span class="hljs-number">9</span> <span class="hljs-number">4</span>], shape=(<span class="hljs-number">7</span>,), dtype=int64)
+tf.Tensor([<span class="hljs-number">5</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">8</span> <span class="hljs-number">6</span> <span class="hljs-number">5</span>], shape=(<span class="hljs-number">7</span>,), dtype=int64)
+tf.Tensor([<span class="hljs-number">4</span> <span class="hljs-number">8</span> <span class="hljs-number">7</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">0</span>], shape=(<span class="hljs-number">7</span>,), dtype=int64)
+tf.Tensor([<span class="hljs-number">5</span> <span class="hljs-number">4</span> <span class="hljs-number">2</span> <span class="hljs-number">7</span> <span class="hljs-number">8</span> <span class="hljs-number">9</span> <span class="hljs-number">9</span>], shape=(<span class="hljs-number">7</span>,), dtype=int64)
+tf.Tensor([<span class="hljs-number">3</span> <span class="hljs-number">6</span>], shape=(<span class="hljs-number">2</span>,), dtype=int64)
+</code></pre>
+<blockquote>
+<p>提示：如果在随机数据集上调用<code>repeat()</code>方法，默认下，每次迭代的顺序都是新的。通常这样没有问题，但如果你想让每次迭代的顺序一样（比如，测试或调试），可以设置<code>reshuffle_each_iteration=False</code>。</p>
+</blockquote>
+<p>对于内存放不下的大数据集，这个简单的随机缓存方法就不成了，因为缓存相比于数据集就小太多了。一个解决方法是将源数据本身打乱（例如，Linux 可以用<code>shuf</code>命令打散文本文件）。这样肯定能提高打散的效果！即使源数据打散了，你可能还想再打散一点，否则每个周期可能还会出现同样的顺序，模型最后可能是偏的（比如，源数据顺序偶然导致的假模式）。为了将实例进一步打散，一个常用的方法是将源数据分成多个文件，训练时随机顺序读取。但是，相同文件中的实例仍然靠的太近。为了避免这点，可以同时随机读取多个文件，做交叉。在最顶层，可以用<code>shuffle()</code>加一个随机缓存。如果这听起来很麻烦，不用担心：Data API 都为你实现了，几行代码就行。</p>
+<h4 id="多行数据交叉">多行数据交叉</h4>
+<p>首先，假设加载了加州房价数据集，打散它（除非已经打散了），分成训练集、验证集、测试集。然后将每个数据集分成多个 csv 文件，每个如下所示（每行包含 8 个输入特征加上目标中位房价）：</p>
+<pre><code class="lang-py">MedInc,HouseAge,AveRooms,AveBedrms,Popul,AveOccup,Lat,Long,MedianHouseValue
+<span class="hljs-number">3.5214</span>,<span class="hljs-number">15.0</span>,<span class="hljs-number">3.0499</span>,<span class="hljs-number">1.1065</span>,<span class="hljs-number">1447.0</span>,<span class="hljs-number">1.6059</span>,<span class="hljs-number">37.63</span>,-<span class="hljs-number">122.43</span>,<span class="hljs-number">1.442</span>
+<span class="hljs-number">5.3275</span>,<span class="hljs-number">5.0</span>,<span class="hljs-number">6.4900</span>,<span class="hljs-number">0.9910</span>,<span class="hljs-number">3464.0</span>,<span class="hljs-number">3.4433</span>,<span class="hljs-number">33.69</span>,-<span class="hljs-number">117.39</span>,<span class="hljs-number">1.687</span>
+<span class="hljs-number">3.1</span>,<span class="hljs-number">29.0</span>,<span class="hljs-number">7.5423</span>,<span class="hljs-number">1.5915</span>,<span class="hljs-number">1328.0</span>,<span class="hljs-number">2.2508</span>,<span class="hljs-number">38.44</span>,-<span class="hljs-number">122.98</span>,<span class="hljs-number">1.621</span>
+[...]
+</code></pre>
+<p>再假设<code>train_filepaths</code>包括了训练文件路径的列表（还要<code>valid_filepaths</code>和<code>test_filepaths</code>）：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>train_filepaths
+[<span class="hljs-string">'datasets/housing/my_train_00.csv'</span>, <span class="hljs-string">'datasets/housing/my_train_01.csv'</span>,...]
+</code></pre>
+<p>另外，可以使用文件模板，比如<code>train_filepaths = "datasets/housing/my_train_*.csv"</code>。现在，创建一个数据集，包括这些文件路径：</p>
+<pre><code class="lang-py">filepath_dataset = tf.data.Dataset.list_files(train_filepaths, seed=<span class="hljs-number">42</span>)
+</code></pre>
+<p>默认，<code>list_files()</code>函数返回一个文件路径打散的数据集。也可以设置<code>shuffle=False</code>，文件路径就不打散了。</p>
+<p>然后，可以调用<code>leave()</code>方法，一次读取 5 个文件，做交叉操作（跳过第一行表头，使用<code>skip()</code>方法）：</p>
+<pre><code class="lang-py">n_readers = <span class="hljs-number">5</span>
+dataset = filepath_dataset.interleave(
+    <span class="hljs-keyword">lambda</span> filepath: tf.data.TextLineDataset(filepath).skip(<span class="hljs-number">1</span>),
+    cycle_length=n_readers)
+</code></pre>
+<p><code>interleave()</code>方法会创建一个数据集，它从<code>filepath_dataset</code>读 5 条文件路径，对每条路径调用函数（例子中是用的匿名函数）来创建数据集（例子中是<code>TextLineDataset</code>）。为了更清楚点，这一步总欧诺个由七个数据集：文件路径数据集，交叉数据集，和五个<code>TextLineDatasets</code>数据集。当迭代交叉数据集时，会循环<code>TextLineDatasets</code>，每次读取一行，知道数据集为空。然后会从<code>filepath_dataset</code>再获取五个文件路径，做同样的交叉，直到文件路径为空。</p>
+<blockquote>
+<p>提示：为了交叉得更好，最好让文件有相同的长度，否则长文件的尾部不会交叉。</p>
+</blockquote>
+<p>默认情况下，<code>interleave()</code>不是并行的，只是顺序从每个文件读取一行。如果想变成并行读取文件，可以设定参数<code>num_parallel_calls</code>为想要的线程数（<code>map()</code>方法也有这个参数）。还可以将其设置为<code>tf.data.experimental.AUTOTUNE</code>，让 TensorFlow 根据 CPU 自己找到合适的线程数（目前这是个试验性的功能）。看看目前数据集包含什么：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> line <span class="hljs-keyword">in</span> dataset.take(<span class="hljs-number">5</span>):
+<span class="hljs-meta">... </span>    <span class="hljs-built_in">print</span>(line.numpy())
+...
+<span class="hljs-string">b'4.2083,44.0,5.3232,0.9171,846.0,2.3370,37.47,-122.2,2.782'</span>
+<span class="hljs-string">b'4.1812,52.0,5.7013,0.9965,692.0,2.4027,33.73,-118.31,3.215'</span>
+<span class="hljs-string">b'3.6875,44.0,4.5244,0.9930,457.0,3.1958,34.04,-118.15,1.625'</span>
+<span class="hljs-string">b'3.3456,37.0,4.5140,0.9084,458.0,3.2253,36.67,-121.7,2.526'</span>
+<span class="hljs-string">b'3.5214,15.0,3.0499,1.1065,1447.0,1.6059,37.63,-122.43,1.442'</span>
+</code></pre>
+<p>忽略表头行，这是五个 csv 文件的第一行，随机选取的。看起来不错。但是也看到了，都是字节串，需要解析数据，缩放数据。</p>
+<h3 id="预处理数据">预处理数据</h3>
+<p>实现一个小函数来做预处理：</p>
+<pre><code class="lang-py">X_mean, X_std = [...] <span class="hljs-comment"># mean and scale of each feature in the training set</span>
+n_inputs = <span class="hljs-number">8</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">line</span>):
+  defs = [<span class="hljs-number">0.</span>] * n_inputs + [tf.constant([], dtype=tf.float32)]
+  fields = tf.io.decode_csv(line, record_defaults=defs)
+  x = tf.stack(fields[:-<span class="hljs-number">1</span>])
+  y = tf.stack(fields[-<span class="hljs-number">1</span>:])
+  <span class="hljs-keyword">return</span> (x - X_mean) / X_std, y
+</code></pre>
+<p>逐行看下代码：</p>
+<ul>
+<li><p>首先，代码假定已经算好了训练集中每个特征的平均值和标准差。<code>X_mean</code>和<code>X_std</code>是 1D 张量（或 NumPy 数组），包含八个浮点数，每个都是特征。</p>
+</li>
+<li><p><code>preprocess()</code>函数从 csv 取一行，开始解析。使用<code>tf.io.decode_csv()</code>函数，接收两个参数，第一个是要解析的行，第二个是一个数组，包含 csv 文件每列的默认值。这个数组不仅告诉 TensorFlow 每列的默认值，还有总列数和数据类型。在这个例子中，是告诉 TensorFlow，所有特征列都是浮点数，缺失值默认为，但提供了一个类型是<code>tf.float32</code>的空数组，作为最后一列（目标）的默认值：数组告诉 TensorFlow 这一列包含浮点数，但没有默认值，所以碰到空值时会报异常。</p>
+</li>
+<li><p><code>decode_csv()</code>函数返回一个标量张量（每列一个）的列表，但应该返回 1D 张量数组。所以在所有张量上调用了<code>tf.stack()</code>，除了最后一个。然后对目标值做同样的操作（让其成为只包含一个值，而不是标量张量的 1D 张量数组）。</p>
+</li>
+<li><p>最后，对特征做缩放，减去平均值，除以标准差，然后返回包含缩放特征和目标值的元组。</p>
+</li>
+</ul>
+<p>测试这个预处理函数：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>preprocess(<span class="hljs-string">b'4.2083,44.0,5.3232,0.9171,846.0,2.3370,37.47,-122.2,2.782'</span>)
+(&lt;tf.Tensor: <span class="hljs-built_in">id</span>=<span class="hljs-number">6227</span>, shape=(<span class="hljs-number">8</span>,), dtype=float32, numpy=
+ array([ <span class="hljs-number">0.16579159</span>,  <span class="hljs-number">1.216324</span>  , -<span class="hljs-number">0.05204564</span>, -<span class="hljs-number">0.39215982</span>, -<span class="hljs-number">0.5277444</span> ,
+        -<span class="hljs-number">0.2633488</span> ,  <span class="hljs-number">0.8543046</span> , -<span class="hljs-number">1.3072058</span> ], dtype=float32)&gt;,
+ &lt;tf.Tensor: [...], numpy=array([<span class="hljs-number">2.782</span>], dtype=float32)&gt;)
+</code></pre>
+<p>很好，接下来将函数应用到数据集上。</p>
+<h3 id="整合">整合</h3>
+<p>为了让代码可复用，将前面所有讨论过的东西编程一个小函数：创建并返回一个数据集，可以高效从多个 csv 文件加载加州房价数据集，做预处理、打散、选择性重复，做批次（见图 3-2）：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">csv_reader_dataset</span>(<span class="hljs-params">filepaths, repeat=<span class="hljs-number">1</span>, n_readers=<span class="hljs-number">5</span>,
+                       n_read_threads=<span class="hljs-literal">None</span>, shuffle_buffer_size=<span class="hljs-number">10000</span>,
+                       n_parse_threads=<span class="hljs-number">5</span>, batch_size=<span class="hljs-number">32</span></span>):
+    dataset = tf.data.Dataset.list_files(filepaths)
+    dataset = dataset.interleave(
+        <span class="hljs-keyword">lambda</span> filepath: tf.data.TextLineDataset(filepath).skip(<span class="hljs-number">1</span>),
+        cycle_length=n_readers, num_parallel_calls=n_read_threads)
+    dataset = dataset.<span class="hljs-built_in">map</span>(preprocess, num_parallel_calls=n_parse_threads)
+    dataset = dataset.shuffle(shuffle_buffer_size).repeat(repeat)
+    <span class="hljs-keyword">return</span> dataset.batch(batch_size).prefetch(<span class="hljs-number">1</span>)
+</code></pre>
+<p>代码条理很清晰，除了最后一行的<code>prefetch(1)</code>，对于提升性能很关键。</p>
+<h3 id="预提取">预提取</h3>
+<p>通过调用<code>prefetch(1)</code>，创建了一个高效的数据集，总能提前一个批次。换句话说，当训练算法在一个批次上工作时，数据集已经准备好下一个批次了（从硬盘读取数据并做预处理）。这样可以极大提升性能，解释见图 13-3。如果加载和预处理还要是多线程的（通过设置<code>interleave()</code>和<code>map()</code>的<code>num_parallel_calls</code>），可以利用多 CPU，准备批次数据可以比在 GPU 上训练还快：这样 GPU 就可以 100% 利用起来了（排除数据从 CPU 传输到 GPU 的时间），训练可以快很多。</p>
+<p><img src="img/c3d15058321675d6e485d74efbdfb90f.png" alt=""></img></p>
+<p>图 13-3 通过预提取，让 CPU 和 GPU 并行工作：GPU 在一个批次上工作时，CPU 准备下一个批次</p>
+<blockquote>
+<p>提示：如果想买一块 GPU 显卡的话，它的处理能力和显存都是非常重要的。另一个同样重要的，是显存带宽，即每秒可以进入或流出内存的 GB 数。</p>
+</blockquote>
+<p>如果数据集不大，内存放得下，可以使用数据集的<code>cache()</code>方法将数据集存入内存。通常这步是在加载和预处理数据之后，在打散、重复、分批次之前。这样做的话，每个实例只需做一次读取和处理，下一个批次仍能提前准备。</p>
+<p>你现在知道如何搭建高效输入管道，从多个文件加载和预处理数据了。我们讨论了最常用的数据集方法，但还有一些你可能感兴趣：<code>concatenate()</code>、<code>zip()</code>、<code>window()</code>、<code>reduce()</code>、<code>shard()</code>、<code>flat_map()</code>、和<code>padded_batch()</code>。还有两个类方法：<code>from_generator()</code>和<code>from_tensors()</code>，它们能从 Python 生成器或张量列表创建数据集。更多细节请查看 API 文档。<code>tf.data.experimental</code>中还有试验性功能，其中许多功能可能会添加到未来版本中。</p>
+<h3 id="tfkeras使用数据集"><code>tf.keras</code>使用数据集</h3>
+<p>现在可以使用<code>csv_reader_dataset()</code>函数为训练集创建数据集了。注意，不需要将数据重复，<code>tf.keras</code>会做重复。还为验证集和测试集创建了数据集：</p>
+<pre><code class="lang-py">train_set = csv_reader_dataset(train_filepaths)
+valid_set = csv_reader_dataset(valid_filepaths)
+test_set = csv_reader_dataset(test_filepaths)
+</code></pre>
+<p>现在就可以利用这些数据集来搭建和训练 Keras 模型了。我们要做的就是将训练和验证集传递给<code>fit()</code>方法，而不是<code>X_train</code>、<code>y_train</code>、<code>X_valid</code>、<code>y_valid</code>：</p>
+<pre><code class="lang-py">model = keras.models.Sequential([...])
+model.<span class="hljs-built_in">compile</span>([...])
+model.fit(train_set, epochs=<span class="hljs-number">10</span>, validation_data=valid_set)
+</code></pre>
+<p>相似的，可以将数据集传递给<code>evaluate()</code>和<code>predict()</code>方法：</p>
+<pre><code class="lang-py">model.evaluate(test_set)
+new_set = test_set.take(<span class="hljs-number">3</span>).<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> X, y: X) <span class="hljs-comment"># pretend we have 3 new instances</span>
+model.predict(new_set) <span class="hljs-comment"># a dataset containing new instances</span>
+</code></pre>
+<p>跟其它集合不同，<code>new_set</code>通常不包含标签（如果包含标签，也会被 Keras 忽略）。注意，在所有这些情况下，还可以使用 NumPy 数组（但仍需要加载和预处理）。</p>
+<p>如果你想创建自定义训练循环（就像 12 章那样），你可以在训练集上迭代：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">for</span> X_batch, y_batch <span class="hljs-keyword">in</span> train_set:
+    [...] <span class="hljs-comment"># perform one Gradient Descent step</span>
+</code></pre>
+<p>事实上，还可以创建一个 TF 函数（见第 12 章）来完成整个训练循环：</p>
+<pre><code class="lang-py"><span class="hljs-meta">@tf.function</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">train</span>(<span class="hljs-params">model, optimizer, loss_fn, n_epochs, [...]</span>):
+    train_set = csv_reader_dataset(train_filepaths, repeat=n_epochs, [...])
+<span class="hljs-keyword">for</span> X_batch, y_batch <span class="hljs-keyword">in</span> train_set:
+        <span class="hljs-keyword">with</span> tf.GradientTape() <span class="hljs-keyword">as</span> tape:
+            y_pred = model(X_batch)
+            main_loss = tf.reduce_mean(loss_fn(y_batch, y_pred))
+            loss = tf.add_n([main_loss] + model.losses)
+        grads = tape.gradient(loss, model.trainable_variables)
+        optimizer.apply_gradients(<span class="hljs-built_in">zip</span>(grads, model.trainable_variables))
+</code></pre>
+<p>祝贺，你现在知道如何使用 Data API 创建强大的输入管道了！但是，目前为止我们使用的 CSV 文件，虽然常见又简单方便，但不够高效，不支持大或复杂的数据结构（比如图片或音频）。这就是 TFRecord 要解决的。</p>
+<blockquote>
+<p>提示：如果你对 csv 文件感到满意（或其它任意格式），就不必使用 TFRecord。就像老话说的，只要没坏就别修！TFRecord 是为解决训练过程中加载和解析数据时碰到的瓶颈。</p>
+</blockquote>
+<h2 id="tfrecord-格式">TFRecord 格式</h2>
+<p>TFRecord 格式是 TensorFlow 偏爱的存储大量数据并高效读取的数据。它是非常简单的二进制格式，只包含不同大小的二进制记录的数据（每个记录包括一个长度、一个 CRC 校验和，校验和用于检查长度是否正确，真是的数据，和一个数据的 CRC 校验和，用于检查数据是否正确）。可以使用<code>tf.io.TFRecordWriter</code>类轻松创建 TFRecord 文件：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">with</span> tf.io.TFRecordWriter(<span class="hljs-string">"my_data.tfrecord"</span>) <span class="hljs-keyword">as</span> f:
+    f.write(<span class="hljs-string">b"This is the first record"</span>)
+    f.write(<span class="hljs-string">b"And this is the second record"</span>)
+</code></pre>
+<p>然后可以使用<code>tf.data.TFRecordDataset</code>来读取一个或多个 TFRecord 文件：</p>
+<pre><code class="lang-py">filepaths = [<span class="hljs-string">"my_data.tfrecord"</span>]
+dataset = tf.data.TFRecordDataset(filepaths)
+<span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> dataset:
+    <span class="hljs-built_in">print</span>(item)
+</code></pre>
+<p>输出是：</p>
+<pre><code class="lang-py">tf.Tensor(<span class="hljs-string">b'This is the first record'</span>, shape=(), dtype=string)
+tf.Tensor(<span class="hljs-string">b'And this is the second record'</span>, shape=(), dtype=string)
+</code></pre>
+<blockquote>
+<p>提示：默认情况下，<code>TFRecordDataset</code>会逐一读取数据，但通过设定<code>num_parallel_reads</code>可以并行读取并交叉数据。另外，你可以使用<code>list_files()</code>和<code>interleave()</code>获得同样的结果。</p>
+</blockquote>
+<h3 id="压缩-tfrecord-文件">压缩 TFRecord 文件</h3>
+<p>有的时候压缩 TFRecord 文件很有必要，特别是当需要网络传输的时候。你可以通过设定<code>options</code>参数，创建压缩的 TFRecord 文件：</p>
+<pre><code class="lang-py">options = tf.io.TFRecordOptions(compression_type=<span class="hljs-string">"GZIP"</span>)
+<span class="hljs-keyword">with</span> tf.io.TFRecordWriter(<span class="hljs-string">"my_compressed.tfrecord"</span>, options) <span class="hljs-keyword">as</span> f:
+  [...]
+</code></pre>
+<p>当读取压缩 TFRecord 文件时，需要指定压缩类型：</p>
+<pre><code class="lang-py">dataset = tf.data.TFRecordDataset([<span class="hljs-string">"my_compressed.tfrecord"</span>],
+                                  compression_type=<span class="hljs-string">"GZIP"</span>)
+</code></pre>
+<h3 id="简要介绍协议缓存">简要介绍协议缓存</h3>
+<p>即便每条记录可以使用任何二进制格式，TFRecord 文件通常包括序列化的协议缓存（也称为 protobuf）。这是一种可移植、可扩展的高效二进制格式，是谷歌在 2001 年开发，并在 2008 年开源的；协议缓存现在使用广泛，特别是在 gRPC，谷歌的远程调用系统中。定义语言如下：</p>
+<pre><code class="lang-py">syntax = <span class="hljs-string">"proto3"</span>;
+message Person {
+  string name = <span class="hljs-number">1</span>;
+  int32 <span class="hljs-built_in">id</span> = <span class="hljs-number">2</span>;
+  repeated string email = <span class="hljs-number">3</span>;
+}
+</code></pre>
+<p>定义写道，使用的是协议缓存的版本 3，指定每个<code>Person</code>对象可以有一个<code>name</code>，类型是字符串，类型是<code>int32</code>的<code>id</code>，0 个或多个<code>email</code>字段，每个都是字符串。数字 1、2、3 是字段标识符：用于每条数据的二进制表示。当你在<code>.proto</code>文件中有了一个定义，就可以编译了。这就需要<code>protoc</code>，协议缓存编译器，来生成 Python（或其它语言）的访问类。注意，要使用的缓存协议的定义已经编译好了，它们的 Python 类是 TensorFlow 的一部分，所以就不必使用<code>protoc</code>了。你需要知道的知识如何使用 Python 的缓存协议访问类。为了讲解，看一个简单的例子，使用访问类来生成<code>Person</code>缓存协议：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> person_pb2 <span class="hljs-keyword">import</span> Person  <span class="hljs-comment"># 引入生成的访问类</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person = Person(name=<span class="hljs-string">"Al"</span>, <span class="hljs-built_in">id</span>=<span class="hljs-number">123</span>, email=[<span class="hljs-string">"a@b.com"</span>])  <span class="hljs-comment"># 创建一个 Person</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(person)  <span class="hljs-comment"># 展示 Person</span>
+name: <span class="hljs-string">"Al"</span>
+<span class="hljs-built_in">id</span>: <span class="hljs-number">123</span>
+email: <span class="hljs-string">"a@b.com"</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person.name  <span class="hljs-comment"># 读取一个字段</span>
+<span class="hljs-string">"Al"</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person.name = <span class="hljs-string">"Alice"</span>  <span class="hljs-comment"># 修改一个字段</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person.email[<span class="hljs-number">0</span>]  <span class="hljs-comment"># 重复的字段可以像数组一样访问</span>
+<span class="hljs-string">"a@b.com"</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person.email.append(<span class="hljs-string">"c@d.com"</span>)  <span class="hljs-comment"># 添加 email 地址</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>s = person.SerializeToString()  <span class="hljs-comment"># 将对象序列化为字节串</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>s
+<span class="hljs-string">b'\n\x05Alice\x10{\x1a\x07a@b.com\x1a\x07c@d.com'</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person2 = Person()  <span class="hljs-comment"># 创建一个新 Person</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person2.ParseFromString(s)  <span class="hljs-comment">#解析字节串（字节长度 27）</span>
+<span class="hljs-number">27</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>person == person2  <span class="hljs-comment"># 现在相等</span>
+<span class="hljs-literal">True</span>
+</code></pre>
+<p>简而言之，我们引入了<code>protoc</code>生成的类<code>Person</code>，创建了一个实例，展示、读取、并写入新字段，然后使用<code>SerializeToString()</code>将其序列化。序列化的数据就可以保存或通过网络传输了。当读取或接收二进制数据时，可以使用<code>ParseFromString()</code>方法来解析，就得到了序列化对象的复制。</p>
+<p>可以将序列化的<code>Person</code>对象存储为 TFRecord 文件，然后可以加载和解析。但是<code>SerializeToString()</code>和<code>ParseFromString()</code>不是 TensorFlow 运算（这段代码中的其它代码也不是 TensorFlow 运算），因此 TensorFlow 函数中不能含有这两个方法（除非将其包装进<code>tf.py_function()</code>运算，但会使代码速度变慢，移植性变差）。幸好，TensorFlow 还有提供了解析运算的特殊协议缓存。</p>
+<h3 id="tensorflow-协议缓存">TensorFlow 协议缓存</h3>
+<p>TFRecord 文件主要使用的协议缓存是<code>Example</code>，它表示数据集中的一个实例，包括命名特征的列表，每个特征可以是字节串列表、或浮点列表、或整数列表。下面是一个协议缓存的定义：</p>
+<pre><code class="lang-py">syntax = <span class="hljs-string">"proto3"</span>;
+message BytesList { repeated <span class="hljs-built_in">bytes</span> value = <span class="hljs-number">1</span>; }
+message FloatList { repeated <span class="hljs-built_in">float</span> value = <span class="hljs-number">1</span> [packed = true]; }
+message Int64List { repeated int64 value = <span class="hljs-number">1</span> [packed = true]; }
+message Feature {
+    oneof kind {
+        BytesList bytes_list = <span class="hljs-number">1</span>;
+        FloatList float_list = <span class="hljs-number">2</span>;
+        Int64List int64_list = <span class="hljs-number">3</span>;
+    }
+};
+message Features { <span class="hljs-built_in">map</span>&lt;string, Feature&gt; feature = <span class="hljs-number">1</span>; };
+message Example { Features features = <span class="hljs-number">1</span>; };
+</code></pre>
+<p><code>BytesList</code>、<code>FloatList</code>、<code>Int64List</code>的定义都很清楚。注意，重复的数值字段使用了<code>[packed = true]</code>，目的是高效编码。<code>Feature</code>包含的是<code>BytesList</code>、<code>FloatList</code>、<code>Int64List</code>三者之一。<code>Features</code>（带<code>s</code>）是包含特征名和对应特征值的字典。最后，一个<code>Example</code>值包含一个<code>Features</code>对象。下面是一个如何创建<code>tf.train.Example</code>的例子，表示的是之前同样的人，并存储为 TFRecord 文件：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">from</span> tensorflow.train <span class="hljs-keyword">import</span> BytesList, FloatList, Int64List
+<span class="hljs-keyword">from</span> tensorflow.train <span class="hljs-keyword">import</span> Feature, Features, Example
+
+person_example = Example(
+    features=Features(
+        feature={
+            <span class="hljs-string">"name"</span>: Feature(bytes_list=BytesList(value=[<span class="hljs-string">b"Alice"</span>])),
+            <span class="hljs-string">"id"</span>: Feature(int64_list=Int64List(value=[<span class="hljs-number">123</span>])),
+            <span class="hljs-string">"emails"</span>: Feature(bytes_list=BytesList(value=[<span class="hljs-string">b"a@b.com"</span>,
+                                                          <span class="hljs-string">b"c@d.com"</span>]))
+        }))
+</code></pre>
+<p>这段代码有点冗长和重复，但很清晰（可以很容易将其包装起来）。现在有了<code>Example</code>协议缓存，可以调用<code>SerializeToString()</code>方法将其序列化，然后将结果数据存入 TFRecord 文件：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">with</span> tf.io.TFRecordWriter(<span class="hljs-string">"my_contacts.tfrecord"</span>) <span class="hljs-keyword">as</span> f:
+    f.write(person_example.SerializeToString())
+</code></pre>
+<p>通常需要写不止一个<code>Example</code>！一般来说，你需要写一个转换脚本，读取当前格式（例如 csv），为每个实例创建<code>Example</code>协议缓存，序列化并存储到若干 TFRecord 文件中，最好再打散。这些需要花费不少时间，如有必要再这么做（也许 CSV 文件就足够了）。</p>
+<p>有了序列化好的<code>Example</code>TFRecord 文件之后，就可以加载了。</p>
+<h3 id="加载和解析-example">加载和解析 Example</h3>
+<p>要加载序列化的<code>Example</code>协议缓存，需要再次使用<code>tf.data.TFRecordDataset</code>，使用<code>tf.io.parse_single_example()</code>解析每个<code>Example</code>。这是一个 TensorFlow 运算，所以可以包装进 TF 函数。它至少需要两个参数：一个包含序列化数据的字符串标量张量，和每个特征的描述。描述是一个字典，将每个特征名映射到<code>tf.io.FixedLenFeature</code>描述符，描述符指明特征的形状、类型和默认值，或（当特征列表长度可能变化时，比如<code>"email"特征</code>）映射到<code>tf.io.VarLenFeature</code>描述符，它只指向类型。</p>
+<p>下面的代码定义了描述字典，然后迭代<code>TFRecordDataset</code>，解析序列化的<code>Example</code>协议缓存：</p>
+<pre><code class="lang-py">feature_description = {
+    <span class="hljs-string">"name"</span>: tf.io.FixedLenFeature([], tf.string, default_value=<span class="hljs-string">""</span>),
+    <span class="hljs-string">"id"</span>: tf.io.FixedLenFeature([], tf.int64, default_value=<span class="hljs-number">0</span>),
+    <span class="hljs-string">"emails"</span>: tf.io.VarLenFeature(tf.string),
+}
+
+<span class="hljs-keyword">for</span> serialized_example <span class="hljs-keyword">in</span> tf.data.TFRecordDataset([<span class="hljs-string">"my_contacts.tfrecord"</span>]):
+    parsed_example = tf.io.parse_single_example(serialized_example,
+                                                feature_description)
+</code></pre>
+<p>长度固定的特征会像常规张量那样解析，而长度可变的特征会作为稀疏张量解析。可以使用<code>tf.sparse.to_dense()</code>将稀疏张量转变为紧密张量，但只是简化了值的访问：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>tf.sparse.to_dense(parsed_example[<span class="hljs-string">"emails"</span>], default_value=<span class="hljs-string">b""</span>)
+&lt;tf.Tensor: [...] dtype=string, numpy=array([<span class="hljs-string">b'a@b.com'</span>, <span class="hljs-string">b'c@d.com'</span>], [...])&gt;
+<span class="hljs-meta">&gt;&gt;&gt; </span>parsed_example[<span class="hljs-string">"emails"</span>].values
+&lt;tf.Tensor: [...] dtype=string, numpy=array([<span class="hljs-string">b'a@b.com'</span>, <span class="hljs-string">b'c@d.com'</span>], [...])&gt;
+</code></pre>
+<p><code>BytesList</code>可以包含任意二进制数据，序列化对象也成。例如，可以使用<code>tf.io.encode_jpeg()</code>将图片编码为 JPEG 格式，然后将二进制数据放入<code>BytesList</code>。然后，当代码读取<code>TFRecord</code>时，会从解析<code>Example</code>开始，再调用<code>tf.io.decode_jpeg()</code>解析数据，得到原始图片（或者可以使用<code>tf.io.decode_image()</code>，它能解析任意<code>BMP</code>、<code>GIF</code>、<code>JPEG</code>、<code>PNG</code>格式）。你还可以通过<code>tf.io.serialize_tensor()</code>序列化张量，将结果字节串放入<code>BytesList</code>特征，将任意张量存储在<code>BytesList</code>中。之后，当解析<code>TFRecord</code>时，可以使用<code>tf.io.parse_tensor()</code>解析数据。</p>
+<p>除了使用<code>tf.io.parse_single_example()</code>逐一解析<code>Example</code>，你还可以通过<code>tf.io.parse_example()</code>逐批次解析：</p>
+<pre><code class="lang-py">dataset = tf.data.TFRecordDataset([<span class="hljs-string">"my_contacts.tfrecord"</span>]).batch(<span class="hljs-number">10</span>)
+<span class="hljs-keyword">for</span> serialized_examples <span class="hljs-keyword">in</span> dataset:
+    parsed_examples = tf.io.parse_example(serialized_examples,
+                                          feature_description)
+</code></pre>
+<p>可以看到<code>Example</code>协议缓存对大多数情况就足够了。但是，如果处理的是嵌套列表，就会比较麻烦。比如，假设你想分类文本文档。每个文档可能都是句子的列表，而每个句子又是词的列表。每个文档可能还有评论列表，评论又是词的列表。可能还有上下文数据，比如文档的作者、标题和出版日期。TensorFlow 的<code>SequenceExample</code>协议缓存就是为了处理这种情况的。</p>
+<h3 id="使用sequenceexample协议缓存处理嵌套列表">使用<code>SequenceExample</code>协议缓存处理嵌套列表</h3>
+<p>下面是<code>SequenceExample</code>协议缓存的定义：</p>
+<pre><code class="lang-py">message FeatureList { repeated Feature feature = <span class="hljs-number">1</span>; };
+message FeatureLists { <span class="hljs-built_in">map</span>&lt;string, FeatureList&gt; feature_list = <span class="hljs-number">1</span>; };
+message SequenceExample {
+    Features context = <span class="hljs-number">1</span>;
+    FeatureLists feature_lists = <span class="hljs-number">2</span>;
+};
+</code></pre>
+<p><code>SequenceExample</code>包括一个上下文数据的<code>Features</code>对象，和一个包括一个或多个命名<code>FeatureList</code>对象（比如，一个<code>FeatureList</code>命名为<code>"content"</code>，另一个命名为<code>"comments"</code>）的<code>FeatureLists</code>对象。每个<code>FeatureList</code>包含<code>Feature</code>对象的列表，每个<code>Feature</code>对象可能是字节串、64 位整数或浮点数的列表（这个例子中，每个<code>Feature</code>表示的是一个句子或一条评论，格式或许是词的列表）。创建<code>SequenceExample</code>，将其序列化、解析，和创建、序列化、解析<code>Example</code>很像，但必须要使用<code>tf.io.parse_single_sequence_example()</code>来解析单个的<code>SequenceExample</code>或用<code>tf.io.parse_sequence_example()</code>解析一个批次。两个函数都是返回一个包含上下文特征（字典）和特征列表（也是字典）的元组。如果特征列表包含大小可变的序列（就像前面的例子），可以将其转化为嵌套张量，使用<code>tf.RaggedTensor.from_sparse()</code>：</p>
+<pre><code class="lang-py">parsed_context, parsed_feature_lists = tf.io.parse_single_sequence_example(
+    serialized_sequence_example, context_feature_descriptions,
+    sequence_feature_descriptions)
+parsed_content = tf.RaggedTensor.from_sparse(parsed_feature_lists[<span class="hljs-string">"content"</span>])
+</code></pre>
+<p>现在你就知道如何高效存储、加载和解析数据了，下一步是准备数据。</p>
+<h2 id="预处理输入特征">预处理输入特征</h2>
+<p>为神经网络准备数据需要将所有特征转变为数值特征，做一些归一化工作等等。特别的，如果数据包括类型特征或文本特征，也需要转变为数字。这些工作可以在准备数据文件的时候做，使用 NumPy、Pandas、Scikit-Learn 这样的工作。或者，可以在用 Data API 加载数据时，实时预处理数据（比如，使用数据集的<code>map()</code>方法，就像前面的例子），或者可以给模型加一个预处理层。接下来，来看最后一种方法。</p>
+<p>例如，这个例子是使用<code>Lambda</code>层实现标准化层。对于每个特征，减去其平均值，再除以标准差（再加上一个平滑项，避免 0 除）：</p>
+<pre><code class="lang-py">means = np.mean(X_train, axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)
+stds = np.std(X_train, axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)
+eps = keras.backend.epsilon()
+model = keras.models.Sequential([
+    keras.layers.Lambda(<span class="hljs-keyword">lambda</span> inputs: (inputs - means) / (stds + eps)),
+    [...] <span class="hljs-comment"># 其它层</span>
+])
+</code></pre>
+<p>并不难。但是，你也许更想要一个独立的自定义层（就像 Scikit-Learn 的<code>StandardScaler</code>），而不是像<code>means</code>和<code>stds</code>这样的全局变量：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Standardization</span>(keras.layers.Layer):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">adapt</span>(<span class="hljs-params">self, data_sample</span>):
+        <span class="hljs-variable language_">self</span>.means_ = np.mean(data_sample, axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)
+        <span class="hljs-variable language_">self</span>.stds_ = np.std(data_sample, axis=<span class="hljs-number">0</span>, keepdims=<span class="hljs-literal">True</span>)
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">call</span>(<span class="hljs-params">self, inputs</span>):
+        <span class="hljs-keyword">return</span> (inputs - <span class="hljs-variable language_">self</span>.means_) / (<span class="hljs-variable language_">self</span>.stds_ + keras.backend.epsilon())
+</code></pre>
+<p>使用这个标准化层之前，你需要使用<code>adapt()</code>方法将其适配到数据集样本。这么做就能使用每个特征的平均值和标准差：</p>
+<pre><code class="lang-py">std_layer = Standardization()
+std_layer.adapt(data_sample)
+</code></pre>
+<p>这个样本必须足够大，可以代表数据集，但不必是完整的训练集：通常几百个随机实例就够了（但还是要取决于任务）。然后，就可以像普通层一样使用这个预处理层了：</p>
+<pre><code class="lang-py">model = keras.Sequential()
+model.add(std_layer)
+[...] <span class="hljs-comment"># create the rest of the model</span>
+model.<span class="hljs-built_in">compile</span>([...])
+model.fit([...])
+</code></pre>
+<p>可能以后还会有<code>keras.layers.Normalization</code>层，和这个自定义<code>Standardization</code>层差不多：先创建层，然后对数据集做适配（向<code>adapt()</code>方法传递样本），最后像普通层一样使用。</p>
+<p>接下来看看类型特征。先将其编码为独热向量。</p>
+<h3 id="使用独热向量编码类型特征">使用独热向量编码类型特征</h3>
+<p>考虑下第 2 章中的加州房价数据集的<code>ocean_proximity</code>特征：这是一个类型特征，有五个值：<code>"&lt;1H OCEAN"</code>、<code>"INLAND"</code>、<code>"NEAR OCEAN"</code>、<code>"NEAR BAY"</code>、<code>"ISLAND"</code>。输入给神经网络之前，需要对其进行编码。因为类型不多，可以使用独热编码。先将每个类型映射为索引（0 到 4），使用一张查询表：</p>
+<pre><code class="lang-py">vocab = [<span class="hljs-string">"&lt;1H OCEAN"</span>, <span class="hljs-string">"INLAND"</span>, <span class="hljs-string">"NEAR OCEAN"</span>, <span class="hljs-string">"NEAR BAY"</span>, <span class="hljs-string">"ISLAND"</span>]
+indices = tf.<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(vocab), dtype=tf.int64)
+table_init = tf.lookup.KeyValueTensorInitializer(vocab, indices)
+num_oov_buckets = <span class="hljs-number">2</span>
+table = tf.lookup.StaticVocabularyTable(table_init, num_oov_buckets)
+</code></pre>
+<p>逐行看下代码：</p>
+<ul>
+<li><p>先定义词典：也就是所有类型的列表。</p>
+</li>
+<li><p>然后创建张量，具有索引 0 到 4。</p>
+</li>
+<li><p>接着，创建查找表的初始化器，传入类型列表和对应索引。在这个例子中，因为已经有了数据，所以直接用<code>KeyValueTensorInitializer</code>就成了；但如果类型是在文本中（一行一个类型），就要使用<code>TextFileInitializer</code>。</p>
+</li>
+<li><p>最后两行创建了查找表，传入初始化器并指明未登录词（oov）桶的数量。如果查找的类型不在词典中，查找表会计算这个类型的哈希，使用哈希分配一个未知的类型给未登录词桶。索引序号接着现有序号，所以这个例子中的两个未登录词的索引是 5 和 6。</p>
+</li>
+</ul>
+<p>为什么使用桶呢？如果类型数足够大（例如，邮编、城市、词、产品、或用户），数据集也足够大，或者数据集持续变化，这样的话，获取类型的完整列表就不容易了。一个解决方法是根据数据样本定义（而不是整个训练集），为其它不在样本中的类型加上一些未登录词桶。训练中碰到的未知类型越多，要使用的未登录词桶就要越多。事实上，如果未登录词桶的数量不够，就会发生碰撞：不同的类型会出现在同一个桶中，所以神经网络就无法区分了。</p>
+<p>现在用查找表将小批次的类型特征编码为独热向量：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>categories = tf.constant([<span class="hljs-string">"NEAR BAY"</span>, <span class="hljs-string">"DESERT"</span>, <span class="hljs-string">"INLAND"</span>, <span class="hljs-string">"INLAND"</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span>cat_indices = table.lookup(categories)
+<span class="hljs-meta">&gt;&gt;&gt; </span>cat_indices
+&lt;tf.Tensor: <span class="hljs-built_in">id</span>=<span class="hljs-number">514</span>, shape=(<span class="hljs-number">4</span>,), dtype=int64, numpy=array([<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>])&gt;
+<span class="hljs-meta">&gt;&gt;&gt; </span>cat_one_hot = tf.one_hot(cat_indices, depth=<span class="hljs-built_in">len</span>(vocab) + num_oov_buckets)
+<span class="hljs-meta">&gt;&gt;&gt; </span>cat_one_hot
+&lt;tf.Tensor: <span class="hljs-built_in">id</span>=<span class="hljs-number">524</span>, shape=(<span class="hljs-number">4</span>, <span class="hljs-number">7</span>), dtype=float32, numpy=
+array([[<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>],
+       [<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">0.</span>],
+       [<span class="hljs-number">0.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>],
+       [<span class="hljs-number">0.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>]], dtype=float32)&gt;
+</code></pre>
+<p>可以看到，<code>"NEAR BAY"</code>映射到了索引 3，未知类型<code>"DESERT"</code>映射到了两个未登录词桶之一（索引 5），<code>"INLAND"</code>映射到了索引 1 两次。然后使用<code>tf.one_hot()</code>来做独热编码。注意，需要告诉该函数索引的总数量，索引总数等于词典大小加上未登录词桶的数量。现在你就知道如何用 TensorFlow 将类型特征编码为独热向量了。</p>
+<p>和之前一样，将这些操作写成一个独立的类并不难。<code>adapt()</code>方法接收一个数据样本，提取其中的所有类型。创建一张查找表，将类型和索引映射起来。<code>call()</code>方法会使用查找表将输入类型和索引建立映射。目前，Keras 已经有了一个名为<code>keras.layers.TextVectorization</code>的层，它的功能就是上面这样：<code>adapt()</code>从样本中提取词表，<code>call()</code>将每个类型映射到词表的索引。如果要将索引变为独热向量的话，可以将这个层添加到模型开始的地方，后面根生一个可以用<code>tf.one_hot()</code>的<code>Lambda</code>层。</p>
+<p>这可能不是最佳解决方法。每个独热向量的大小是词表长度加上未登录词桶的大小。当类型不多时，这么做可以，但如果词表很大，最好使用“嵌入“来做。</p>
+<blockquote>
+<p>提示：一个重要的原则，如果类型数小于 10，可以使用独热编码。如果类型超过 50 个（使用哈希桶时通常如此），最好使用嵌入。类型数在 10 和 50 之间时，最好对两种方法做个试验，看哪个更合适。</p>
+</blockquote>
+<h3 id="使用嵌入编码类型特征">使用嵌入编码类型特征</h3>
+<p>嵌入是一个可训练的表示类型的紧密向量。默认时，嵌入是随机初始化的，<code>"NEAR BAY"</code>可能初始化为<code>[0.131, 0.890]</code>，<code>"NEAR OCEAN"</code>可能初始化为<code>[0.631, 0.791]</code>。</p>
+<p>这个例子中，使用的是 2D 嵌入，维度是一个可调节的超参数。因为嵌入是可以训练的，它能在训练中提高性能；当嵌入表示相似的类时，梯度下降会使相似的嵌入靠的更近，而<code>"INLAND"</code>会偏的更远（见图 13-4）。事实上，表征的越好，越利于神经网络做出准确的预测，而训练会让嵌入更好的表征类型，这被称为表征学习（第 17 章会介绍其它类型的表征学习）。</p>
+<p><img src="img/fe4033ba5308d2443fab436092a33e41.png" alt=""></img></p>
+<p>图 13-4 嵌入的表征会在训练中提高</p>
+<blockquote>
+<p>词嵌入</p>
+<p>嵌入不仅可以实现当前任务的表征，同样的嵌入也可以用于其它的任务。最常见的例子是词嵌入（即，单个词的嵌入）：对于自然语言处理任务，最好使用预训练的词嵌入，而不是使用自己训练的。</p>
+<p>使用向量表征词可以追溯到 1960 年代，许多复杂的技术用于生成向量，包括使用神经网络。进步发生在 2013 年，Tomáš Mikolov 和谷歌其它的研究院发表了一篇论文<a href="https://links.jianshu.com/go?to=https%3A%2F%2Farxiv.org%2Fabs%2F1310.4546" target="_blank">《Distributed Representations of Words and Phrases and their Compositionality》</a>，介绍了一种用神经网络学习词嵌入的技术，效果远超以前的技术。可以实现在大文本语料上学习嵌入：用神经网络预测给定词附近的词，得到了非常好的词嵌入。例如，同义词有非常相近的词嵌入，语义相近的词，比如法国、西班牙和意大利靠的也很近。</p>
+<p>不止是相近：词嵌入在嵌入空间的轴上的分布也是有意义的。下面是一个著名的例子：如果计算<code>King – Man + Woman</code>，结果与<code>Queen</code>非常相近（见图 13-5）。换句话，词嵌入编码了性别。相似的，可以计算<code>Madrid – Spain + France</code>，结果和<code>Paris</code>很近。</p>
+<p><img src="img/ea880ddede4144bbb1306b3eb213c234.png" alt=""></img></p>
+<p>图 13-5 相似词的词嵌入也相近，一些轴编码了概念</p>
+<p>但是，词嵌入有时偏差很大。例如，尽管词嵌入学习到了男人是国王，女人是王后，词嵌入还学到了男人是医生、女人是护士。这是非常大的性别偏差。</p>
+</blockquote>
+<p>来看下如何手动实现嵌入。首先，需要创建一个包含每个类型嵌入（随机初始化）的嵌入矩阵。每个类型就有一行，每个未登录词桶就有一行，每个嵌入维度就有一列：</p>
+<pre><code class="lang-py">embedding_dim = <span class="hljs-number">2</span>
+embed_init = tf.random.uniform([<span class="hljs-built_in">len</span>(vocab) + num_oov_buckets, embedding_dim])
+embedding_matrix = tf.Variable(embed_init)
+</code></pre>
+<p>这个例子用的是 2D 嵌入，通常的嵌入是 10 到 300 维，取决于任务和词表大小（需要调节词表大小超参数）。</p>
+<p>嵌入矩阵是一个随机的<code>6 × 2</code>矩阵，存入一个变量（因此可以在训练中被梯度下降调节）：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>embedding_matrix
+&lt;tf.Variable <span class="hljs-string">'Variable:0'</span> shape=(<span class="hljs-number">6</span>, <span class="hljs-number">2</span>) dtype=float32, numpy=
+array([[<span class="hljs-number">0.6645621</span> , <span class="hljs-number">0.44100678</span>],
+       [<span class="hljs-number">0.3528825</span> , <span class="hljs-number">0.46448255</span>],
+       [<span class="hljs-number">0.03366041</span>, <span class="hljs-number">0.68467236</span>],
+       [<span class="hljs-number">0.74011743</span>, <span class="hljs-number">0.8724445</span> ],
+       [<span class="hljs-number">0.22632635</span>, <span class="hljs-number">0.22319686</span>],
+       [<span class="hljs-number">0.3103881</span> , <span class="hljs-number">0.7223358</span> ]], dtype=float32)&gt;
+</code></pre>
+<p>使用嵌入编码之前的类型特征：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>categories = tf.constant([<span class="hljs-string">"NEAR BAY"</span>, <span class="hljs-string">"DESERT"</span>, <span class="hljs-string">"INLAND"</span>, <span class="hljs-string">"INLAND"</span>])
+<span class="hljs-meta">&gt;&gt;&gt; </span>cat_indices = table.lookup(categories)
+<span class="hljs-meta">&gt;&gt;&gt; </span>cat_indices
+&lt;tf.Tensor: <span class="hljs-built_in">id</span>=<span class="hljs-number">741</span>, shape=(<span class="hljs-number">4</span>,), dtype=int64, numpy=array([<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>])&gt;
+<span class="hljs-meta">&gt;&gt;&gt; </span>tf.nn.embedding_lookup(embedding_matrix, cat_indices)
+&lt;tf.Tensor: <span class="hljs-built_in">id</span>=<span class="hljs-number">864</span>, shape=(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>), dtype=float32, numpy=
+array([[<span class="hljs-number">0.74011743</span>, <span class="hljs-number">0.8724445</span> ],
+       [<span class="hljs-number">0.3103881</span> , <span class="hljs-number">0.7223358</span> ],
+       [<span class="hljs-number">0.3528825</span> , <span class="hljs-number">0.46448255</span>],
+       [<span class="hljs-number">0.3528825</span> , <span class="hljs-number">0.46448255</span>]], dtype=float32)&gt;
+</code></pre>
+<p><code>tf.nn.embedding_lookup()</code>函数根据给定的索引在嵌入矩阵中查找行。例如，查找表说<code>"INLAND"</code>类型位于索引 1，<code>tf.nn.embedding_lookup()</code>就返回嵌入矩阵的行 1：<code>[0.3528825, 0.46448255]</code>。</p>
+<p>Keras 提供了<code>keras.layers.Embedding</code>层来处理嵌入矩阵（默认可训练）；当这个层初始化时，会随机初始化嵌入矩阵，当被调用时，就返回索引所在的嵌入矩阵的那行：</p>
+<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>embedding = keras.layers.Embedding(input_dim=<span class="hljs-built_in">len</span>(vocab) + num_oov_buckets,
+<span class="hljs-meta">... </span>                                   output_dim=embedding_dim)
+...
+<span class="hljs-meta">&gt;&gt;&gt; </span>embedding(cat_indices)
+&lt;tf.Tensor: <span class="hljs-built_in">id</span>=<span class="hljs-number">814</span>, shape=(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>), dtype=float32, numpy=
+array([[ <span class="hljs-number">0.02401174</span>,  <span class="hljs-number">0.03724445</span>],
+       [-<span class="hljs-number">0.01896119</span>,  <span class="hljs-number">0.02223358</span>],
+       [-<span class="hljs-number">0.01471175</span>, -<span class="hljs-number">0.00355174</span>],
+       [-<span class="hljs-number">0.01471175</span>, -<span class="hljs-number">0.00355174</span>]], dtype=float32)&gt;
+</code></pre>
+<p>将这些内容放到一起，创建一个 Keras 模型，可以处理类型特征（和数值特征），学习每个类型（和未登录词）的嵌入：</p>
+<pre><code class="lang-py">regular_inputs = keras.layers.Input(shape=[<span class="hljs-number">8</span>])
+categories = keras.layers.Input(shape=[], dtype=tf.string)
+cat_indices = keras.layers.Lambda(<span class="hljs-keyword">lambda</span> cats: table.lookup(cats))(categories)
+cat_embed = keras.layers.Embedding(input_dim=<span class="hljs-number">6</span>, output_dim=<span class="hljs-number">2</span>)(cat_indices)
+encoded_inputs = keras.layers.concatenate([regular_inputs, cat_embed])
+outputs = keras.layers.Dense(<span class="hljs-number">1</span>)(encoded_inputs)
+model = keras.models.Model(inputs=[regular_inputs, categories],
+                           outputs=[outputs])
+</code></pre>
+<p>这个模型有两个输入：一个常规输入，每个实例包括 8 个数值特征，机上一个类型特征。使用<code>Lambda</code>层查找每个类型的索引，然后用索引查找嵌入。接着，将嵌入和常规输入连起来，作为编码输入进神经网络。此时可以加入任意种类的神经网络，但只是添加了一个紧密输出层。</p>
+<p>当<code>keras.layers.TextVectorization</code>准备好之后，可以调用它的<code>adapt()</code>方法，从数据样本提取词表（会自动创建查找表）。然后加入到模型中，就可以执行索引查找了（替换前面代码的<code>Lambda</code>层）。</p>
+<blockquote>
+<p>笔记：独热编码加紧密层（没有激活函数和偏差项），等价于嵌入层。但是，嵌入层用的计算更少（嵌入矩阵越大，性能差距越明显）。紧密层的权重矩阵扮演的是嵌入矩阵的角色。例如，大小为 20 的独热向量和 10 个单元的紧密层加起来，等价于<code>input_dim=20</code>、<code>output_dim=10</code>的嵌入层。作为结果，嵌入的维度超过后面的层的神经元数是浪费的。</p>
+</blockquote>
+<p>再进一步看看 Keras 的预处理层。</p>
+<h3 id="keras-预处理层">Keras 预处理层</h3>
+<p>Keras 团队打算提供一套标准的 Keras 预处理层，现在已经可用了，<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fkeras-team%2Fgovernance%2Fblob%2Fmaster%2Frfcs%2F20190502-preprocessing-layers.md" target="_blank">链接</a>。新的 API 可能会覆盖旧的 Feature Columns API。</p>
+<p>我们已经讨论了其中的两个：<code>keras.layers.Normalization</code>用来做特征标准化，<code>TextVectorization</code>层用于将文本中的词编码为词典的索引。对于这两个层，都是用数据样本调用它的<code>adapt()</code>方法，然后如常使用。其它的预处理层也是这么使用的。</p>
+<p>API 中还提供了<code>keras.layers.Discretization</code>层，它能将连续数据切成不同的组，将每个组斌吗为独热向量。例如，可以用它将价格分成是三类，低、中、高，编码为<code>[1, 0, 0]</code>、<code>[0, 1, 0]</code>、<code>[0, 0, 1]</code>。当然，这么做会损失很多信息，但有时，相对于连续数据，这么做可以发现不那么明显的规律。</p>
+<blockquote>
+<p>警告：<code>Discretization</code>层是不可微的，只能在模型一开始使用。事实上，模型的预处理层会在训练时冻结，因此预处理层的参数不会被梯度下降影响，所以可以是不可微的。这还意味着，如果想让预处理层可训练的话，不能在自定义预处理层上直接使用嵌入层，而是应该像前民的例子那样分开来做。</p>
+</blockquote>
+<p>还可以用类<code>PreprocessingStage</code>将多个预处理层链接起来。例如，下面的代码创建了一个预处理管道，先将输入归一化，然后离散（有点类似 Scikit-Learn 的管道）。当将这个管道应用到数据样本时，可以作为常规层使用（还得是在模型的前部，因为包含不可微分的预处理层）：</p>
+<pre><code class="lang-py">normalization = keras.layers.Normalization()
+discretization = keras.layers.Discretization([...])
+pipeline = keras.layers.PreprocessingStage([normalization, discretization])
+pipeline.adapt(data_sample)
+</code></pre>
+<p><code>TextVectorization</code>层也有一个选项用于输出词频向量，而不是词索引。例如，如果词典包括三个词，比如<code>["and", "basketball", "more"]</code>，则<code>"more and more"</code>会映射为<code>[1, 0, 2]</code>：<code>"and"</code>出现了一次，<code>"basketball"</code>没有出现，<code>"more"</code>出现了两次。这种词表征称为词袋，因为它完全失去了词的顺序。常见词，比如<code>"and"</code>，会在文本中有更高的值，尽管没什么实际意义。因此，词频向量中应该降低常见词的影响。一个常见的方法是将词频除以出现该词的文档数的对数。这种方法称为词频-逆文档频率（TF-IDF）。例如，假设<code>"and"</code>、<code>"basketball"</code>、<code>"more"</code>分别出现在了 200、10、100 个文档中：最终的向量应该是<code>[1/log(200), 0/log(10), 2/log(100)]</code>，大约是<code>[0.19, 0., 0.43]</code>。<code>TextVectorization</code>层会有 TF-IDF 的选项。</p>
+<blockquote>
+<p>笔记：如果标准预处理层不能满足你的任务，你还可以选择创建自定义预处理层，就像前面的<code>Standardization</code>。创建一个<code>keras.layers.PreprocessingLayer</code>子类，<code>adapt()</code>方法用于接收一个<code>data_sample</code>参数，或者再有一个<code>reset_state</code>参数：如果是<code>True</code>，则<code>adapt()</code>方法在计算新状态之前重置现有的状态；如果是<code>False</code>，会更新现有的状态。</p>
+</blockquote>
+<p>可以看到，这些 Keras 预处理层可以使预处理更容易！现在，无论是自定义预处理层，还是使用 Keras 的，预处理都可以实时进行了。但在训练中，最好再提前进行预处理。下面来看看为什么，以及怎么做。</p>
+<h2 id="tf-transform">TF Transform</h2>
+<p>预处理非常消耗算力，训练前做预处理相对于实时处理，可以极大的提高速度：数据在训练前，每个实例就处理一次，而不是在训练中每个实例在每个周期就处理一次。前面提到过，如果数据集小到可以存入内存，可以使用<code>cache()</code>方法。但如果太大，可以使用 Apache Beam 或 Spark。它们可以在大数据上做高效的数据预处理，还可以分布进行，使用它们就能在训练前处理所有训练数据了。</p>
+<p>虽然训练加速了，但带来一个问题：一旦模型训练好了，假如想部署到移动 app 上，还是需要写一些预处理数据的代码。假如想部署到 TensorFlow.js，还是需要预处理代码。这是一个维护难题：无论何时想改变预处理逻辑，都需要更新 Apache Beam 的代码、移动端代码、JavaScript 代码。不仅耗时，也容易出错：不同端的可能有细微的差别。训练/实际产品表现之间的偏差会导致 bug 或使效果大打折扣。</p>
+<p>一种解决办法是在部署到 app 或浏览器之前，给训练好的模型加上额外的预处理层，来做实时的预处理。这样好多了，只有两套代码 Apache Beam 或 Spark 代码，和预处理层代码。</p>
+<p>如果只需定义一次预处理操作呢？这就是 TF Transform 要做的。TF Transform 是 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Ftensorflow.org%2Ftfx" target="_blank">TensorFlow Extended (TFX)</a> 的一部分，这是一个端到端的 TensorFlow 模型生产化平台。首先，需要安装（TensorFlow 没有捆绑）。然后通过 TF Transform 函数来做缩放、分桶等操作，一次性定义预处理函数。你还可以使用任意需要的 TensorFlow 运算。如果只有两个特征，预处理函数可能如下：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow_transform <span class="hljs-keyword">as</span> tft
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">inputs</span>):  <span class="hljs-comment"># inputs = 输入特征批次</span>
+    median_age = inputs[<span class="hljs-string">"housing_median_age"</span>]
+    ocean_proximity = inputs[<span class="hljs-string">"ocean_proximity"</span>]
+    standardized_age = tft.scale_to_z_score(median_age)
+    ocean_proximity_id = tft.compute_and_apply_vocabulary(ocean_proximity)
+    <span class="hljs-keyword">return</span> {
+        <span class="hljs-string">"standardized_median_age"</span>: standardized_age,
+        <span class="hljs-string">"ocean_proximity_id"</span>: ocean_proximity_id
+    }
+</code></pre>
+<p>然后，TF Transform 可以使用 Apache Beam（可以使用其<code>AnalyzeAndTransformDataset</code>类）在整个训练集上应用这个<code>preprocess()</code>函数。在使用过程中，还会计算整个训练集上的必要统计数据：这个例子中，是<code>housing_median_age</code>和<code>the ocean_proximity</code>的平均值和标准差。计算这些数据的组件称为分析器。</p>
+<p>更重要的，TF Transform 还会生成一个等价的 TensorFlow 函数，可以放入部署的模型中。这个 TF 函数包括一些常量，对应于 Apache Beam 的统计值（平均值、标准差和词典）。</p>
+<p>有了 Data API、TFRecord，Keras 预处理层和 TF Transform，可以为训练搭建高度伸缩的输入管道，可以是生产又快，迁移性又好。</p>
+<p>但是，如果只想使用标准数据集呢？只要使用 TFDS 就成了。</p>
+<h2 id="tensorflow-datasets（tfds）项目">TensorFlow Datasets（TFDS）项目</h2>
+<p>从 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Ftensorflow.org%2Fdatasets" target="_blank">TensorFlow Datasets</a> 项目，可以非常方便的下载一些常见的数据集，从小数据集，比如 MNIST 或 Fashion MNIST，到大数据集，比如 ImageNet（需要大硬盘）。包括了图片数据集、文本数据集（包括翻译数据集）、和音频视频数据集。可以访问<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.tensorflow.org%2Fdatasets%2Fdatasets" target="_blank">这里</a>，查看完整列表，每个数据集都有介绍。</p>
+<p>TensorFlow 没有捆绑 TFDS，所以需要使用 PIP 安装库<code>tensorflow-datasets</code>。然后调用函数<code>tfds.load()</code>，就能下载数据集了（除非之前下载过），返回的数据是数据集的字典（通常是一个是训练集，一个是测试集）。例如，下载 MNIST：</p>
+<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow_datasets <span class="hljs-keyword">as</span> tfds
+
+dataset = tfds.load(name=<span class="hljs-string">"mnist"</span>)
+mnist_train, mnist_test = dataset[<span class="hljs-string">"train"</span>], dataset[<span class="hljs-string">"test"</span>]
+</code></pre>
+<p>然后可以对其应用任意转换（打散、批次、预提取），然后就可以训练模型了。下面是一个简单的例子：</p>
+<pre><code class="lang-py">mnist_train = mnist_train.shuffle(<span class="hljs-number">10000</span>).batch(<span class="hljs-number">32</span>).prefetch(<span class="hljs-number">1</span>)
+<span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> mnist_train:
+    images = item[<span class="hljs-string">"image"</span>]
+    labels = item[<span class="hljs-string">"label"</span>]
+    [...]
+</code></pre>
+<blockquote>
+<p>提示：<code>load()</code>函数打散了每个下载的数据分片（只是对于训练集）。但还不够，最好再自己做打散。</p>
+</blockquote>
+<p>注意，数据集中的每一项都是一个字典，包含特征和标签。但 Keras 期望每项都是一个包含两个元素（特征和标签）的元组。可以使用<code>map()</code>对数据集做转换，如下：</p>
+<pre><code class="lang-py">mnist_train = mnist_train.shuffle(<span class="hljs-number">10000</span>).batch(<span class="hljs-number">32</span>)
+mnist_train = mnist_train.<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> items: (items[<span class="hljs-string">"image"</span>], items[<span class="hljs-string">"label"</span>]))
+mnist_train = mnist_train.prefetch(<span class="hljs-number">1</span>)
+</code></pre>
+<p>更简单的方式是让<code>load()</code>函数来做这个工作，只要设定<code>as_supervised=True</code>（显然这只适用于有标签的数据集）。你还可以将数据集直接传给<code>tf.keras</code>模型：</p>
+<pre><code class="lang-py">dataset = tfds.load(name=<span class="hljs-string">"mnist"</span>, batch_size=<span class="hljs-number">32</span>, as_supervised=<span class="hljs-literal">True</span>)
+mnist_train = dataset[<span class="hljs-string">"train"</span>].prefetch(<span class="hljs-number">1</span>)
+model = keras.models.Sequential([...])
+model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"sparse_categorical_crossentropy"</span>, optimizer=<span class="hljs-string">"sgd"</span>)
+model.fit(mnist_train, epochs=<span class="hljs-number">5</span>)
+</code></pre>
+<p>这一章很技术，你可能觉得没有神经网络的抽象美，但事实是深度学习经常要涉及大数据集，知道如果高效加载、解析和预处理，是一个非常重要的技能。下一章会学习卷积神经网络，它是一种用于图像处理和其它应用的、非常成功的神经网络。</p>
+<h2 id="练习">练习</h2>
+<ol>
+<li><p>为什么要使用 Data API ？</p>
+</li>
+<li><p>将大数据分成多个文件有什么好处？</p>
+</li>
+<li><p>训练中，如何断定输入管道是瓶颈？如何处理瓶颈？</p>
+</li>
+<li><p>可以将任何二进制数据存入 TFRecord 文件吗，还是只能存序列化的协议缓存？</p>
+</li>
+<li><p>为什么要将数据转换为示例协议缓存？为什么不使用自己的协议缓存？</p>
+</li>
+<li><p>使用 TFRecord 时，什么时候要压缩？为什么不系统化的做？</p>
+</li>
+<li><p>数据预处理可以在写入数据文件时，或在<code>tf.data</code>管道中，或在预处理层中，或使用 TF Transform。这几种方法各有什么优缺点？</p>
+</li>
+<li><p>说出几种常见的编码类型特征的方法。文本如何编码？</p>
+</li>
+</ol>
+<p>9.加载 Fashion MNIST 数据集；将其分成训练集、验证集和测试集；打散训练集；将每个数据及村委多个 TFRecord 文件。每条记录应该是有两个特征的序列化的示例协议缓存：序列化的图片（使用<code>tf.io.serialize_tensor()</code>序列化每张图片），和标签。然后使用<code>tf.data</code>为每个集合创建一个高效数据集。最后，使用 Keras 模型训练这些数据集，用预处理层标准化每个特征。让输入管道越高效越好，使用 TensorBoard 可视化地分析数据。</p>
+<ol>
+<li>在这道题中，你要下载一个数据集，分割它，创建一个<code>tf.data.Dataset</code>，用于高效加载和预处理，然后搭建一个包含嵌入层的二分类模型：</li>
+</ol>
+<p>a. 下载 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fimdb" target="_blank">Large Movie Review Dataset</a>，它包含 50000 条 IMDB 的影评。数据分为两个目录，<code>train</code>和<code>test</code>，每个包含 12500 条正面评价和 12500 条负面评价。每条评价都存在独立的文本文件中。还有其他文件和文件夹（包括预处理的词袋），但这个练习中用不到。</p>
+<p>b. 将测试集分给成验证集（15000）和测试集（10000）。</p>
+<p>c. 使用<code>tf.data</code>，为每个集合创建高效数据集。</p>
+<p>d. 创建一个二分类模型，使用<code>TextVectorization</code>层来预处理每条影评。如果<code>TextVectorization</code>层用不了（或者你想挑战下），则创建自定义的预处理层：使用<code>tf.strings</code>包中的函数，比如<code>lower()</code>来做小写，<code>regex_replace()</code>来替换带有空格的标点，<code>split()</code>来分割词。用查找表输出词索引，<code>adapt()</code>方法中要准备好。</p>
+<p>e. 加入嵌入层，计算每条评论的平均嵌入，乘以词数的平方根。这个缩放过的平均嵌入可以传入剩余的模型中。</p>
+<p>f. 训练模型，看看准确率能达到多少。尝试优化管道，让训练越快越好。</p>
+<p>g. 使用 TFDS 加载同样的数据集：<code>tfds.load("imdb_reviews")</code>。</p>
+<p>参考答案见附录 A。</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="12.html" class="navigation navigation-prev " aria-label="Previous page: 十二、使用 TensorFlow 自定义模型并训练">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="14.html" class="navigation navigation-next " aria-label="Next page: 十四、使用卷积神经网络实现深度计算机视觉">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"十三、使用 TensorFlow 加载和预处理数据","level":"1.14","depth":1,"next":{"title":"十四、使用卷积神经网络实现深度计算机视觉","level":"1.15","depth":1,"path":"14.md","ref":"./14.md","articles":[]},"previous":{"title":"十二、使用 TensorFlow 自定义模型并训练","level":"1.13","depth":1,"path":"12.md","ref":"./12.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"13.md","mtime":"2024-08-23T21:05:56.812Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
