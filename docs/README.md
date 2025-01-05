@@ -13,7 +13,7 @@
 
 ## 编译
 
-```
+```python
 npm install -g gitbook-cli          # 安装 gitbook
 gitbook fetch 3.2.3                 # 安装 gitbook 子版本
 gitbook install                     # 安装必要的插件
@@ -25,7 +25,7 @@ gitbook <build|pdf|epub|mobi>       # 编译 HTML/PDF/EPUB/MOBI
 
 ### Docker
 
-```
+```python
 docker pull apachecn0/hands-on-ml-2e-zh
 docker run -tid -p <port>:80 apachecn0/hands-on-ml-2e-zh
 # 访问 http://localhost:{port} 查看文档
@@ -33,7 +33,7 @@ docker run -tid -p <port>:80 apachecn0/hands-on-ml-2e-zh
 
 ### PYPI
 
-```
+```python
 pip install hands-on-ml-2e-zh
 hands-on-ml-2e-zh <port>
 # 访问 http://localhost:{port} 查看文档
@@ -41,7 +41,7 @@ hands-on-ml-2e-zh <port>
 
 ### NPM
 
-```
+```python
 npm install -g handson-ml-2e-zh
 handson-ml-2e-zh <port>
 # 访问 http://localhost:{port} 查看文档

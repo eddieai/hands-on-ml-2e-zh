@@ -6,7 +6,7 @@
         <title>十四、使用卷积神经网络实现深度计算机视觉 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -455,7 +455,7 @@
 <h3 id="tensorflow-实现">TensorFlow 实现</h3>
 <p>在 TensorFlow 中，每张输入图片通常都是用形状为<code>[高度，宽度，通道]</code>的 3D 张量表示的。一个小批次则为 4D 张量，形状是<code>[批次大小，高度，宽度，通道]</code>。卷积层的权重是 4D 张量，形状是<code>[f[h], f[w], f[n'], f[n]]</code>。卷积层的偏置项是 1D 张量，形状是<code>[f[n]]</code>。</p>
 <p>看一个简单的例子。下面的代码使用 Scikit-Learn 的<code>load_sample_image()</code>加载了两张图片，一张是中国的寺庙，另一张是花，创建了两个过滤器，应用到了两张图片上，最后展示了一张特征映射：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_sample_image
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_sample_image
 
 <span class="hljs-comment"># 加载样本图片</span>
 china = load_sample_image(<span class="hljs-string">"china.jpg"</span>) / <span class="hljs-number">255</span>
@@ -502,7 +502,7 @@ plt.show()
 <p><img src="img/176addd6633ed6e883b3c6dc1a8d1569.png" alt=""></img></p>
 <p>图 14-7 <code>Padding="same"</code>或<code>"valid"</code>（输入宽度 13，过滤器宽度 6，步长 5）</p>
 <p>这个例子中，我们手动定义了过滤器，但在真正的 CNN 中，一般将过滤器定义为可以训练的变量，好让神经网络学习哪个过滤器的效果最好。使用<code>keras.layers.Conv2D</code>层：</p>
-<pre><code class="lang-py">conv = keras.layers.Conv2D(filters=<span class="hljs-number">32</span>, kernel_size=<span class="hljs-number">3</span>, strides=<span class="hljs-number">1</span>,
+<pre><code class="lang-python">conv = keras.layers.Conv2D(filters=<span class="hljs-number">32</span>, kernel_size=<span class="hljs-number">3</span>, strides=<span class="hljs-number">1</span>,
                            padding=<span class="hljs-string">"same"</span>, activation=<span class="hljs-string">"relu"</span>)
 </code></pre>
 <p>这段代码创建了一个有 32 个过滤器的<code>Conv2D</code>层，每个过滤器的形状是<code>3 × 3</code>，步长为 1（水平垂直都是 1），和<code>"same"</code>填充，输出使用 ReLU 激活函数。可以看到，卷积层的超参数不多：选择过滤器的数量，过滤器的高和宽，步长和填充类型。和以前一样，可以使用交叉验证来找到合适的超参数值，但很耗时间。后面会讨论常见的 CNN 架构，可以告诉你如何挑选超参数的值。</p>
@@ -528,28 +528,28 @@ plt.show()
 <p>但是，最大池化层也有缺点。首先，池化层破坏了信息：即使感受野的核是<code>2 × 2</code>，步长是 2，输出在两个方向上都损失了一半，总共损失了 75% 的信息。对于某些任务，不变性不可取。比如语义分割（将像素按照对象分类）：如果输入图片向右平移了一个像素，输出也应该向右平移一个降速。此时强调的就是等价：输入发生小变化，则输出也要有对应的小变化。</p>
 <h3 id="tensorflow-实现">TensorFlow 实现</h3>
 <p>用 TensorFlow 实现最大池化层很简单。下面的代码实现了最大池化层，核是<code>2 × 2</code>。步长默认等于核的大小，所以步长是 2（水平和垂直步长都是 2）。默认使用<code>"valid"</code>填充：</p>
-<pre><code class="lang-py">max_pool = keras.layers.MaxPool2D(pool_size=<span class="hljs-number">2</span>)
+<pre><code class="lang-python">max_pool = keras.layers.MaxPool2D(pool_size=<span class="hljs-number">2</span>)
 </code></pre>
 <p>要创建平均池化层，则使用<code>AvgPool2D</code>。平均池化层和最大池化层很相似，但计算的是感受野的平均值。平均池化层在过去很流行，但最近人们使用最大池化层更多，因为最大池化层的效果更好。初看很奇怪，因为计算平均值比最大值损失的信息要少。但是从反面看，最大值保留了最强特征，去除了无意义的特征，可以让下一层获得更清楚的信息。另外，最大池化层提供了更强的平移不变性，所需计算也更少。</p>
 <p>池化层还可以沿着深度方向做计算。这可以让 CNN 学习到不同特征的不变性。比如。CNN 可以学习多个过滤器，每个过滤器检测一个相同的图案的不同旋转（比如手写字，见图 14-10），深度池化层可以使输出相同。CNN 还能学习其它的不变性：厚度、明亮度、扭曲、颜色，等等。</p>
 <p><img src="img/b36a6bb4d3a0783b1bc2bdcfe475e592.png" alt=""></img></p>
 <p>图 14-10 深度最大池化层可以让 CNN 学习到多种不变性</p>
 <p>Keras 没有深度方向最大池化层，但 TensorFlow 的低级 API 有：使用<code>tf.nn.max_pool()</code>，指定核的大小、步长（4 元素的元组）：元组的前三个值应该是 1，表明沿批次、高度、宽度的步长是 1；最后一个值，是深度方向的步长 —— 比如 3（深度步长必须可以整除输入深度；如果前一个层有 20 个特征映射，步长 3 就不成）：</p>
-<pre><code class="lang-py">output = tf.nn.max_pool(images,
+<pre><code class="lang-python">output = tf.nn.max_pool(images,
                         ksize=(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>),
                         strides=(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>),
                         padding=<span class="hljs-string">"valid"</span>)
 </code></pre>
 <p>如果想将这个层添加到 Keras 模型中，可以将其包装进<code>Lambda</code>层（或创建一个自定义 Keras 层）：</p>
-<pre><code class="lang-py">depth_pool = keras.layers.Lambda(
+<pre><code class="lang-python">depth_pool = keras.layers.Lambda(
     <span class="hljs-keyword">lambda</span> X: tf.nn.max_pool(X, ksize=(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>), strides=(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>),
                              padding=<span class="hljs-string">"valid"</span>))
 </code></pre>
 <p>最后一中常见的池化层是全局平均池化层。它的原理非常不同：它计算整个特征映射的平均值（就像是平均池化层的核的大小和输入的空间维度一样）。这意味着，全局平均池化层对于每个实例的每个特征映射，只输出一个值。虽然这么做对信息的破坏性很大，却可以用来做输出层，后面会看到例子。创建全局平均池化层的方法如下：</p>
-<pre><code class="lang-py">global_avg_pool = keras.layers.GlobalAvgPool2D()
+<pre><code class="lang-python">global_avg_pool = keras.layers.GlobalAvgPool2D()
 </code></pre>
 <p>它等同于下面的<code>Lambda</code>层：</p>
-<pre><code class="lang-py">global_avg_pool = keras.layers.Lambda(<span class="hljs-keyword">lambda</span> X: tf.reduce_mean(X, axis=[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]))
+<pre><code class="lang-python">global_avg_pool = keras.layers.Lambda(<span class="hljs-keyword">lambda</span> X: tf.reduce_mean(X, axis=[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]))
 </code></pre>
 <p>介绍完 CNN 的组件之后，来看看如何将它们组合起来。</p>
 <h2 id="cnn-架构">CNN 架构</h2>
@@ -560,7 +560,7 @@ plt.show()
 <p>提示：常犯的错误之一，是使用过大的卷积核。例如，要使用一个卷积层的核是<code>5 × 5</code>，再加上两个核为<code>3 × 3</code>的层：这样参数不多，计算也不多，通常效果也更好。第一个卷积层是例外：可以有更大的卷积核（例如<code>5 × 5</code>），步长为 2 或更大：这样可以降低图片的空间维度，也没有损失很多信息。</p>
 </blockquote>
 <p>下面的例子用一个简单的 CNN 来处理 Fashion MNIST 数据集（第 10 章介绍过）：</p>
-<pre><code class="lang-py">model = keras.models.Sequential([
+<pre><code class="lang-python">model = keras.models.Sequential([
     keras.layers.Conv2D(<span class="hljs-number">64</span>, <span class="hljs-number">7</span>, activation=<span class="hljs-string">"relu"</span>, padding=<span class="hljs-string">"same"</span>,
                         input_shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>, <span class="hljs-number">1</span>]),
     keras.layers.MaxPooling2D(<span class="hljs-number">2</span>),
@@ -726,7 +726,7 @@ plt.show()
 <p>和之前一样，全局平均池化层计算每个特征映射的平均激活：例如，如果它的输入包括 256 个特征映射，就会输出 256 个数，表示对每个过滤器的整体响应水平。下一个层是“挤压”步骤：这个层的神经元数远小于 256，通常是小于特征映射数的 16 倍（比如 16 个神经元）—— 因此 256 个数被压缩金小向量中（16 维）。这是特征响应的地位向量表征（即，嵌入）。这一步作为瓶颈，能让 SE 块强行学习特征组合的通用表征（第 17 章会再次接触这个原理）。最后，输出层使用这个嵌入，输出一个重调向量，每个特征映射（比如，256）包含一个数，都位于 0 和 1 之间。然后，特征映射乘以这个重调向量，所以无关特征（其重调分数小）就被弱化了，就剩下相关特征（重调分数接近于 1）了。</p>
 <h2 id="用-karas-实现-resnet-34-cnn">用 Karas 实现 ResNet-34 CNN</h2>
 <p>目前为止介绍的大多数 CNN 架构的实现并不难（但经常需要加载预训练网络）。接下来用 Keras 实现 ResNet-34。首先，创建<code>ResidualUnit</code>层：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ResidualUnit</span>(keras.layers.Layer):
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ResidualUnit</span>(keras.layers.Layer):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, filters, strides=<span class="hljs-number">1</span>, activation=<span class="hljs-string">"relu"</span>, **kwargs</span>):
         <span class="hljs-built_in">super</span>().__init__(**kwargs)
         <span class="hljs-variable language_">self</span>.activation = keras.activations.get(activation)
@@ -756,7 +756,7 @@ plt.show()
 </code></pre>
 <p>可以看到，这段代码和图 14-18 很接近。在构造器中，创建了所有需要的层：主要的层位于图中右侧，跳跃层位于左侧（只有当步长大于 1 时需要）。在<code>call()</code>方法中，我们让输入经过主层和跳跃层，然后将输出相加，再应用激活函数。</p>
 <p>然后，使用<code>Sequential</code>模型搭建 ResNet-34，ResNet-34 就是一连串层的组合（将每个残差单元作为一个单一层）：</p>
-<pre><code class="lang-py">model = keras.models.Sequential()
+<pre><code class="lang-python">model = keras.models.Sequential()
 model.add(keras.layers.Conv2D(<span class="hljs-number">64</span>, <span class="hljs-number">7</span>, strides=<span class="hljs-number">2</span>, input_shape=[<span class="hljs-number">224</span>, <span class="hljs-number">224</span>, <span class="hljs-number">3</span>],
                               padding=<span class="hljs-string">"same"</span>, use_bias=<span class="hljs-literal">False</span>))
 model.add(keras.layers.BatchNormalization())
@@ -775,22 +775,22 @@ model.add(keras.layers.Dense(<span class="hljs-number">10</span>, activation=<sp
 <p>不到 40 行代码就能搭建出 ILSVRC 2015 年冠军模型，既体现出 ResNet 的优美，也展现了 Keras API 的表达力。实现其他 CNN 架构也不困难。但是 Keras 内置了其中一些架构，一起尝试下。</p>
 <h2 id="使用-keras-的预训练模型">使用 Keras 的预训练模型</h2>
 <p>通常来讲，不用手动实现 GoogLeNet 或 ResNet 这样的标准模型，因为<code>keras.applications</code>中已经包含这些预训练模型了，只需一行代码就成。例如，要加载在 ImageNet 上预训练的 ResNet-50 模型，使用下面的代码就行：</p>
-<pre><code class="lang-py">model = keras.applications.resnet50.ResNet50(weights=<span class="hljs-string">"imagenet"</span>)
+<pre><code class="lang-python">model = keras.applications.resnet50.ResNet50(weights=<span class="hljs-string">"imagenet"</span>)
 </code></pre>
 <p>仅此而已！这样就能穿件一个 ResNet-50 模型，并下载在 ImageNet 上预训练的权重。要使用它，首先要保证图片有正确的大小。ResNet-50 模型要用<code>224 × 224</code>像素的图片（其它模型可能是<code>299 × 299</code>），所以使用 TensorFlow 的<code>tf.image.resize()</code>函数来缩放图片：</p>
-<pre><code class="lang-py">images_resized = tf.image.resize(images, [<span class="hljs-number">224</span>, <span class="hljs-number">224</span>])
+<pre><code class="lang-python">images_resized = tf.image.resize(images, [<span class="hljs-number">224</span>, <span class="hljs-number">224</span>])
 </code></pre>
 <blockquote>
 <p>提示：<code>tf.image.resize()</code>不会保留宽高比。如果需要，可以裁剪图片为合适的宽高比之后，再进行缩放。两步可以通过<code>tf.image.crop_and_resize()</code>来实现。</p>
 </blockquote>
 <p>预训练模型的图片要经过特别的预处理。在某些情况下，要求输入是 0 到 1，有时是 -1 到 1，等等。每个模型提供了一个<code>preprocess_input()</code>函数，来对图片做预处理。这些函数假定像素值的范围是 0 到 255，因此需要乘以 255（因为之前将图片缩减到 0 和 1 之间）：</p>
-<pre><code class="lang-py">inputs = keras.applications.resnet50.preprocess_input(images_resized * <span class="hljs-number">255</span>)
+<pre><code class="lang-python">inputs = keras.applications.resnet50.preprocess_input(images_resized * <span class="hljs-number">255</span>)
 </code></pre>
 <p>现在就可以用预训练模型做预测了：</p>
-<pre><code class="lang-py">Y_proba = model.predict(inputs)
+<pre><code class="lang-python">Y_proba = model.predict(inputs)
 </code></pre>
 <p>和通常一样，输出<code>Y_proba</code>是一个矩阵，每行是一张图片，每列是一个类（这个例子中有 1000 类）。如果想展示 top K 预测，要使用<code>decode_predictions()</code>函数，将每个预测出的类的名字和概率包括进来。对于每张图片，返回 top K 预测的数组，每个预测表示为包含类标识符、名字和置信度的数组：</p>
-<pre><code class="lang-py">top_K = keras.applications.resnet50.decode_predictions(Y_proba, top=<span class="hljs-number">3</span>)
+<pre><code class="lang-python">top_K = keras.applications.resnet50.decode_predictions(Y_proba, top=<span class="hljs-number">3</span>)
 <span class="hljs-keyword">for</span> image_index <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(images)):
     <span class="hljs-built_in">print</span>(<span class="hljs-string">"Image #{}"</span>.<span class="hljs-built_in">format</span>(image_index))
     <span class="hljs-keyword">for</span> class_id, name, y_proba <span class="hljs-keyword">in</span> top_K[image_index]:
@@ -798,7 +798,7 @@ model.add(keras.layers.Dense(<span class="hljs-number">10</span>, activation=<sp
     <span class="hljs-built_in">print</span>()
 </code></pre>
 <p>输出如下：</p>
-<pre><code class="lang-py">Image <span class="hljs-comment">#0</span>
+<pre><code class="lang-python">Image <span class="hljs-comment">#0</span>
   n03877845 - palace       <span class="hljs-number">42.87</span>%
   n02825657 - bell_cote    <span class="hljs-number">40.57</span>%
   n03781244 - monastery    <span class="hljs-number">14.56</span>%
@@ -813,7 +813,7 @@ Image <span class="hljs-comment">#1</span>
 <p>如果要使用的图片分类器不是给 ImageNet 图片做分类的呢？这时，还是可以使用预训练模型来做迁移学习。</p>
 <h2 id="使用预训练模型做迁移学习">使用预训练模型做迁移学习</h2>
 <p>如果想创建一个图片分类器，但没有足够的训练数据，使用预训练模型的低层通常是不错的主意，就像第 11 章讨论过的那样。例如，使用预训练的 Xception 模型训练一个分类花的图片的模型。首先，使用 TensorFlow Datasets 加载数据集（见 13 章）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow_datasets <span class="hljs-keyword">as</span> tfds
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> tensorflow_datasets <span class="hljs-keyword">as</span> tfds
 
 dataset, info = tfds.load(<span class="hljs-string">"tf_flowers"</span>, as_supervised=<span class="hljs-literal">True</span>, with_info=<span class="hljs-literal">True</span>)
 dataset_size = info.splits[<span class="hljs-string">"train"</span>].num_examples <span class="hljs-comment"># 3670</span>
@@ -821,20 +821,20 @@ class_names = info.features[<span class="hljs-string">"label"</span>].names <spa
 n_classes = info.features[<span class="hljs-string">"label"</span>].num_classes <span class="hljs-comment"># 5</span>
 </code></pre>
 <p>可以通过设定<code>with_info=True</code>来获取数据集信息。这里，获取到了数据集的大小和类名。但是，这里只有<code>"train"</code>训练集，没有测试集和验证集，所以需要分割训练集。TF Datasets 提供了一个 API 来做这项工作。比如，使用数据集的前 10% 作为测试集，接着的 15% 来做验证集，剩下的 75% 来做训练集：</p>
-<pre><code class="lang-py">test_split, valid_split, train_split = tfds.Split.TRAIN.subsplit([<span class="hljs-number">10</span>, <span class="hljs-number">15</span>, <span class="hljs-number">75</span>])
+<pre><code class="lang-python">test_split, valid_split, train_split = tfds.Split.TRAIN.subsplit([<span class="hljs-number">10</span>, <span class="hljs-number">15</span>, <span class="hljs-number">75</span>])
 
 test_set = tfds.load(<span class="hljs-string">"tf_flowers"</span>, split=test_split, as_supervised=<span class="hljs-literal">True</span>)
 valid_set = tfds.load(<span class="hljs-string">"tf_flowers"</span>, split=valid_split, as_supervised=<span class="hljs-literal">True</span>)
 train_set = tfds.load(<span class="hljs-string">"tf_flowers"</span>, split=train_split, as_supervised=<span class="hljs-literal">True</span>)
 </code></pre>
 <p>然后，必须要预处理图片。CNN 的要求是<code>224 × 224</code>的图片，所以需要缩放。还要使用 Xception 的<code>preprocess_input()</code>函数来预处理图片：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">image, label</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">image, label</span>):
     resized_image = tf.image.resize(image, [<span class="hljs-number">224</span>, <span class="hljs-number">224</span>])
     final_image = keras.applications.xception.preprocess_input(resized_image)
     <span class="hljs-keyword">return</span> final_image, label
 </code></pre>
 <p>对三个数据集使用这个预处理函数，打散训练集，给所有的数据集添加批次和预提取：</p>
-<pre><code class="lang-py">batch_size = <span class="hljs-number">32</span>
+<pre><code class="lang-python">batch_size = <span class="hljs-number">32</span>
 train_set = train_set.shuffle(<span class="hljs-number">1000</span>)
 train_set = train_set.<span class="hljs-built_in">map</span>(preprocess).batch(batch_size).prefetch(<span class="hljs-number">1</span>)
 valid_set = valid_set.<span class="hljs-built_in">map</span>(preprocess).batch(batch_size).prefetch(<span class="hljs-number">1</span>)
@@ -845,21 +845,21 @@ test_set = test_set.<span class="hljs-built_in">map</span>(preprocess).batch(bat
 <p>提示：<code>keras.preprocessing.image.ImageDataGenerator</code>可以方便地从硬盘加载图片，并用多种方式来增强：偏移、旋转、缩放、翻转、裁剪，或使用任何你想做的转换。对于简单项目，这么做很方便。但是，使用<code>tf.data</code>管道的好处更多：从任何数据源高效读取图片（例如，并行）；操作数据集；如果基于<code>tf.image</code>运算编写预处理函数，既可以用在<code>tf.data</code>管道中，也可以用在生产部署的模型中（见第 19 章）。</p>
 </blockquote>
 <p>然后加载一个在 ImageNet 上预训练的 Xception 模型。通过设定<code>include_top=False</code>，排除模型的顶层：排除了全局平均池化层和紧密输出层。我们然后根据基本模型的输出，添加自己的全局平均池化层，然后添加紧密输出层（没有一个类就有一个单元，使用 softmax 激活函数）。最后，创建 Keras 模型：</p>
-<pre><code class="lang-py">base_model = keras.applications.xception.Xception(weights=<span class="hljs-string">"imagenet"</span>,
+<pre><code class="lang-python">base_model = keras.applications.xception.Xception(weights=<span class="hljs-string">"imagenet"</span>,
                                                   include_top=<span class="hljs-literal">False</span>)
 avg = keras.layers.GlobalAveragePooling2D()(base_model.output)
 output = keras.layers.Dense(n_classes, activation=<span class="hljs-string">"softmax"</span>)(avg)
 model = keras.Model(inputs=base_model.<span class="hljs-built_in">input</span>, outputs=output)
 </code></pre>
 <p>第 11 章介绍过，最好冻结预训练层的权重，至少在训练初期如此：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> base_model.layers:
+<pre><code class="lang-python"><span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> base_model.layers:
     layer.trainable = <span class="hljs-literal">False</span>
 </code></pre>
 <blockquote>
 <p>笔记：因为我们的模型直接使用了基本模型的层，而不是<code>base_model</code>对象，设置<code>base_model.trainable=False</code>没有任何效果。</p>
 </blockquote>
 <p>最后，编译模型，开始训练：</p>
-<pre><code class="lang-py">optimizer = keras.optimizers.SGD(lr=<span class="hljs-number">0.2</span>, momentum=<span class="hljs-number">0.9</span>, decay=<span class="hljs-number">0.01</span>)
+<pre><code class="lang-python">optimizer = keras.optimizers.SGD(lr=<span class="hljs-number">0.2</span>, momentum=<span class="hljs-number">0.9</span>, decay=<span class="hljs-number">0.01</span>)
 model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"sparse_categorical_crossentropy"</span>, optimizer=optimizer,
               metrics=[<span class="hljs-string">"accuracy"</span>])
 history = model.fit(train_set, epochs=<span class="hljs-number">5</span>, validation_data=valid_set)
@@ -868,7 +868,7 @@ history = model.fit(train_set, epochs=<span class="hljs-number">5</span>, valida
 <p>警告：训练过程非常慢，除非使用 GPU。如果没有 GPU，应该在 Colab 中运行本章的笔记本，使用 GPU 运行时（是免费的！）。见<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fageron%2Fhandson-ml2" target="_blank">这里</a>。</p>
 </blockquote>
 <p>模型训练几个周期之后，它的验证准确率应该可以达到 75-80%，然后就没什么提升了。这意味着上层训练的差不多了，此时可以解冻所有层（或只是解冻上边的层），然后继续训练（别忘在冷冻和解冻层是编译模型）。此时使用小得多的学习率，以避免破坏预训练的权重：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> base_model.layers:
+<pre><code class="lang-python"><span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> base_model.layers:
     layer.trainable = <span class="hljs-literal">True</span>
 
 optimizer = keras.optimizers.SGD(lr=<span class="hljs-number">0.01</span>, momentum=<span class="hljs-number">0.9</span>, decay=<span class="hljs-number">0.001</span>)
@@ -878,7 +878,7 @@ history = model.fit(...)
 <p>训练要花不少时间，最终在测试集上的准确率可以达到 95%。有个模型，就可以训练出惊艳的图片分类器了！计算机视觉除了分类，还有其它任务，比如，想知道花在图片中的位置，该怎么做呢？</p>
 <h2 id="分类和定位">分类和定位</h2>
 <p>第 10 章讨论过，定位图片中的物体可以表达为一个回归任务：预测物体的范围框，一个常见的方法是预测物体中心的水平和垂直坐标，和其高度和宽度。不需要大改模型，只要再添加一个有四个单元的紧密输出层（通常是在全局平均池化层的上面），可以用 MSE 损失训练：</p>
-<pre><code class="lang-py">base_model = keras.applications.xception.Xception(weights=<span class="hljs-string">"imagenet"</span>,
+<pre><code class="lang-python">base_model = keras.applications.xception.Xception(weights=<span class="hljs-string">"imagenet"</span>,
                                                   include_top=<span class="hljs-literal">False</span>)
 avg = keras.layers.GlobalAveragePooling2D()(base_model.output)
 class_output = keras.layers.Dense(n_classes, activation=<span class="hljs-string">"softmax"</span>)(avg)
@@ -1043,7 +1043,7 @@ model.<span class="hljs-built_in">compile</span>(loss=[<span class="hljs-string"
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"十四、使用卷积神经网络实现深度计算机视觉","level":"1.15","depth":1,"next":{"title":"十五、使用 RNN 和 CNN 处理序列","level":"1.16","depth":1,"path":"15.md","ref":"./15.md","articles":[]},"previous":{"title":"十三、使用 TensorFlow 加载和预处理数据","level":"1.14","depth":1,"path":"13.md","ref":"./13.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"14.md","mtime":"2024-08-23T21:05:56.814Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"十四、使用卷积神经网络实现深度计算机视觉","level":"1.15","depth":1,"next":{"title":"十五、使用 RNN 和 CNN 处理序列","level":"1.16","depth":1,"path":"15.md","ref":"./15.md","articles":[]},"previous":{"title":"十三、使用 TensorFlow 加载和预处理数据","level":"1.14","depth":1,"path":"13.md","ref":"./13.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"14.md","mtime":"2025-01-05T17:59:46.717Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

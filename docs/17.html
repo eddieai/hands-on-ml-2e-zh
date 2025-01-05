@@ -6,7 +6,7 @@
         <title>十七、使用自编码器和 GAN 做表征学习和生成式学习 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -424,7 +424,7 @@
 <h2 id="用不完整的线性自编码器来做-pca">用不完整的线性自编码器来做 PCA</h2>
 <p>如果自编码器仅使用线性激活并且损失函数是均方误差（MSE），最终其实是做了主成分分析（参见第 8 章）。</p>
 <p>以下代码创建了一个简单的线性自编码器，以在 3D 数据集上执行 PCA，并将其投影到 2D：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tensorflow <span class="hljs-keyword">import</span> keras
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tensorflow <span class="hljs-keyword">import</span> keras
 
 encoder = keras.models.Sequential([keras.layers.Dense(<span class="hljs-number">2</span>, input_shape=[<span class="hljs-number">3</span>])])
 decoder = keras.models.Sequential([keras.layers.Dense(<span class="hljs-number">3</span>, input_shape=[<span class="hljs-number">2</span>])])
@@ -442,7 +442,7 @@ autoencoder.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-st
 </li>
 </ul>
 <p>现在用生成出来的 3D 数据集训练模型，并用模型编码数据集（即将其投影到 2D）：</p>
-<pre><code class="lang-py">history = autoencoder.fit(X_train, X_train, epochs=<span class="hljs-number">20</span>)
+<pre><code class="lang-python">history = autoencoder.fit(X_train, X_train, epochs=<span class="hljs-number">20</span>)
 codings = encoder.predict(X_train)
 </code></pre>
 <p>注意，<code>X_train</code>既用来做输入，也用来做目标。图 17-2 显示了原始 3D 数据集（左侧）和自编码器隐藏层的输出（即编码层，右侧）。 可以看到，自编码器找到了投影数据的最佳二维平面，保留了数据的尽可能多的差异（就像 PCA 一样）。</p>
@@ -458,7 +458,7 @@ codings = encoder.predict(X_train)
 <p>图 17-3 栈式自编码器</p>
 <h3 id="用-keras-实现栈式自编码器">用 Keras 实现栈式自编码器</h3>
 <p>你可以像常规深度 MLP 一样实现栈式自编码器。 特别是，我们在第 11 章中用于训练深度网络的技术也可以应用。例如，下面的代码使用 SELU 激活函数为 Fashion MNIST 创建了一个栈式自编码器：</p>
-<pre><code class="lang-py">stacked_encoder = keras.models.Sequential([
+<pre><code class="lang-python">stacked_encoder = keras.models.Sequential([
     keras.layers.Flatten(input_shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>]),
     keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>),
     keras.layers.Dense(<span class="hljs-number">30</span>, activation=<span class="hljs-string">"selu"</span>),
@@ -489,7 +489,7 @@ history = stacked_ae.fit(X_train, X_train, epochs=<span class="hljs-number">10</
 </ul>
 <h3 id="可视化重建">可视化重建</h3>
 <p>确保自编码器训练得当的方式之一，是比较输入和输出：差异不应过大。画一些验证集的图片，及其重建：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_image</span>(<span class="hljs-params">image</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_image</span>(<span class="hljs-params">image</span>):
     plt.imshow(image, cmap=<span class="hljs-string">"binary"</span>)
     plt.axis(<span class="hljs-string">"off"</span>)
 
@@ -510,14 +510,14 @@ show_reconstructions(stacked_ae)
 <p>可以认出重建，但图片有些失真。需要再训练模型一段时间，或使编码器和解码器更深，或使编码更大。但如果使网络太强大，就学不到数据中的规律。</p>
 <h3 id="可视化-fashion-mnist-数据集">可视化 Fashion MNIST 数据集</h3>
 <p>训练好栈式自编码器之后，就可以用它给数据集降维了。可视化的话，结果不像（第 8 章其它介绍的）其它降维方法那么好，但自编码器的优势是可以处理带有多个实例多个特征的大数据集。所以一个策略是利用自编码器将数据集降维到一个合理的水平，然后使用另外一个降维算法做可视化。用这个策略来可视化 Fashion MNIST。首先，使用栈式自编码器的编码器将维度降到 30，然后使用 Scikit-Learn 的 t-SNE 算法实现，将维度降到 2 并做可视化：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.manifold <span class="hljs-keyword">import</span> TSNE
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.manifold <span class="hljs-keyword">import</span> TSNE
 
 X_valid_compressed = stacked_encoder.predict(X_valid)
 tsne = TSNE()
 X_valid_2D = tsne.fit_transform(X_valid_compressed)
 </code></pre>
 <p>对数据集作图：</p>
-<pre><code class="lang-py">plt.scatter(X_valid_2D[:, <span class="hljs-number">0</span>], X_valid_2D[:, <span class="hljs-number">1</span>], c=y_valid, s=<span class="hljs-number">10</span>, cmap=<span class="hljs-string">"tab10"</span>)
+<pre><code class="lang-python">plt.scatter(X_valid_2D[:, <span class="hljs-number">0</span>], X_valid_2D[:, <span class="hljs-number">1</span>], c=y_valid, s=<span class="hljs-number">10</span>, cmap=<span class="hljs-string">"tab10"</span>)
 </code></pre>
 <p>图 17-5 展示了结果的散点图（并展示了一些图片）。t-SNE 算法区分除了几类，比较符合图片的类别（每个类的颜色不一样）。</p>
 <p><img src="img/fc72779301071ddc44cc9423b21732bc.png" alt=""></img></p>
@@ -536,7 +536,7 @@ X_valid_2D = tsne.fit_transform(X_valid_compressed)
 <h3 id="关联权重">关联权重</h3>
 <p>当自编码器整齐地对称时，就像我们刚刚构建的那样，一种常用方法是将解码器层的权重与编码器层的权重相关联。 这样减半了模型中的权重数量，加快了训练速度，并限制了过度拟合的风险。具体来说，如果自编码器总共具有<code>N</code>个层（不算输入层），并且<code>W[L]</code>表示第<code>L</code>层的连接权重（例如，层 1 是第一隐藏层，则层<code>N / 2</code>是编码层，而层<code>N</code>是输出层），则解码器层权重可以简单地定义为：<code>W[N–L+1] = W[L]^T</code>（其中<code>L = 1, 2, ..., N/2</code>）。</p>
 <p>使用 Keras 将层的权重关联起来，先定义一个自定义层：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">DenseTranspose</span>(keras.layers.Layer):
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">DenseTranspose</span>(keras.layers.Layer):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, dense, activation=<span class="hljs-literal">None</span>, **kwargs</span>):
         <span class="hljs-variable language_">self</span>.dense = dense
         <span class="hljs-variable language_">self</span>.activation = keras.activations.get(activation)
@@ -550,7 +550,7 @@ X_valid_2D = tsne.fit_transform(X_valid_compressed)
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.activation(z + <span class="hljs-variable language_">self</span>.biases)
 </code></pre>
 <p>自定义层的作用就像一个常规紧密层，但使用了另一个紧密层的权重，并且做了转置（设置<code>transpose_b=True</code>等同于转置第二个参数，但在<code>matmul()</code>运算中实时做转置更为高效）。但是，要使用自己的偏置向量。然后，创建一个新的栈式自编码器，将解码器的紧密层和编码器的紧密层关联起来：</p>
-<pre><code class="lang-py">dense_1 = keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>)
+<pre><code class="lang-python">dense_1 = keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>)
 dense_2 = keras.layers.Dense(<span class="hljs-number">30</span>, activation=<span class="hljs-string">"selu"</span>)
 
 tied_encoder = keras.models.Sequential([
@@ -577,7 +577,7 @@ tied_ae = keras.models.Sequential([tied_encoder, tied_decoder])
 <p>自编码器不限于紧密网络：还有卷积自编码器和循环自编码器。</p>
 <h2 id="卷积自编码器">卷积自编码器</h2>
 <p>如果处理的是图片，则前面介绍的自编码器的效果可能一般（除非图片非常小）。第 14 章介绍过，对于图片任务，卷积神经网络比紧密网络的效果更好。所以如果想用自编码器来处理图片的话（例如，无监督预训练或降维），你需要搭建一个卷积自编码器。编码器是一个包含卷积层和池化层的常规 CNN。通常降低输入的空间维度（即，高和宽），同时增加深度（即，特征映射的数量）。解码器的工作相反（放大图片，压缩深度），要这么做的话，可以转置卷积层（或者，可以将上采样层和卷积层合并）。下面是一个卷积自编码器处理 Fashion MNIST 的例子：</p>
-<pre><code class="lang-py">conv_encoder = keras.models.Sequential([
+<pre><code class="lang-python">conv_encoder = keras.models.Sequential([
     keras.layers.Reshape([<span class="hljs-number">28</span>, <span class="hljs-number">28</span>, <span class="hljs-number">1</span>], input_shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>]),
     keras.layers.Conv2D(<span class="hljs-number">16</span>, kernel_size=<span class="hljs-number">3</span>, padding=<span class="hljs-string">"same"</span>, activation=<span class="hljs-string">"selu"</span>),
     keras.layers.MaxPool2D(pool_size=<span class="hljs-number">2</span>),
@@ -600,7 +600,7 @@ conv_ae = keras.models.Sequential([conv_encoder, conv_decoder])
 </code></pre>
 <h2 id="循环自编码器">循环自编码器</h2>
 <p>如果你想用自编码器处理序列，比如对时间序列或文本无监督学习和降维，则循环神经网络要优于紧密网络。搭建循环自编码器很简单：编码器是一个序列到向量的 RNN，而解码器是向量到序列的 RNN：</p>
-<pre><code class="lang-py">recurrent_encoder = keras.models.Sequential([
+<pre><code class="lang-python">recurrent_encoder = keras.models.Sequential([
     keras.layers.LSTM(<span class="hljs-number">100</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, <span class="hljs-number">28</span>]),
     keras.layers.LSTM(<span class="hljs-number">30</span>)
 ])
@@ -620,7 +620,7 @@ recurrent_ae = keras.models.Sequential([recurrent_encoder, recurrent_decoder])
 <p><img src="img/34a85484de696688796d6e35f8e7a0a3.png" alt=""></img></p>
 <p>图 17-8 高斯噪音（左）和丢弃（右）的降噪自编码器</p>
 <p>实现很简单：常规的栈式自编码器中有一个应用于输入的<code>Dropout</code>层（或使用<code>GaussianNoise</code>层）。<code>Dropout</code>层只在训练中起作用（<code>GaussianNoise</code>层也只在训练中起作用）：</p>
-<pre><code class="lang-py">dropout_encoder = keras.models.Sequential([
+<pre><code class="lang-python">dropout_encoder = keras.models.Sequential([
     keras.layers.Flatten(input_shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>]),
     keras.layers.Dropout(<span class="hljs-number">0.5</span>),
     keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>),
@@ -639,7 +639,7 @@ dropout_ae = keras.models.Sequential([dropout_encoder, dropout_decoder])
 <h2 id="稀疏自编码器">稀疏自编码器</h2>
 <p>通常良好特征提取的另一种约束是稀疏性：通过向损失函数添加适当的项，让自编码器减少编码层中活动神经元的数量。 例如，可以让编码层中平均只有 5% 的活跃神经元。 这迫使自编码器将每个输入表示为少量激活的组合。 因此，编码层中的每个神经元通常都会代表一个有用的特征（如果每个月只能说几个字，你会说的特别精炼）。</p>
 <p>使用 sigmoid 激活函数可以实现这个目的。添加一个编码层（比如，有 300 个神经元），给编码层的激活函数添加<code>ℓ1</code>正则（解码器就是一个常规解码器）：</p>
-<pre><code class="lang-py">sparse_l1_encoder = keras.models.Sequential([
+<pre><code class="lang-python">sparse_l1_encoder = keras.models.Sequential([
     keras.layers.Flatten(input_shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>]),
     keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>),
     keras.layers.Dense(<span class="hljs-number">300</span>, activation=<span class="hljs-string">"sigmoid"</span>),
@@ -665,7 +665,7 @@ sparse_l1_ae = keras.models.Sequential([sparse_l1_encoder, sparse_l1_decoder])
 <p>公式 17-2 目标稀疏度<code>p</code>和实际稀疏度<code>q</code>之间的 KL 散度</p>
 <p>一旦我们已经计算了编码层中每个神经元的稀疏损失，就相加这些损失，并将结果添加到损失函数中。 为了控制稀疏损失和重构损失的相对重要性，我们可以用稀疏权重超参数乘以稀疏损失。 如果这个权重太高，模型会紧贴目标稀疏度，但它可能无法正确重建输入，导致模型无用。 相反，如果它太低，模型将大多忽略稀疏目标，它不会学习任何有趣的功能。</p>
 <p>现在就可以实现基于 KL 散度的稀疏自编码器了。首先，创建一个自定义正则器来实现 KL 散度正则：</p>
-<pre><code class="lang-py">K = keras.backend
+<pre><code class="lang-python">K = keras.backend
 kl_divergence = keras.losses.kullback_leibler_divergence
 
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">KLDivergenceRegularizer</span>(keras.regularizers.Regularizer):
@@ -679,7 +679,7 @@ kl_divergence = keras.losses.kullback_leibler_divergence
             kl_divergence(<span class="hljs-number">1</span>\. - <span class="hljs-variable language_">self</span>.target, <span class="hljs-number">1</span>\. - mean_activities))
 </code></pre>
 <p>使用<code>KLDivergenceRegularizer</code>作为编码层的激活函数，创建稀疏自编码器：</p>
-<pre><code class="lang-py">kld_reg = KLDivergenceRegularizer(weight=<span class="hljs-number">0.05</span>, target=<span class="hljs-number">0.1</span>)
+<pre><code class="lang-python">kld_reg = KLDivergenceRegularizer(weight=<span class="hljs-number">0.05</span>, target=<span class="hljs-number">0.1</span>)
 sparse_kl_encoder = keras.models.Sequential([
     keras.layers.Flatten(input_shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>]),
     keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>),
@@ -717,14 +717,14 @@ sparse_kl_ae = keras.models.Sequential([sparse_kl_encoder, sparse_kl_decoder])
 <p><img src="img/8d10a31df92b1efadc78aa7882e885c0.png" alt=""></img></p>
 <p>公式 17-4 变分自编码器的潜在损失，使用<code>γ = log(σ^2)</code></p>
 <p>给 Fashion MNIST 创建一个自编码器（见图 17-12，使用<code>γ</code>变体）。首先，需要一个自定义层从编码采样，给定<code>μ</code>和<code>γ</code>：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Sampling</span>(keras.layers.Layer):
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Sampling</span>(keras.layers.Layer):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">call</span>(<span class="hljs-params">self, inputs</span>):
         mean, log_var = inputs
         <span class="hljs-keyword">return</span> K.random_normal(tf.shape(log_var)) * K.exp(log_var / <span class="hljs-number">2</span>) + mean
 </code></pre>
 <p>这个<code>Sampling</code>层接收两个输入：<code>mean (μ)</code> 和 <code>log_var (γ)</code>。使用函数<code>K.random_normal()</code>根据正态分布随机采样向量（形状为<code>γ</code>）平均值为 0 标准差为 1。然后乘以<code>exp(γ / 2)</code>（这个值等于<code>σ</code>），最后加上μ并返回结果。这样就能从平均值为 0 标准差为 1 的正态分布采样编码向量。</p>
 <p>然后，创建编码器，因为模型不是完全顺序的，所以要使用函数式 API：</p>
-<pre><code class="lang-py">codings_size = <span class="hljs-number">10</span>
+<pre><code class="lang-python">codings_size = <span class="hljs-number">10</span>
 
 inputs = keras.layers.Input(shape=[<span class="hljs-number">28</span>, <span class="hljs-number">28</span>])
 z = keras.layers.Flatten()(inputs)
@@ -737,7 +737,7 @@ variational_encoder = keras.Model(
     inputs=[inputs], outputs=[codings_mean, codings_log_var, codings])
 </code></pre>
 <p>注意，输出<code>codings_mean</code> (μ)和<code>codings_log_var</code> (γ)的<code>Dense</code>层，有同样的输入（即，第二个紧密层的输出）。然后将<code>codings_mean</code>和<code>codings_log_var</code>传给<code>Sampling</code>层。最后，<code>variational_encoder</code>模型有三个输出，可以用来检查<code>codings_mean</code>和<code>codings_log_var</code>的值。真正使用的是最后一个（<code>codings</code>）。下面创建解码器：</p>
-<pre><code class="lang-py">decoder_inputs = keras.layers.Input(shape=[codings_size])
+<pre><code class="lang-python">decoder_inputs = keras.layers.Input(shape=[codings_size])
 x = keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>)(decoder_inputs)
 x = keras.layers.Dense(<span class="hljs-number">150</span>, activation=<span class="hljs-string">"selu"</span>)(x)
 x = keras.layers.Dense(<span class="hljs-number">28</span> * <span class="hljs-number">28</span>, activation=<span class="hljs-string">"sigmoid"</span>)(x)
@@ -745,12 +745,12 @@ outputs = keras.layers.Reshape([<span class="hljs-number">28</span>, <span class
 variational_decoder = keras.Model(inputs=[decoder_inputs], outputs=[outputs])
 </code></pre>
 <p>对于解码器，因为是简单栈式结构，可以不使用函数式 API，而使用顺序 API。最后，创建变分自编码器：</p>
-<pre><code class="lang-py">_, _, codings = variational_encoder(inputs)
+<pre><code class="lang-python">_, _, codings = variational_encoder(inputs)
 reconstructions = variational_decoder(codings)
 variational_ae = keras.Model(inputs=[inputs], outputs=[reconstructions])
 </code></pre>
 <p>注意，我们忽略了编码器的前两个输出。最后，必须将潜在损失和重建损失加起来：</p>
-<pre><code class="lang-py">latent_loss = -<span class="hljs-number">0.5</span> * K.<span class="hljs-built_in">sum</span>(
+<pre><code class="lang-python">latent_loss = -<span class="hljs-number">0.5</span> * K.<span class="hljs-built_in">sum</span>(
     <span class="hljs-number">1</span> + codings_log_var - K.exp(codings_log_var) - K.square(codings_mean),
     axis=-<span class="hljs-number">1</span>)
 variational_ae.add_loss(K.mean(latent_loss) / <span class="hljs-number">784.</span>)
@@ -758,12 +758,12 @@ variational_ae.<span class="hljs-built_in">compile</span>(loss=<span class="hljs
 </code></pre>
 <p>我们首先用公式 17-4 计算批次中每个实例的潜在损失。然后计算所有实例的平均损失，然后除以，使其量纲与重建损失一致。实际上，变分自编码器的重建损失是像素重建误差的和，但当 Keras 计算<code>"binary_crossentropy"</code>损失时，它计算的是 784 个像素的平均值，而不是和。因此，重建损失比真正要的值小 784 倍。我们可以定义一个自定义损失来计算误差和，但除以 784 更简单。</p>
 <p>注意，这里使用了<code>RMSprop</code>优化器。最后，我们可以训练自编码器。</p>
-<pre><code class="lang-py">history = variational_ae.fit(X_train, X_train, epochs=<span class="hljs-number">50</span>, batch_size=<span class="hljs-number">128</span>,
+<pre><code class="lang-python">history = variational_ae.fit(X_train, X_train, epochs=<span class="hljs-number">50</span>, batch_size=<span class="hljs-number">128</span>,
                              validation_data=[X_valid, X_valid])
 </code></pre>
 <h3 id="生成-fashion-mnist-图片">生成 Fashion MNIST 图片</h3>
 <p>接下来用上面的变分自编码器生成图片。我们要做的只是从高斯分布随机采样编码，然后做解码：</p>
-<pre><code class="lang-py">codings = tf.random.normal(shape=[<span class="hljs-number">12</span>, codings_size])
+<pre><code class="lang-python">codings = tf.random.normal(shape=[<span class="hljs-number">12</span>, codings_size])
 images = variational_decoder(codings).numpy()
 </code></pre>
 <p>图 17-13 展示了 12 张生成的图片。</p>
@@ -771,7 +771,7 @@ images = variational_decoder(codings).numpy()
 <p>图 17-13 用变分自编码器生成的 Fashion MNIST 图片</p>
 <p>大多数生成的图片很逼真，就是有些模糊。其它的效果一般，这是因为自编码器只学习了几分钟。经过微调和更长时间的训练，效果就能编号。</p>
 <p>变分自编码器也可以做语义插值：不是对两张图片做像素级插值（结果就像是两张图重叠），而是在编码级插值。先用编码层运行两张图片，然后对两个编码层插值，然后解码插值编码，得到结果图片。结果就像一个常规的 Fashion MINIST 图片，但还是介于原始图之间。在接下来的代码中，将 12 个生成出来的编码，排列成<code>3 × 4</code>的网格，然后用 TensorFlow 的<code>tf.image.resize()</code>函数，将其缩放为<code>5 × 7</code>。默认条件下，<code>resize()</code>函数会做双线性插值，所以每两个行或列都会包含插值编码。然后用解码器生成所有图片：</p>
-<pre><code class="lang-py">codings_grid = tf.reshape(codings, [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, codings_size])
+<pre><code class="lang-python">codings_grid = tf.reshape(codings, [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, codings_size])
 larger_grid = tf.image.resize(codings_grid, size=[<span class="hljs-number">5</span>, <span class="hljs-number">7</span>])
 interpolated_codings = tf.reshape(larger_grid, [-<span class="hljs-number">1</span>, codings_size])
 images = variational_decoder(interpolated_codings).numpy()
@@ -804,7 +804,7 @@ images = variational_decoder(interpolated_codings).numpy()
 </blockquote>
 <p>接下来为 Fashion MNIST 创建一个简单的 GAN 模型。</p>
 <p>首先，创建生成器和判别器。生成器很像自编码器的解码器，判别器就是一个常规的二元分类器（图片作为输入，输出是包含一个神经元的紧密层，使用 sigmoid 激活函数）。对于每次训练迭代中的第二阶段，需要完整的 GAN 模型：</p>
-<pre><code class="lang-py">codings_size = <span class="hljs-number">30</span>
+<pre><code class="lang-python">codings_size = <span class="hljs-number">30</span>
 
 generator = keras.models.Sequential([
     keras.layers.Dense(<span class="hljs-number">100</span>, activation=<span class="hljs-string">"selu"</span>, input_shape=[codings_size]),
@@ -821,7 +821,7 @@ discriminator = keras.models.Sequential([
 gan = keras.models.Sequential([generator, discriminator])
 </code></pre>
 <p>然后，我们需要编译这些模型。因为判别器是一个二元分类器，我们可以使用二元交叉熵损失。生成器只能通过 GAN 训练，所以不需要编译生成器。<code>gan</code>模型也是一个二元分类器，所以可以使用二元交叉熵损失。重要的，不能在第二个阶段训练判别器，所以编译模型之前，使其不可训练：</p>
-<pre><code class="lang-py">discriminator.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"binary_crossentropy"</span>, optimizer=<span class="hljs-string">"rmsprop"</span>)
+<pre><code class="lang-python">discriminator.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"binary_crossentropy"</span>, optimizer=<span class="hljs-string">"rmsprop"</span>)
 discriminator.trainable = <span class="hljs-literal">False</span>
 gan.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"binary_crossentropy"</span>, optimizer=<span class="hljs-string">"rmsprop"</span>)
 </code></pre>
@@ -829,12 +829,12 @@ gan.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"b
 <p>笔记：Keras 只有在编译模型时才会考虑<code>trainable</code>属性，所以运行这段代码后，如果调用<code>fit()</code>方法或<code>train_on_batch()</code>方法，<code>discriminator</code>就是可训练的了。但在<code>gan</code>模型上调用这些方法，判别器是不可训练的。</p>
 </blockquote>
 <p>因为训练循环是非常规的，我们不能使用常规的<code>fit()</code>方法。但我们可以写一个自定义的训练循环。要这么做，需要先创建一个<code>Dataset</code>迭代这些图片：</p>
-<pre><code class="lang-py">batch_size = <span class="hljs-number">32</span>
+<pre><code class="lang-python">batch_size = <span class="hljs-number">32</span>
 dataset = tf.data.Dataset.from_tensor_slices(X_train).shuffle(<span class="hljs-number">1000</span>)
 dataset = dataset.batch(batch_size, drop_remainder=<span class="hljs-literal">True</span>).prefetch(<span class="hljs-number">1</span>)
 </code></pre>
 <p>现在就可以来写训练循环了。用<code>train_gan()</code>函数来包装：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">train_gan</span>(<span class="hljs-params">gan, dataset, batch_size, codings_size, n_epochs=<span class="hljs-number">50</span></span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">train_gan</span>(<span class="hljs-params">gan, dataset, batch_size, codings_size, n_epochs=<span class="hljs-number">50</span></span>):
     generator, discriminator = gan.layers
     <span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n_epochs):
         <span class="hljs-keyword">for</span> X_batch <span class="hljs-keyword">in</span> dataset:
@@ -886,7 +886,7 @@ train_gan(gan, dataset, batch_size, codings_size)
 </li>
 </ul>
 <p>这些建议在许多任务中有效，但存在例外，所以你还是需要尝试不同的超参数（事实上，改变随机种子，再训练模型，可能就成功了）。例如，下面是一个小型的 DCGAN，在 Fashion MNIST 上效果不错：</p>
-<pre><code class="lang-py">codings_size = <span class="hljs-number">100</span>
+<pre><code class="lang-python">codings_size = <span class="hljs-number">100</span>
 
 generator = keras.models.Sequential([
     keras.layers.Dense(<span class="hljs-number">7</span> * <span class="hljs-number">7</span> * <span class="hljs-number">128</span>, input_shape=[codings_size]),
@@ -912,7 +912,7 @@ discriminator = keras.models.Sequential([
 gan = keras.models.Sequential([generator, discriminator])
 </code></pre>
 <p>生成器的编码大小为 100，将其投影到 6272 个维度上（<code>7 * 7 * 128</code>），将结果变形为<code>7 × 7 × 128</code>的张量。这个张量经过批归一化，然后输入给步长为 2 的转置卷积层，从<code>7 × 7</code>上采样为<code>14 × 14</code>，深度从 128 降到 64。结果再做一次批归一化，传给另一个步长为 2 的转置卷积层，从<code>7 × 7</code>上采样为<code>14 × 14</code>，深度从 64 降到 1。这个层使用 tanh 激活函数，输出范围是-1 到 1。因为这个原因，在训练 GAN 之前，需要收缩训练集到相同的范围。还需要变形，加上通道维度：</p>
-<pre><code class="lang-py">X_train = X_train.reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">28</span>, <span class="hljs-number">28</span>, <span class="hljs-number">1</span>) * <span class="hljs-number">2</span>\. - <span class="hljs-number">1</span>\. <span class="hljs-comment"># 变形和收缩</span>
+<pre><code class="lang-python">X_train = X_train.reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">28</span>, <span class="hljs-number">28</span>, <span class="hljs-number">1</span>) * <span class="hljs-number">2</span>\. - <span class="hljs-number">1</span>\. <span class="hljs-comment"># 变形和收缩</span>
 </code></pre>
 <p>判别器看起来很像英语二元分类的常规 CNN，除了使用的不是最大池化层降采样图片，而是使用卷积步长。另外，使用的激活函数是 leaky ReLU。</p>
 <p>总之，我们遵守了 DCGAN 的建议，除了将判别器中的<code>BatchNormalization</code>替换成了<code>Dropout</code>层（否则训练会变得不稳定），生成器的 ReLU 替换为 SELU。你可以随意调整这个架构：可以看到对超参数（特别是学习率）的敏感度。</p>
@@ -1038,7 +1038,7 @@ gan = keras.models.Sequential([generator, discriminator])
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"十七、使用自编码器和 GAN 做表征学习和生成式学习","level":"1.18","depth":1,"next":{"title":"十八、强化学习","level":"1.19","depth":1,"path":"18.md","ref":"./18.md","articles":[]},"previous":{"title":"十六、使用 RNN 和注意力机制进行自然语言处理","level":"1.17","depth":1,"path":"16.md","ref":"./16.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"17.md","mtime":"2024-08-23T21:05:56.818Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"十七、使用自编码器和 GAN 做表征学习和生成式学习","level":"1.18","depth":1,"next":{"title":"十八、强化学习","level":"1.19","depth":1,"path":"18.md","ref":"./18.md","articles":[]},"previous":{"title":"十六、使用 RNN 和注意力机制进行自然语言处理","level":"1.17","depth":1,"path":"16.md","ref":"./16.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"17.md","mtime":"2025-01-05T17:59:46.676Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -6,7 +6,7 @@
         <title>六、决策树 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -407,7 +407,7 @@
 <h2 id="决策树的训练和可视化">决策树的训练和可视化</h2>
 <p>为了理解决策树，我们需要先构建一个决策树并亲身体验它到底如何进行预测。</p>
 <p>接下来的代码就是在我们熟知的鸢尾花数据集上进行一个决策树分类器的训练。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_iris
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_iris
 <span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeClassifier
 iris = load_iris()
 X = iris.data[:, <span class="hljs-number">2</span>:] <span class="hljs-comment"># petal length and width </span>
@@ -416,7 +416,7 @@ tree_clf = DecisionTreeClassifier(max_depth=<span class="hljs-number">2</span>)
 tree_clf.fit(X, y)
 </code></pre>
 <p>你可以通过使用<code>export_graphviz()</code>方法，通过生成一个叫做<code>iris_tree.dot</code>的图形定义文件将一个训练好的决策树模型可视化。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> export_graphviz
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> export_graphviz
 export_graphviz(
             tree_clf,
             out_file=image_path(<span class="hljs-string">"iris_tree.dot"</span>),
@@ -467,7 +467,7 @@ export_graphviz(
 <h2 id="估计分类概率">估计分类概率</h2>
 <p>决策树还可以估计某个实例属于特定类<code>k</code>的概率：首先遍历树来查找此实例的叶节点，然后它返回此节点中类<code>k</code>的训练实例的比例。</p>
 <p>例如，假设你发现了一个花瓣长 5 厘米，宽 1.5 厘米的花朵。相应的叶节点是深度为 2 的左节点，因此决策树应该输出以下概率：Iris-Setosa 为 0%（<code>0/54</code>），Iris-Versicolor 为 90.7%（<code>49/5</code>4），Iris-Virginica 为 9.3%（<code>5/54</code>）。当然，如果你要求它预测具体的类，它应该输出 Iris-Versicolor（类别 1），因为它具有最高的概率。我们了测试一下：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>tree_clf.predict_proba([[<span class="hljs-number">5</span>, <span class="hljs-number">1.5</span>]])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>tree_clf.predict_proba([[<span class="hljs-number">5</span>, <span class="hljs-number">1.5</span>]])
 array([[ <span class="hljs-number">0.</span> , <span class="hljs-number">0.90740741</span>, <span class="hljs-number">0.09259259</span>]])
 <span class="hljs-meta">&gt;&gt;&gt; </span>tree_clf.predict([[<span class="hljs-number">5</span>, <span class="hljs-number">1.5</span>]])
 array([<span class="hljs-number">1</span>])
@@ -519,7 +519,7 @@ array([<span class="hljs-number">1</span>])
 <p><img src="img/105.png" alt=""></img></p>
 <h2 id="回归">回归</h2>
 <p>决策树也能够执行回归任务，让我们使用 Scikit-Learn 的<code>DecisionTreeRegressor</code>类构建一个回归树，让我们用<code>max_depth = 2</code>在具有噪声的二次项数据集上进行训练。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeRegressor
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeRegressor
 tree_reg = DecisionTreeRegressor(max_depth=<span class="hljs-number">2</span>)
 tree_reg.fit(X, y)
 </code></pre>
@@ -627,7 +627,7 @@ tree_reg.fit(X, y)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"六、决策树","level":"1.8","depth":1,"next":{"title":"七、集成学习和随机森林","level":"1.9","depth":1,"path":"7.md","ref":"./7.md","articles":[]},"previous":{"title":"五、支持向量机","level":"1.7","depth":1,"path":"5.md","ref":"./5.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"6.md","mtime":"2024-08-23T21:05:56.827Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"六、决策树","level":"1.8","depth":1,"next":{"title":"七、集成学习和随机森林","level":"1.9","depth":1,"path":"7.md","ref":"./7.md","articles":[]},"previous":{"title":"五、支持向量机","level":"1.7","depth":1,"path":"5.md","ref":"./5.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"6.md","mtime":"2025-01-05T17:59:46.727Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

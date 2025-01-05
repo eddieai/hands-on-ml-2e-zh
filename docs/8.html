@@ -6,7 +6,7 @@
         <title>八、降维 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -454,7 +454,7 @@
 <p>公式 8-1 主成分矩阵</p>
 <p><img src="img/e-8-1.gif" alt=""></img></p>
 <p>下面的 Python 代码使用了 Numpy 提供的<code>svd()</code>函数获得训练集的所有主成分，然后提取前两个 PC:  </p>
-<pre><code class="lang-py">X_centered=X-X.mean(axis=<span class="hljs-number">0</span>)
+<pre><code class="lang-python">X_centered=X-X.mean(axis=<span class="hljs-number">0</span>)
 U,s,V=np.linalg.svd(X_centered)
 c1=V.T[:,<span class="hljs-number">0</span>]
 c2=V.T[:,<span class="hljs-number">1</span>]
@@ -468,13 +468,13 @@ c2=V.T[:,<span class="hljs-number">1</span>]
 <p>公式 8-2 将训练集投影到<code>d</code>维空间</p>
 <p><img src="img/tex-4d58b6f45f2e33f3ceb537b2b174c09b.gif" alt=""></img></p>
 <p>下面的 Python 代码将训练集投影到由前两个主成分定义的超平面上：  </p>
-<pre><code class="lang-py">W2=V.T[:,:<span class="hljs-number">2</span>]
+<pre><code class="lang-python">W2=V.T[:,:<span class="hljs-number">2</span>]
 X2D=X_centered.dot(W2)
 </code></pre>
 <p>好了你已经知道这个东西了！你现在已经知道如何给任何一个数据集降维而又能尽可能的保留原数据集的方差了。  </p>
 <h3 id="使用-scikit-learn">使用 Scikit-Learn</h3>
 <p>Scikit-Learn 的 PCA 类使用 SVD 分解来实现，就像我们之前做的那样。以下代码应用 PCA 将数据集的维度降至两维（请注意，它会自动处理数据的中心化）：  </p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> PCA
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> PCA
 
 pca=PCA(n_components=<span class="hljs-number">2</span>)
 X2D=pca.fit_transform(X)
@@ -488,13 +488,13 @@ array([0.84248607, 0.14631839])
 <h3 id="选择正确的维度">选择正确的维度</h3>
 <p>通常我们倾向于选择加起来到方差解释率能够达到足够占比（例如 95%）的维度的数量，而不是任意选择要降低到的维度数量。当然，除非您正在为数据可视化而降低维度 -- 在这种情况下，您通常希望将维度降低到 2 或 3。  </p>
 <p>下面的代码在不降维的情况下进行 PCA，然后计算出保留训练集方差 95% 所需的最小维数：  </p>
-<pre><code class="lang-py">pca=PCA()
+<pre><code class="lang-python">pca=PCA()
 pac.fit(X)
 cumsum=np.cumsum(pca.explained_variance_ratio_)
 d=np.argmax(cumsum&gt;=<span class="hljs-number">0.95</span>)+<span class="hljs-number">1</span>
 </code></pre>
 <p>你可以设置<code>n_components = d</code>并再次运行 PCA。但是，有一个更好的选择：不指定你想要保留的主成分个数，而是将<code>n_components</code>设置为 0.0 到 1.0 之间的浮点数，表明您希望保留的方差比率：  </p>
-<pre><code class="lang-py">pca=PCA(n_components=<span class="hljs-number">0.95</span>)
+<pre><code class="lang-python">pca=PCA(n_components=<span class="hljs-number">0.95</span>)
 X_reduced=pca.fit_transform(X)
 </code></pre>
 <p>另一种选择是画出方差解释率关于维数的函数（简单地绘制<code>cumsum</code>；参见图 8-8）。曲线中通常会有一个肘部，方差解释率停止快速增长。您可以将其视为数据集的真正的维度。在这种情况下，您可以看到将维度降低到大约 100 个维度不会失去太多的可解释方差。  </p>
@@ -503,7 +503,7 @@ X_reduced=pca.fit_transform(X)
 <h3 id="pca-压缩">PCA 压缩</h3>
 <p>显然，在降维之后，训练集占用的空间要少得多。例如，尝试将 PCA 应用于 MNIST 数据集，同时保留 95% 的方差。你应该发现每个实例只有 150 多个特征，而不是原来的 784 个特征。因此，尽管大部分方差都保留下来，但数据集现在还不到其原始大小的 20%！这是一个合理的压缩比率，您可以看到这可以如何极大地加快分类算法（如 SVM 分类器）的速度。  </p>
 <p>通过应用 PCA 投影的逆变换，也可以将缩小的数据集解压缩回 784 维。当然这并不会返回给你最原始的数据，因为投影丢失了一些信息（在 5% 的方差内），但它可能非常接近原始数据。原始数据和重构数据之间的均方距离（压缩然后解压缩）被称为重构误差（reconstruction error）。例如，下面的代码将 MNIST 数据集压缩到 154 维，然后使用<code>inverse_transform()</code>方法将其解压缩回 784 维。图 8-9 显示了原始训练集（左侧）的几位数字在压缩并解压缩后（右侧）的对应数字。您可以看到有轻微的图像质量降低，但数字仍然大部分完好无损。  </p>
-<pre><code class="lang-py">pca=PCA(n_components=<span class="hljs-number">154</span>)
+<pre><code class="lang-python">pca=PCA(n_components=<span class="hljs-number">154</span>)
 X_mnist_reduced=pca.fit_transform(X_mnist)
 X_mnist_recovered=pca.inverse_transform(X_mnist_reduced)
 </code></pre>
@@ -515,7 +515,7 @@ X_mnist_recovered=pca.inverse_transform(X_mnist_reduced)
 <h3 id="增量-pca（incremental-pca）">增量 PCA（Incremental PCA）</h3>
 <p>先前 PCA 实现的一个问题是它需要在内存中处理整个训练集以便 SVD 算法运行。幸运的是，我们已经开发了增量 PCA（IPCA）算法：您可以将训练集分批，并一次只对一个批量使用 IPCA 算法。这对大型训练集非常有用，并且可以在线应用 PCA（即在新实例到达时即时运行）。  </p>
 <p>下面的代码将 MNIST 数据集分成 100 个小批量（使用 NumPy 的<code>array_split()</code>函数），并将它们提供给 Scikit-Learn 的<code>IncrementalPCA</code>类，以将 MNIST 数据集的维度降低到 154 维（就像以前一样）。请注意，您必须对每个最小批次调用<code>partial_fit()</code>方法，而不是对整个训练集使用<code>fit()</code>方法： </p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> IncrementalPCA
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> IncrementalPCA
 
 n_batches=<span class="hljs-number">100</span>
 inc_pca=IncrementalPCA(n_components=<span class="hljs-number">154</span>)
@@ -524,21 +524,21 @@ inc_pca=IncrementalPCA(n_components=<span class="hljs-number">154</span>)
 X_mnist_reduced=inc_pca.transform(X_mnist)
 </code></pre>
 <p>或者，您可以使用 NumPy 的<code>memmap</code>类，它允许您操作存储在磁盘上二进制文件中的大型数组，就好像它完全在内存中；该类仅在需要时加载内存中所需的数据。由于增量 PCA 类在任何时间内仅使用数组的一小部分，因此内存使用量仍受到控制。这可以调用通常的<code>fit()</code>方法，如下面的代码所示：  </p>
-<pre><code class="lang-py">X_mm=np.memmap(filename,dtype=<span class="hljs-string">'float32'</span>,mode=<span class="hljs-string">'readonly'</span>,shape=(m,n))
+<pre><code class="lang-python">X_mm=np.memmap(filename,dtype=<span class="hljs-string">'float32'</span>,mode=<span class="hljs-string">'readonly'</span>,shape=(m,n))
 batch_size=m//n_batches
 inc_pca=IncrementalPCA(n_components=<span class="hljs-number">154</span>,batch_size=batch_size)
 inc_pca.fit(X_mm)
 </code></pre>
 <h3 id="随机-pca（randomized-pca）">随机 PCA（Randomized PCA）</h3>
 <p>Scikit-Learn 提供了另一种执行 PCA 的选择，称为随机 PCA。这是一种随机算法，可以快速找到前<code>d</code>个主成分的近似值。它的计算复杂度是<code>O(m × d^2) + O(d^3)</code>，而不是<code>O(m × n^2) + O(n^3)</code>，所以当<code>d</code>远小于<code>n</code>时，它比之前的算法快得多。  </p>
-<pre><code class="lang-py">rnd_pca=PCA(n_components=<span class="hljs-number">154</span>,svd_solver=<span class="hljs-string">'randomized'</span>)
+<pre><code class="lang-python">rnd_pca=PCA(n_components=<span class="hljs-number">154</span>,svd_solver=<span class="hljs-string">'randomized'</span>)
 X_reduced=rnd_pca.fit_transform(X_mnist)
 </code></pre>
 <h2 id="核-pca（kernel-pca）">核 PCA（Kernel PCA）</h2>
 <p>在第 5 章中，我们讨论了核技巧，一种将实例隐式映射到非常高维空间（称为特征空间）的数学技术，让支持向量机可以应用于非线性分类和回归。回想一下，高维特征空间中的线性决策边界对应于原始空间中的复杂非线性决策边界。  </p>
 <p>事实证明，同样的技巧可以应用于 PCA，从而可以执行复杂的非线性投影来降低维度。这就是所谓的核 PCA（kPCA）。它通常能够很好地保留投影后的簇，有时甚至可以展开分布近似于扭曲流形的数据集。  </p>
 <p>例如，下面的代码使用 Scikit-Learn 的<code>KernelPCA</code>类来执行带有 RBF 核的 kPCA（有关 RBF 核和其他核的更多详细信息，请参阅第 5 章）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> KernelPCA
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.decomposition <span class="hljs-keyword">import</span> KernelPCA
 
 rbf_pca=KernelPCA(n_components=<span class="hljs-number">2</span>,kernel=<span class="hljs-string">'rbf'</span>,gamma=<span class="hljs-number">0.04</span>)
 X_reduced=rbf_pca.fit_transform(X)
@@ -548,7 +548,7 @@ X_reduced=rbf_pca.fit_transform(X)
 <p>图 8-10 使用不同核的 kPCA 将瑞士卷降到 2 维</p>
 <h3 id="选择一种核并调整超参数">选择一种核并调整超参数</h3>
 <p>由于 kPCA 是无监督学习算法，因此没有明显的性能指标可以帮助您选择最佳的核方法和超参数值。但是，降维通常是监督学习任务（例如分类）的准备步骤，因此您可以简单地使用网格搜索来选择可以让该任务达到最佳表现的核方法和超参数。例如，下面的代码创建了一个两步的流水线，首先使用 kPCA 将维度降至两维，然后应用 Logistic 回归进行分类。然后它使用<code>Grid SearchCV</code>为 kPCA 找到最佳的核和<code>gamma</code>值，以便在最后获得最佳的分类准确性：  </p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> GridSearchCV 
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> GridSearchCV 
 <span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LogisticRegression 
 <span class="hljs-keyword">from</span> sklearn.pipeline <span class="hljs-keyword">import</span> Pipeline
 
@@ -564,14 +564,14 @@ grid_search = GridSearchCV(clf, param_grid, cv=<span class="hljs-number">3</span
 grid_search.fit(X, y)
 </code></pre>
 <p>你可以通过调用<code>best_params_</code>变量来查看使模型效果最好的核和超参数：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(grid_search.best_params_)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(grid_search.best_params_)
 {<span class="hljs-string">'kpca__gamma'</span>: <span class="hljs-number">0.043333333333333335</span>, <span class="hljs-string">'kpca__kernel'</span>: <span class="hljs-string">'rbf'</span>}
 </code></pre>
 <p>另一种完全为非监督的方法，是选择产生最低重建误差的核和超参数。但是，重建并不像线性 PCA 那样容易。这里是原因：图 8-11 显示了原始瑞士卷 3D 数据集（左上角），并且使用 RBF 核应用 kPCA 后生成的二维数据集（右上角）。由于核技巧，这在数学上等同于使用特征映射<code>φ</code>将训练集映射到无限维特征空间（右下），然后使用线性 PCA 将变换的训练集投影到 2D。请注意，如果我们可以在缩减空间中对给定实例实现反向线性 PCA 步骤，则重构点将位于特征空间中，而不是位于原始空间中（例如，如图中由<code>x</code>表示的那样）。由于特征空间是无限维的，我们不能找出重建点，因此我们无法计算真实的重建误差。幸运的是，可以在原始空间中找到一个贴近重建点的点。这被称为重建前图像（reconstruction pre-image）。一旦你有这个前图像，你就可以测量其与原始实例的平方距离。然后，您可以选择最小化重建前图像错误的核和超参数。</p>
 <p><img src="img/8-11.jpeg" alt=""></img></p>
 <p>图 8-11 核 PCA 和重建前图像误差  </p>
 <p>您可能想知道如何进行这种重建。一种解决方案是训练一个监督回归模型，将预计实例作为训练集，并将原始实例作为训练目标。如果您设置了<code>fit_inverse_transform = True</code>，Scikit-Learn 将自动执行此操作，代码如下所示：</p>
-<pre><code class="lang-py">rbf_pca = KernelPCA(n_components = <span class="hljs-number">2</span>, kernel=<span class="hljs-string">"rbf"</span>, gamma=<span class="hljs-number">0.0433</span>,fit_inverse_transform=<span class="hljs-literal">True</span>)
+<pre><code class="lang-python">rbf_pca = KernelPCA(n_components = <span class="hljs-number">2</span>, kernel=<span class="hljs-string">"rbf"</span>, gamma=<span class="hljs-number">0.0433</span>,fit_inverse_transform=<span class="hljs-literal">True</span>)
 X_reduced = rbf_pca.fit_transform(X)
 X_preimage = rbf_pca.inverse_transform(X_reduced)
 </code></pre>
@@ -579,14 +579,14 @@ X_preimage = rbf_pca.inverse_transform(X_reduced)
 <p>概述：默认条件下，<code>fit_inverse_transform = False</code>并且<code>KernelPCA</code>没有<code>inverse_tranfrom()</code>方法。这种方法仅仅当<code>fit_inverse_transform = True</code>的情况下才会创建。  </p>
 </blockquote>
 <p>你可以计算重建前图像误差：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> mean_squared_error
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> mean_squared_error
 <span class="hljs-meta">&gt;&gt;&gt; </span>mean_squared_error(X, X_preimage) <span class="hljs-number">32.786308795766132</span>
 </code></pre>
 <p>现在你可以使用交叉验证的方格搜索来寻找可以最小化重建前图像误差的核方法和超参数。  </p>
 <h3 id="lle">LLE</h3>
 <p>局部线性嵌入（Locally Linear Embedding）是另一种非常有效的非线性降维（NLDR）方法。这是一种流形学习技术，不依赖于像以前算法那样的投影。简而言之，LLE 首先测量每个训练实例与其最近邻（c.n.）之间的线性关系，然后寻找能最好地保留这些局部关系的训练集的低维表示（稍后会详细介绍） 。这使得它特别擅长展开扭曲的流形，尤其是在没有太多噪音的情况下。  </p>
 <p>例如，以下代码使用 Scikit-Learn 的<code>LocallyLinearEmbedding</code>类来展开瑞士卷。得到的二维数据集如图 8-12 所示。正如您所看到的，瑞士卷被完全展开，实例之间的距离保存得很好。但是，距离不能在较大范围内保留的很好：展开的瑞士卷的左侧被挤压，而右侧的部分被拉长。尽管如此，LLE 在对流形建模方面做得非常好。  </p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.manifold <span class="hljs-keyword">import</span> LocallyLinearEmbedding
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.manifold <span class="hljs-keyword">import</span> LocallyLinearEmbedding
 
 lle=LocallyLinearEmbedding(n_components=<span class="hljs-number">2</span>,n_neighbors=<span class="hljs-number">10</span>)
 X_reduced=lle.fit_transform(X)
@@ -667,7 +667,7 @@ X_reduced=lle.fit_transform(X)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"八、降维","level":"1.10","depth":1,"next":{"title":"十、使用 Keras 搭建人工神经网络","level":"1.11","depth":1,"path":"10.md","ref":"./10.md","articles":[]},"previous":{"title":"七、集成学习和随机森林","level":"1.9","depth":1,"path":"7.md","ref":"./7.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"8.md","mtime":"2024-08-23T21:05:56.829Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"八、降维","level":"1.10","depth":1,"next":{"title":"十、使用 Keras 搭建人工神经网络","level":"1.11","depth":1,"path":"10.md","ref":"./10.md","articles":[]},"previous":{"title":"七、集成学习和随机森林","level":"1.9","depth":1,"path":"7.md","ref":"./7.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"8.md","mtime":"2025-01-05T17:59:46.717Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

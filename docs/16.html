@@ -6,7 +6,7 @@
         <title>十六、使用 RNN 和注意力机制进行自然语言处理 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -403,7 +403,7 @@
 <p>先从一个简单有趣的模型开始，它能写出莎士比亚风格的文字。</p>
 <h2 id="使用-character-rnn-生成莎士比亚风格的文本">使用 Character RNN 生成莎士比亚风格的文本</h2>
 <p>在 2015 年一篇著名的、名为《The Unreasonable Effectiveness of Recurrent Neural Networks》博客中，Andrej Karpathy 展示了如何训练 RNN，来预测句子中的下一个字符。这个 Char-RNN 可以用来生成小说，每次一个字符。下面是一段简短的、由 Char-RNN 模型（在莎士比亚全部著作上训练而成）生成的文本：</p>
-<pre><code class="lang-py">PANDARUS:
+<pre><code class="lang-python">PANDARUS:
 Alas, I think he shall be come approached <span class="hljs-keyword">and</span> the day
 When little srain would be attain<span class="hljs-string">'d into being never fed,
 And who is but a chain and subjects of his death,
@@ -412,17 +412,17 @@ I should not sleep.
 <p>虽然文笔一般，但只是通过学习来预测一句话中的下一个字符，模型在单词、语法、断句等等方面做的很好。接下来一步一步搭建 Char-RNN，从创建数据集开始。</p>
 <h3 id="创建训练数据集">创建训练数据集</h3>
 <p>首先，使用 Keras 的<code>get_file()</code>函数，从 Andrej Karpathy 的 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fkarpathy%2Fchar-rnn" target="_blank">Char-RNN 项目</a>，下载所有莎士比亚的作品：</p>
-<pre><code class="lang-py">shakespeare_url = <span class="hljs-string">"https://homl.info/shakespeare"</span> <span class="hljs-comment"># shortcut URL</span>
+<pre><code class="lang-python">shakespeare_url = <span class="hljs-string">"https://homl.info/shakespeare"</span> <span class="hljs-comment"># shortcut URL</span>
 filepath = keras.utils.get_file(<span class="hljs-string">"shakespeare.txt"</span>, shakespeare_url)
 <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(filepath) <span class="hljs-keyword">as</span> f:
     shakespeare_text = f.read()
 </code></pre>
 <p>然后，将每个字符编码为一个整数。方法之一是创建一个自定义预处理层，就像之前在第 13 章做的那样。但在这里，使用 Keras 的<code>Tokenizer</code>会更加简单。首先，将一个将分词器拟合到文本：分词器能从文本中发现所有的字符，并将所有字符映射到不同的字符 ID，映射从 1 开始（注意不是从 0 开始，0 是用来做遮挡的，后面会看到）：</p>
-<pre><code class="lang-py">tokenizer = keras.preprocessing.text.Tokenizer(char_level=<span class="hljs-literal">True</span>)
+<pre><code class="lang-python">tokenizer = keras.preprocessing.text.Tokenizer(char_level=<span class="hljs-literal">True</span>)
 tokenizer.fit_on_texts([shakespeare_text])
 </code></pre>
 <p>设置<code>char_level=True</code>，以得到字符级别的编码，而不是默认的单词级别的编码。这个分词器默认将所有文本转换成了小写（如果不想这样，可以设置<code>lower=False</code>）。现在分词器可以将一整句（或句子列表）编码为字符 ID 列表，这可以告诉我们文本中有多少个独立的字符，以及总字符数：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>tokenizer.texts_to_sequences([<span class="hljs-string">"First"</span>])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>tokenizer.texts_to_sequences([<span class="hljs-string">"First"</span>])
 [[<span class="hljs-number">20</span>, <span class="hljs-number">6</span>, <span class="hljs-number">9</span>, <span class="hljs-number">8</span>, <span class="hljs-number">3</span>]]
 <span class="hljs-meta">&gt;&gt;&gt; </span>tokenizer.sequences_to_texts([[<span class="hljs-number">20</span>, <span class="hljs-number">6</span>, <span class="hljs-number">9</span>, <span class="hljs-number">8</span>, <span class="hljs-number">3</span>]])
 [<span class="hljs-string">'f i r s t'</span>]
@@ -430,7 +430,7 @@ tokenizer.fit_on_texts([shakespeare_text])
 <span class="hljs-meta">&gt;&gt;&gt; </span>dataset_size = tokenizer.document_count <span class="hljs-comment"># total number of characters</span>
 </code></pre>
 <p>现在对完整文本做编码，将每个字符都用 ID 来表示（减 1 使 ID 从 0 到 38，而不是 1 到 39）：</p>
-<pre><code class="lang-py">[encoded] = np.array(tokenizer.texts_to_sequences([shakespeare_text])) - <span class="hljs-number">1</span>
+<pre><code class="lang-python">[encoded] = np.array(tokenizer.texts_to_sequences([shakespeare_text])) - <span class="hljs-number">1</span>
 </code></pre>
 <p>继续之前，需要将数据集分成训练集、验证集和测试集。不能大论字符，该怎么处理这种序列式的数据集呢？</p>
 <h3 id="如何切分序列数据集">如何切分序列数据集</h3>
@@ -439,12 +439,12 @@ tokenizer.fit_on_texts([shakespeare_text])
 <p>因此，在时间维度上切分更加安全 —— 但这实际是默认 RNN 可以（在训练集）从过去学到的规律也适用于将来。换句话说，我们假设时间序列是静态的（至少是在一个较宽的区间内）。对于时间序列，这个假设是合理的（比如，化学反应就是这样，化学定理不会每天发生改变），但其它的就不是（例如，金融市场就不是静态的，一旦交易员发现规律并从中牟利，规律就会改变）。要保证时间序列确实是静态的，可以在验证集上画出模型随时间的误差：如果模型在验证集的前端表现优于后段，则时间序列可能就不够静态，最好是在一个更短的时间区间内训练。</p>
 <p>总而言之，将时间序列切分成训练集、验证集和测试集不是简单的工作，怎么做要取决于具体的任务。</p>
 <p>回到莎士比亚！这里将前 90% 的文本作为训练集（剩下的作为验证集和测试集），创建一个<code>tf.data.Dataset</code>，可以从这个集和一个个返回每个字符：</p>
-<pre><code class="lang-py">train_size = dataset_size * <span class="hljs-number">90</span> // <span class="hljs-number">100</span>
+<pre><code class="lang-python">train_size = dataset_size * <span class="hljs-number">90</span> // <span class="hljs-number">100</span>
 dataset = tf.data.Dataset.from_tensor_slices(encoded[:train_size])
 </code></pre>
 <h3 id="将序列数据集切分成多个窗口">将序列数据集切分成多个窗口</h3>
 <p>现在训练集包含一个单独的长序列，超过 100 万的任务，所以不能直接在这个训练集上训练神经网络：现在的 RNN 等同于一个有 100 万层的深度网络，只有一个超长的单实例来训练。所以，得使用数据集的<code>window()</code>方法，将这个长序列转化为许多小窗口文本。每个实例都是完整文本的相对短的子字符串，RNN 只在这些子字符串上展开。这被称为截断沿时间反向传播。调用<code>window()</code>方法创建一个短文本窗口的数据集：</p>
-<pre><code class="lang-py">n_steps = <span class="hljs-number">100</span>
+<pre><code class="lang-python">n_steps = <span class="hljs-number">100</span>
 window_length = n_steps + <span class="hljs-number">1</span> <span class="hljs-comment"># target = input 向前移动 1 个字符</span>
 dataset = dataset.window(window_length, shift=<span class="hljs-number">1</span>, drop_remainder=<span class="hljs-literal">True</span>)
 </code></pre>
@@ -454,10 +454,10 @@ dataset = dataset.window(window_length, shift=<span class="hljs-number">1</span>
 <p>默认情况下，<code>window()</code>方法创建的窗口是不重叠的，但为了获得可能的最大训练集，我们设定<code>shift=1</code>，好让第一个窗口包含字符 0 到 100，第二个窗口包含字符 1 到 101，等等。为了确保所有窗口是准确的 101 个字符长度（为了不做填充而创建批次），设置<code>drop_remainder=True</code>（否则，最后的 100 个窗口会包含 100 个字符、99 个字符，一直到 1 个字符）。</p>
 <p><code>window()</code>方法创建了一个包含窗口的数据集，每个窗口也是数据集。这是一个嵌套的数据集，类似于列表的列表。当调用数据集方法处理（比如、打散或做批次）每个窗口时，这样会很方便。但是，不能直接使用嵌套数据集来训练，因为模型要的输入是张量，不是数据集。因此，必须调用<code>flat_map()</code>方法：它能将嵌套数据集转换成打平的数据集。例如，假设<code>{1, 2, 3}</code>表示包含张量 1、2、3 的序列。如果将嵌套数据集<code>{{1, 2}, {3, 4, 5, 6}}</code>打平，就会得到<code>{1, 2, 3, 4, 5, 6}</code>。另外，<code>flat_map()</code>方法可以接收函数作为参数，可以处理嵌套数据集的每个数据集。例如，如果将函数 <code>lambda ds: ds.batch(2)</code> 传递给 <code>flat_map()</code> ，它能将<code>{{1, 2}, {3, 4, 5, 6}}</code>转变为<code>{[1, 2], [3, 4], [5, 6]}</code>：这是一个张量大小为 2 的数据集。</p>
 <p>有了这些知识，就可以打平数据集了：</p>
-<pre><code class="lang-py">dataset = dataset.flat_map(<span class="hljs-keyword">lambda</span> window: window.batch(window_length))
+<pre><code class="lang-python">dataset = dataset.flat_map(<span class="hljs-keyword">lambda</span> window: window.batch(window_length))
 </code></pre>
 <p>我们在每个窗口上调用了<code>batch(window_length)</code>：因为所有窗口都是这个长度，对于每个窗口，都能得到一个独立的张量。现在的数据集包含连续的窗口，每个有 101 个字符。因为梯度下降在训练集中的实例独立同分布时的效果最好，需要打散这些窗口。然后我们可以对窗口做批次，分割输入（前 100 个字符）和目标（最后一个字符）：</p>
-<pre><code class="lang-py">batch_size = <span class="hljs-number">32</span>
+<pre><code class="lang-python">batch_size = <span class="hljs-number">32</span>
 dataset = dataset.shuffle(<span class="hljs-number">10000</span>).batch(batch_size)
 dataset = dataset.<span class="hljs-built_in">map</span>(<span class="hljs-keyword">lambda</span> windows: (windows[:, :-<span class="hljs-number">1</span>], windows[:, <span class="hljs-number">1</span>:]))
 </code></pre>
@@ -465,16 +465,16 @@ dataset = dataset.<span class="hljs-built_in">map</span>(<span class="hljs-keywo
 <p><img src="img/847ef99a515939c6266e9a184ac7e061.png" alt=""></img></p>
 <p>图 16-1 准备打散窗口的数据集</p>
 <p>第 13 章讨论过，类型输入特征通常都要编码，一般是独热编码或嵌入。这里，使用独热编码，因为独立字符不多（只有 39）：</p>
-<pre><code class="lang-py">dataset = dataset.<span class="hljs-built_in">map</span>(
+<pre><code class="lang-python">dataset = dataset.<span class="hljs-built_in">map</span>(
     <span class="hljs-keyword">lambda</span> X_batch, Y_batch: (tf.one_hot(X_batch, depth=max_id), Y_batch))
 </code></pre>
 <p>最后，加上预提取：</p>
-<pre><code class="lang-py">dataset = dataset.prefetch(<span class="hljs-number">1</span>)
+<pre><code class="lang-python">dataset = dataset.prefetch(<span class="hljs-number">1</span>)
 </code></pre>
 <p>就是这样！准备数据集是最麻烦的部分。下面开始搭建模型。</p>
 <h3 id="搭建并训练-char-rnn-模型">搭建并训练 Char-RNN 模型</h3>
 <p>根据前面的 100 个字符预测下一个字符，可以使用一个 RNN，含有两个 GRU 层，每个 128 个单元，每个单元对输入（<code>dropout</code>）和隐藏态（<code>recurrent_dropout</code>）的丢弃率是 20%。如果需要的话，后面可以微调这些超参数。输出层是一个时间分布的紧密层，有 39 个单元（<code>max_id</code>），因为文本中有 39 个不同的字符，需要输出每个可能字符（在每个时间步）的概率。输出概率之后应为 1，所以使用 softmax 激活很熟。然后可以使用<code>"sparse_categorical_crossentropy"</code>损失和 Adam 优化器，编译模型。最后，就可以训练模型几个周期了（训练过程可能要几个小时，取决于硬件）：</p>
-<pre><code class="lang-py">model = keras.models.Sequential([
+<pre><code class="lang-python">model = keras.models.Sequential([
     keras.layers.GRU(<span class="hljs-number">128</span>, return_sequences=<span class="hljs-literal">True</span>, input_shape=[<span class="hljs-literal">None</span>, max_id],
                      dropout=<span class="hljs-number">0.2</span>, recurrent_dropout=<span class="hljs-number">0.2</span>),
     keras.layers.GRU(<span class="hljs-number">128</span>, return_sequences=<span class="hljs-literal">True</span>,
@@ -487,12 +487,12 @@ history = model.fit(dataset, epochs=<span class="hljs-number">20</span>)
 </code></pre>
 <h3 id="使用-char-rnn-模型">使用 Char-RNN 模型</h3>
 <p>现在就有了可以预测莎士比亚要写的下一个人物的模型了。输入数据之前，先要像之前那样做预处理，因此写个小函数来做预处理：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">texts</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">texts</span>):
     X = np.array(tokenizer.texts_to_sequences(texts)) - <span class="hljs-number">1</span>
     <span class="hljs-keyword">return</span> tf.one_hot(X, max_id)
 </code></pre>
 <p>现在，用这个模型预测文本中的下一个字母：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>X_new = preprocess([<span class="hljs-string">"How are yo"</span>])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>X_new = preprocess([<span class="hljs-string">"How are yo"</span>])
 <span class="hljs-meta">&gt;&gt;&gt; </span>Y_pred = model.predict_classes(X_new)
 <span class="hljs-meta">&gt;&gt;&gt; </span>tokenizer.sequences_to_texts(Y_pred + <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>][-<span class="hljs-number">1</span>] <span class="hljs-comment"># 1st sentence, last char</span>
 <span class="hljs-string">'u'</span>
@@ -500,7 +500,7 @@ history = model.fit(dataset, epochs=<span class="hljs-number">20</span>)
 <p>预测成功！接下来用这个模型生成文本。</p>
 <h3 id="生成假莎士比亚文本">生成假莎士比亚文本</h3>
 <p>要使用 Char-RNN 生成新文本，我们可以给模型输入一些文本，让模型预测出下一个字母，将字母添加到文本的尾部，再将延长后的文本输入给模型，预测下一个字母，以此类推。但在实际中，这会导致相同的单词不断重复。相反的，可以使用<code>tf.random.categorical()</code>函数，随机挑选下一个字符，概率等同于估计概率。这样就能生成一些多样且有趣的文本。根据类的对数概率（logits），<code>categorical()</code>函数随机从类索引采样。为了对生成文本的多样性更可控，我们可以用一个称为“温度“的可调节的数来除以对数概率：温度接近 0，会利于高概率字符，而高温度会是所有字符概率相近。下面的<code>next_char()</code>函数使用这个方法，来挑选添加进文本中的字符：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">next_char</span>(<span class="hljs-params">text, temperature=<span class="hljs-number">1</span></span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">next_char</span>(<span class="hljs-params">text, temperature=<span class="hljs-number">1</span></span>):
     X_new = preprocess([text])
     y_proba = model.predict(X_new)[<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>:, :]
     rescaled_logits = tf.math.log(y_proba) / temperature
@@ -508,13 +508,13 @@ history = model.fit(dataset, epochs=<span class="hljs-number">20</span>)
     <span class="hljs-keyword">return</span> tokenizer.sequences_to_texts(char_id.numpy())[<span class="hljs-number">0</span>]
 </code></pre>
 <p>然后，可以写一个小函数，重复调用<code>next_char()</code>：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">complete_text</span>(<span class="hljs-params">text, n_chars=<span class="hljs-number">50</span>, temperature=<span class="hljs-number">1</span></span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">complete_text</span>(<span class="hljs-params">text, n_chars=<span class="hljs-number">50</span>, temperature=<span class="hljs-number">1</span></span>):
     <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n_chars):
         text += next_char(text, temperature)
     <span class="hljs-keyword">return</span> text
 </code></pre>
 <p>现在就可以生成一些文本了！先尝试下不同的温度数：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(complete_text(<span class="hljs-string">"t"</span>, temperature=<span class="hljs-number">0.2</span>))
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(complete_text(<span class="hljs-string">"t"</span>, temperature=<span class="hljs-number">0.2</span>))
 the belly the great <span class="hljs-keyword">and</span> who shall be the belly the
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(complete_text(<span class="hljs-string">"w"</span>, temperature=<span class="hljs-number">1</span>))
 thing? <span class="hljs-keyword">or</span> why you gremio.
@@ -528,7 +528,7 @@ fol rusb
 <h3 id="有状态-rnn">有状态 RNN</h3>
 <p>到目前为止，我们只使用了无状态 RNN：在每个训练迭代中，模型从全是 0 的隐藏状态开始训练，然后在每个时间步更新其状态，在最后一个时间步，隐藏态就被丢掉，以后再也不用了。如果让 RNN 保留这个状态，供下一个训练批次使用如何呢？这么做的话，尽管反向传播只在短序列传播，模型也可以学到长时规律。这被称为有状态 RNN。</p>
 <p>首先，有状态 RNN 只在前一批次的序列离开，后一批次中的对应输入序列开始的情况下才有意义。所以第一件要做的事情是使用序列且没有重叠的输入序列（而不是用来训练无状态 RNN 时的打散和重叠的序列）。当创建<code>Dataset</code>时，调用<code>window()</code>必须使用<code>shift=n_steps</code>（而不是<code>shift=1</code>）。另外，不能使用<code>shuffle()</code>方法。但是，准备有状态 RNN 数据集的批次会麻烦些。事实上，如果调用<code>batch(32)</code>，32 个连续的窗口会放到一个相同的批次中，后面的批次不会接着这些窗口。第一个批次含有窗口 1 到 32，第二个批次批次含有窗口 33 到 64，因此每个批次中的第一个窗口（窗口 1 和 33），它们是不连续的。最简单办法是使用只包含一个窗口的“批次”：</p>
-<pre><code class="lang-py">dataset = tf.data.Dataset.from_tensor_slices(encoded[:train_size])
+<pre><code class="lang-python">dataset = tf.data.Dataset.from_tensor_slices(encoded[:train_size])
 dataset = dataset.window(window_length, shift=n_steps, drop_remainder=<span class="hljs-literal">True</span>)
 dataset = dataset.flat_map(<span class="hljs-keyword">lambda</span> window: window.batch(window_length))
 dataset = dataset.batch(<span class="hljs-number">1</span>)
@@ -542,7 +542,7 @@ dataset = dataset.prefetch(<span class="hljs-number">1</span>)
 <p>图 16-2 为有状态 RNN 准备连续序列片段的数据集</p>
 <p>做批次虽然麻烦，但可以实现。例如，我们可以将莎士比亚作品切分成 32 段等长的文本，每个做成一个连续序列的数据集，最后使用<code>tf.train.Dataset.zip(datasets).map(lambda *windows: tf.stack(windows))</code>来创建合适的连续批次，批次中的<code>n</code>输入序列紧跟着<code>n</code>结束的地方（笔记本中有完整代码）。</p>
 <p>现在创建有状态 RNN。首先，创建每个循环层时需要设置<code>stateful=True</code>。第二，有状态 RNN 需要知道批次大小（因为要为批次中的输入序列保存状态），所以要在第一层中设置<code>batch_input_shape</code>参数。不用指定第二个维度，因为不限制序列的长度：</p>
-<pre><code class="lang-py">model = keras.models.Sequential([
+<pre><code class="lang-python">model = keras.models.Sequential([
     keras.layers.GRU(<span class="hljs-number">128</span>, return_sequences=<span class="hljs-literal">True</span>, stateful=<span class="hljs-literal">True</span>,
                      dropout=<span class="hljs-number">0.2</span>, recurrent_dropout=<span class="hljs-number">0.2</span>,
                      batch_input_shape=[batch_size, <span class="hljs-literal">None</span>, max_id]),
@@ -553,12 +553,12 @@ dataset = dataset.prefetch(<span class="hljs-number">1</span>)
 ])
 </code></pre>
 <p>在每个周期之后，回到文本开头之前，需要重设状态。要这么做，可以使用一个小调回：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ResetStatesCallback</span>(keras.callbacks.Callback):
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ResetStatesCallback</span>(keras.callbacks.Callback):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_epoch_begin</span>(<span class="hljs-params">self, epoch, logs</span>):
         <span class="hljs-variable language_">self</span>.model.reset_states()
 </code></pre>
 <p>现在可以编译、训练模型了（周期数更多，是因为每个周期比之前变短了，每个批次只有一个实例）：</p>
-<pre><code class="lang-py">model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"sparse_categorical_crossentropy"</span>, optimizer=<span class="hljs-string">"Adam"</span>)
+<pre><code class="lang-python">model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">"sparse_categorical_crossentropy"</span>, optimizer=<span class="hljs-string">"Adam"</span>)
 model.fit(dataset, epochs=<span class="hljs-number">50</span>, callbacks=[ResetStatesCallback()])
 </code></pre>
 <blockquote>
@@ -567,12 +567,12 @@ model.fit(dataset, epochs=<span class="hljs-number">50</span>, callbacks=[ResetS
 <p>创建了一个字符层面的模型，接下来看看词层面的模型，并做一个常见的自然语言处理任务：情感分析。我们会学习使用遮掩来处理变化长度的序列。</p>
 <h2 id="情感分析">情感分析</h2>
 <p>如果说 MNIST 是计算机视觉的“hello world”，那么 IMDb 影评数据集就是自然语言处理的“hello world”：这个数据集包含 50000 条英文影评，25000 条用于训练，25000 条用于测试，是从 IMDb 网站提取的，并带有影评标签，负（0）或正（1）。和 MNIST 一样，IMDb 影评数据集的流行是有原因的：笔记本电脑上就可以跑起来，不会耗时太长，也具有一定挑战。Keras 提供了一个简单的函数加载数据集：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>(X_train, y_train), (X_test, y_test) = keras.datasets.imdb.load_data()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>(X_train, y_train), (X_test, y_test) = keras.datasets.imdb.load_data()
 <span class="hljs-meta">&gt;&gt;&gt; </span>X_train[<span class="hljs-number">0</span>][:<span class="hljs-number">10</span>]
 [<span class="hljs-number">1</span>, <span class="hljs-number">14</span>, <span class="hljs-number">22</span>, <span class="hljs-number">16</span>, <span class="hljs-number">43</span>, <span class="hljs-number">530</span>, <span class="hljs-number">973</span>, <span class="hljs-number">1622</span>, <span class="hljs-number">1385</span>, <span class="hljs-number">65</span>]
 </code></pre>
 <p>影评在哪里？可以看到，数据集已经经过预处理了：<code>X_train</code>包括列表形式的影评，每条都是整数 NumPy 数组，每个整数代表一个词。所有标点符号都被去掉了，单词转换为小写，用空格隔开，最后用频次建立索引（小整数对应常见词）。整数 0、1、2 是特殊的：它们表示填充标记、序列开始（SSS）标记、和未知单词。如果想看到影评，可以如下解码：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>word_index = keras.datasets.imdb.get_word_index()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>word_index = keras.datasets.imdb.get_word_index()
 <span class="hljs-meta">&gt;&gt;&gt; </span>id_to_word = {id_ + <span class="hljs-number">3</span>: word <span class="hljs-keyword">for</span> word, id_ <span class="hljs-keyword">in</span> word_index.items()}
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> id_, token <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>((<span class="hljs-string">"&lt;pad&gt;"</span>, <span class="hljs-string">"&lt;sos&gt;"</span>, <span class="hljs-string">"&lt;unk&gt;"</span>)):
 <span class="hljs-meta">... </span>    id_to_word[id_] = token
@@ -584,13 +584,13 @@ model.fit(dataset, epochs=<span class="hljs-number">50</span>, callbacks=[ResetS
 <p>幸好，有更好的方法。Taku Kudo 在 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fsubword" target="_blank">2018 年的一篇论文</a>中介绍了一种无监督学习方法，在亚词层面分词和取消分词文本，与所属语言独立，空格和其它字符等同处理。使用这种方法，就算模型碰到一个之前没见过的单词，模型还是能猜出它的意思。例如，模型在训练期间没见过单词<code>smartest</code>，但学过<code>est</code>词尾是最的意思，然后就可以推断<code>smartest</code>的意思。Google 的 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fgoogle%2Fsentencepiece" target="_blank"><em>SentencePiece</em></a> 项目提供了开源实现，见 Taku Kudo 和 John Richardson 的<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fsentencepiece" target="_blank">论文</a>。</p>
 <p>另一种方法，是 Rico Sennrich 在更早的<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Frarewords" target="_blank">论文</a>中提出的，探索了其它创建亚单词编码的方法（比如，使用字节对编码）。最后同样重要的，TensorFlow 团队在 2019 年提出了<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Ftftext" target="_blank"><code>TF.Text</code></a>库，它实现了多种分词策略，包括 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fwordpiece" target="_blank">WordPiece</a>（字节对编码的变种）。</p>
 <p>如果你想将模型部署到移动设备或网页中，又不想每次都写一个不同的预处理函数，最好只使用 TensorFlow 运算，它可以融进模型中。看看怎么做。首先，使用 TensorFlow Datasets 加载原始 IMDb 评论，为文本（字节串）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow_datasets <span class="hljs-keyword">as</span> tfds
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> tensorflow_datasets <span class="hljs-keyword">as</span> tfds
 
 datasets, info = tfds.load(<span class="hljs-string">"imdb_reviews"</span>, as_supervised=<span class="hljs-literal">True</span>, with_info=<span class="hljs-literal">True</span>)
 train_size = info.splits[<span class="hljs-string">"train"</span>].num_examples
 </code></pre>
 <p>然后，写预处理函数：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">X_batch, y_batch</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">preprocess</span>(<span class="hljs-params">X_batch, y_batch</span>):
     X_batch = tf.strings.substr(X_batch, <span class="hljs-number">0</span>, <span class="hljs-number">300</span>)
     X_batch = tf.strings.regex_replace(X_batch, <span class="hljs-string">b"&lt;br\\s*/?&gt;"</span>, <span class="hljs-string">b" "</span>)
     X_batch = tf.strings.regex_replace(X_batch, <span class="hljs-string">b"[^a-zA-Z']"</span>, <span class="hljs-string">b" "</span>)
@@ -599,30 +599,30 @@ train_size = info.splits[<span class="hljs-string">"train"</span>].num_examples
 </code></pre>
 <p>预处理函数先裁剪影评，只保留前 300 个字符：这么做可以加速训练，并且不会过多影响性能，因为大多数时候只要看前一两句话，就能判断是正面或侧面的了。然后使用正则表达式替换<code>&lt;br /&gt;</code>标签为空格，然后将所有非字母字符替换为空格。例如，文本<code>"Well, I can't&lt;br /&gt;"</code>变成<code>"Well I can't"</code>。最后，<code>preprocess()</code>函数用空格分隔影评，返回一个嵌套张量，然后将嵌套张量转变为紧密张量，给所有影评填充上<code>"&lt;pad&gt;"</code>，使其长度相等。</p>
 <p>然后，构建词典。这需要使用<code>preprocess()</code>函数再次处理训练集，并使用<code>Counter</code>统计每个单词的出现次数：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> Counter
 vocabulary = Counter()
 <span class="hljs-keyword">for</span> X_batch, y_batch <span class="hljs-keyword">in</span> datasets[<span class="hljs-string">"train"</span>].batch(<span class="hljs-number">32</span>).<span class="hljs-built_in">map</span>(preprocess):
     <span class="hljs-keyword">for</span> review <span class="hljs-keyword">in</span> X_batch:
         vocabulary.update(<span class="hljs-built_in">list</span>(review.numpy()))
 </code></pre>
 <p>看看最常见的词有哪些：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>vocabulary.most_common()[:<span class="hljs-number">3</span>]
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>vocabulary.most_common()[:<span class="hljs-number">3</span>]
 [(<span class="hljs-string">b'&lt;pad&gt;'</span>, <span class="hljs-number">215797</span>), (<span class="hljs-string">b'the'</span>, <span class="hljs-number">61137</span>), (<span class="hljs-string">b'a'</span>, <span class="hljs-number">38564</span>)]
 </code></pre>
 <p>但是，并不需要让模型知道词典中的所有词，所以裁剪词典，只保留 10000 个最常见的词：</p>
-<pre><code class="lang-py">vocab_size = <span class="hljs-number">10000</span>
+<pre><code class="lang-python">vocab_size = <span class="hljs-number">10000</span>
 truncated_vocabulary = [
     word <span class="hljs-keyword">for</span> word, count <span class="hljs-keyword">in</span> vocabulary.most_common()[:vocab_size]]
 </code></pre>
 <p>现在需要加上预处理步骤将每个单词替换为单词 ID（即它在词典中的索引）。就像第 13 章那样，创建一张查找表，使用 1000 个未登录词（oov）桶：</p>
-<pre><code class="lang-py">words = tf.constant(truncated_vocabulary)
+<pre><code class="lang-python">words = tf.constant(truncated_vocabulary)
 word_ids = tf.<span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(truncated_vocabulary), dtype=tf.int64)
 vocab_init = tf.lookup.KeyValueTensorInitializer(words, word_ids)
 num_oov_buckets = <span class="hljs-number">1000</span>
 table = tf.lookup.StaticVocabularyTable(vocab_init, num_oov_buckets)
 </code></pre>
 <p>用这个词表查找几个单词的 ID：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>table.lookup(tf.constant([<span class="hljs-string">b"This movie was faaaaaantastic"</span>.split()]))
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>table.lookup(tf.constant([<span class="hljs-string">b"This movie was faaaaaantastic"</span>.split()]))
 &lt;tf.Tensor: [...], dtype=int64, numpy=array([[   <span class="hljs-number">22</span>,    <span class="hljs-number">12</span>,    <span class="hljs-number">11</span>, <span class="hljs-number">10054</span>]])&gt;
 </code></pre>
 <p>因为<code>this</code>、<code>movie</code>、<code>was</code>是在词表中的，所以它们的 ID 小于 10000，而<code>faaaaaantastic</code>不在词表中，所以将其映射到一个 oov 桶，其 ID 大于或等于 10000。</p>
@@ -630,14 +630,14 @@ table = tf.lookup.StaticVocabularyTable(vocab_init, num_oov_buckets)
 <p>提示：TF Transform 提供了一些实用的函数来处理词典。例如，<code>tft.compute_and_apply_vocabulary()</code>函数：它可以遍历数据集，找到所有不同的词，创建词典，还能生成 TF 运算，利用词典编码每个单词。</p>
 </blockquote>
 <p>现在，可以创建最终的训练集。对影评做批次，使用<code>preprocess()</code>将其转换为词的短序列，然后使用一个简单的<code>encode_words()</code>函数，利用创建的词表来编码这些词，最后预提取下一个批次：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">encode_words</span>(<span class="hljs-params">X_batch, y_batch</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">encode_words</span>(<span class="hljs-params">X_batch, y_batch</span>):
     <span class="hljs-keyword">return</span> table.lookup(X_batch), y_batch
 
 train_set = datasets[<span class="hljs-string">"train"</span>].batch(<span class="hljs-number">32</span>).<span class="hljs-built_in">map</span>(preprocess)
 train_set = train_set.<span class="hljs-built_in">map</span>(encode_words).prefetch(<span class="hljs-number">1</span>)
 </code></pre>
 <p>最后，创建模型并训练：</p>
-<pre><code class="lang-py">embed_size = <span class="hljs-number">128</span>
+<pre><code class="lang-python">embed_size = <span class="hljs-number">128</span>
 model = keras.models.Sequential([
     keras.layers.Embedding(vocab_size + num_oov_buckets, embed_size,
                            input_shape=[<span class="hljs-literal">None</span>]),
@@ -660,7 +660,7 @@ history = model.fit(train_set, epochs=<span class="hljs-number">5</span>)
 </blockquote>
 <p>所有接收遮挡的层必须支持遮挡（否则会抛出异常）。包括所有的循环层、<code>TimeDistributed</code>层和其它层。所有支持遮挡的层必须有等于<code>True</code>的属性<code>supports_masking</code>。如果想实现自定义的支持遮挡的层，应该给<code>call()</code>方法添加<code>mask</code>参数。另外，要在构造器中设定<code>self.supports_masking = True</code>。如果第一个层不是嵌入层，可以使用<code>keras.layers.Masking</code>层：它设置遮挡为<code>K.any(K.not_equal(inputs, 0), axis=-1)</code>，意思是最后一维都是 0 的时间步，会被后续层遮挡。</p>
 <p>对于<code>Sequential</code>模型，使用遮挡层，并自动向前传递遮挡是最佳的。但复杂模型上不能这么做，比如将<code>Conv1D</code>层与循环层混合使用时。对这种情况，需要使用函数式 API 或子类化 API 显式计算遮挡张量，然后将其传给需要的层。例如，下面的模型等价于前一个模型，除了使用函数式 API 手动处理遮挡张量：</p>
-<pre><code class="lang-py">K = keras.backend
+<pre><code class="lang-python">K = keras.backend
 inputs = keras.layers.Input(shape=[<span class="hljs-literal">None</span>])
 mask = keras.layers.Lambda(<span class="hljs-keyword">lambda</span> inputs: K.not_equal(inputs, <span class="hljs-number">0</span>))(inputs)
 z = keras.layers.Embedding(vocab_size + num_oov_buckets, embed_size)(inputs)
@@ -673,7 +673,7 @@ model = keras.Model(inputs=[inputs], outputs=[outputs])
 <h3 id="复用预训练的词嵌入">复用预训练的词嵌入</h3>
 <p>在 TensorFlow Hub 上可以非常方便的找到可以复用的预训练模型组件。这些模型组件被称为模块。只需浏览 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Ftfhub.dev%2F" target="_blank">TF Hub 仓库</a>，找到需要的模型，复制代码到自己的项目中就行，模块可以总动下载下来，包含预训练权重，到自己的模型中。</p>
 <p>例如，在情感分析模型中使用<code>nnlm-en-dim50</code>句子嵌入模块，版本 1：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow_hub <span class="hljs-keyword">as</span> hub
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> tensorflow_hub <span class="hljs-keyword">as</span> hub
 
 model = keras.Sequential([
     hub.KerasLayer(<span class="hljs-string">"https://tfhub.dev/google/tf2-preview/nnlm-en-dim50/1"</span>,
@@ -689,7 +689,7 @@ model.<span class="hljs-built_in">compile</span>(loss=<span class="hljs-string">
 <p>警告：不是所有的 TF Hub 模块都支持 TensorFlow 2。</p>
 </blockquote>
 <p>然后，就可以加载 IMDb 影评数据集了，不需要预处理（但要做批次和预提取），直接训练模型就成：</p>
-<pre><code class="lang-py">datasets, info = tfds.load(<span class="hljs-string">"imdb_reviews"</span>, as_supervised=<span class="hljs-literal">True</span>, with_info=<span class="hljs-literal">True</span>)
+<pre><code class="lang-python">datasets, info = tfds.load(<span class="hljs-string">"imdb_reviews"</span>, as_supervised=<span class="hljs-literal">True</span>, with_info=<span class="hljs-literal">True</span>)
 train_size = info.splits[<span class="hljs-string">"train"</span>].num_examples
 batch_size = <span class="hljs-number">32</span>
 train_set = datasets[<span class="hljs-string">"train"</span>].batch(batch_size).prefetch(<span class="hljs-number">1</span>)
@@ -718,7 +718,7 @@ history = model.fit(train_set, epochs=<span class="hljs-number">5</span>)
 </li>
 </ul>
 <p>TensorFlow Addons 项目涵盖了许多序列到序列的工具，可以创建准生产的编码器-解码器。例如，下面的代码创建了一个基本的编码器-解码器模型，相似于图 16-3：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow_addons <span class="hljs-keyword">as</span> tfa
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> tensorflow_addons <span class="hljs-keyword">as</span> tfa
 
 encoder_inputs = keras.layers.Input(shape=[<span class="hljs-literal">None</span>], dtype=np.int32)
 decoder_inputs = keras.layers.Input(shape=[<span class="hljs-literal">None</span>], dtype=np.int32)
@@ -750,7 +750,7 @@ model = keras.Model(inputs=[encoder_inputs, decoder_inputs, sequence_lengths],
 <h3 id="双向-rnn">双向 RNN</h3>
 <p>在每个时间步，常规循环层在产生输出前，只会查看过去和当下的输入。换句话说，循环层是遵循因果关系的，它不能查看未来。这样的 RNN 在预测时间序列时是合理的，但对于许多 NLP 任务，比如机器翻译，在编码给定词时，最好看看后面的词是什么。比如，对于这几个短语<code>the Queen of the United Kingdom</code>、<code>the queen of hearts</code>、<code>the queen bee</code>：要正确编码<code>queen</code>，需要向前看。要实现的话，可以对于相同的输入运行两个循环层，一个从左往右读，一个从右往左读。然后将每个时间步的输出结合，通常是连起来。这被称为双向循环层（见图 16-5）。</p>
 <p>要在 Keras 中实现双向循环层，可以在<code>keras.layers.Bidirectional</code>层中包一个循环层。例如，下面的代码创建了一个双向<code>GRU</code>层：</p>
-<pre><code class="lang-py">keras.layers.Bidirectional(keras.layers.GRU(<span class="hljs-number">10</span>, return_sequences=<span class="hljs-literal">True</span>))
+<pre><code class="lang-python">keras.layers.Bidirectional(keras.layers.GRU(<span class="hljs-number">10</span>, return_sequences=<span class="hljs-literal">True</span>))
 </code></pre>
 <blockquote>
 <p>笔记：<code>Bidirectional</code>层会创建一个<code>GRU</code>层的复制（但方向相反），会运行两个层，并将输出连起来。因此<code>GRU</code>层有 10 个神经元，<code>Bidirectional</code>层在每个时间步会输出 20 个值。</p>
@@ -763,7 +763,7 @@ model = keras.Model(inputs=[encoder_inputs, decoder_inputs, sequence_lengths],
 <p>然后，计算 30000 个含有两个词的句子的概率。将条件概率相乘。例如，<code>How will</code>的概率是<code>75% × 36% = 27%</code>。计算完 30000 个概率之后，只保留概率最大的 3 个。假设是<code>How will</code>（27%）、<code>How are</code>（24%）、<code>How do</code>（12%）。现在<code>How will</code>的概率最大，但<code>How are</code>并没有被删掉。</p>
 <p>接着，重复同样的过程：用三个模型预测这三个句子的接下来的词，再计算 30000 个含有三个词的句子的概率。假设前三名是<code>How are you</code>（10%）、<code>How do you</code>（8%）、<code>How will you</code>（2%）。再下一步的前三名是<code>How do you do</code>（7%）、<code>How are you &lt;eos&gt;</code>（6%）、<code>How are you doing</code>（3%）。注意，<code>How will</code>被淘汰了。没有使用额外的训练，只是在使用层面做了改动，就提高了模型的性能。</p>
 <p>TensorFlow Addons 可以很容易实现集束搜索：</p>
-<pre><code class="lang-py">beam_width = <span class="hljs-number">10</span>
+<pre><code class="lang-python">beam_width = <span class="hljs-number">10</span>
 decoder = tfa.seq2seq.beam_search_decoder.BeamSearchDecoder(
     cell=decoder_cell, beam_width=beam_width, output_layer=output_layer)
 decoder_initial_state = tfa.seq2seq.beam_search_decoder.tile_batch(
@@ -788,7 +788,7 @@ outputs, _, _ = decoder(
 <p><img src="img/1d965bfcdda748da7778d2e92ef55448.png" alt=""></img></p>
 <p>公式 16-1 注意力机制</p>
 <p>使用 TensorFlow Addons 将 Luong 注意力添加到编码器-解码器模型的方法如下：</p>
-<pre><code class="lang-py">attention_mechanism = tfa.seq2seq.attention_wrapper.LuongAttention(
+<pre><code class="lang-python">attention_mechanism = tfa.seq2seq.attention_wrapper.LuongAttention(
     units, encoder_state, memory_sequence_length=encoder_sequence_length)
 attention_decoder_cell = tfa.seq2seq.attention_wrapper.AttentionWrapper(
     decoder_cell, attention_mechanism, attention_layer_size=n_units)
@@ -835,7 +835,7 @@ attention_decoder_cell = tfa.seq2seq.attention_wrapper.AttentionWrapper(
 <p>图 16-9 正弦/余弦位置嵌入矩阵（经过转置，上），关注<code>i</code>的两个值（下）</p>
 <p>这个方法的效果和学习过的位置嵌入相同，但可以拓展到任意长度的句子上，这是它受欢迎的原因。给词嵌入加上位置嵌入之后，模型剩下的部分就可以访问每个词在句子中的绝对位置了，因为每个值都有一个独立的位置嵌入（比如，句子中第 22 个位置的词的位置嵌入，表示为图 16-9 中的左下方的垂直虚线，可以看到位置嵌入对这个位置是一对一的）。另外，振动函数（正弦和余弦）选择也可以让模型学到相对位置。例如，相隔 38 个位置的词（例如，在位置<code>p=22</code>和<code>p=60</code>）总是在嵌入维度<code>i=100</code>和<code>i=101</code>有相同的位置嵌入值，见图 16-9。这解释了对于每个频率，为什么需要正弦和余弦两个函数：如果只使用正弦（蓝线，<code>i=100</code>），模型不能区分位置<code>p=25</code>和<code>p=35</code>（叉子标记）。</p>
 <p>TensorFlow 中没有<code>PositionalEmbedding</code>层，但创建很容易。出于效率的考量，在构造器中先计算出位置嵌入（因此需要知道最大句子长度，<code>max_steps</code>，每个词表征的维度，<code>max_dims</code>）。然后调用<code>call()</code>方法裁剪嵌入矩阵，变成输入的大小，然后添加到输入上。因为创建位置嵌入矩阵时，添加了一个大小为 1 的维度，广播机制可以确保位置矩阵添加到输入中的每个句子上：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PositionalEncoding</span>(keras.layers.Layer):
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PositionalEncoding</span>(keras.layers.Layer):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, max_steps, max_dims, dtype=tf.float32, **kwargs</span>):
         <span class="hljs-built_in">super</span>().__init__(dtype=dtype, **kwargs)
         <span class="hljs-keyword">if</span> max_dims % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>: max_dims += <span class="hljs-number">1</span> <span class="hljs-comment"># max_dims must be even</span>
@@ -849,7 +849,7 @@ attention_decoder_cell = tfa.seq2seq.attention_wrapper.AttentionWrapper(
         <span class="hljs-keyword">return</span> inputs + <span class="hljs-variable language_">self</span>.positional_embedding[:, :shape[-<span class="hljs-number">2</span>], :shape[-<span class="hljs-number">1</span>]]
 </code></pre>
 <p>然后可以创建 Transformer 的前几层：</p>
-<pre><code class="lang-py">embed_size = <span class="hljs-number">512</span>; max_steps = <span class="hljs-number">500</span>; vocab_size = <span class="hljs-number">10000</span>
+<pre><code class="lang-python">embed_size = <span class="hljs-number">512</span>; max_steps = <span class="hljs-number">500</span>; vocab_size = <span class="hljs-number">10000</span>
 encoder_inputs = keras.layers.Input(shape=[<span class="hljs-literal">None</span>], dtype=np.int32)
 decoder_inputs = keras.layers.Input(shape=[<span class="hljs-literal">None</span>], dtype=np.int32)
 embeddings = keras.layers.Embedding(vocab_size, embed_size)
@@ -885,7 +885,7 @@ decoder_in = positional_encoding(decoder_embeddings)
 <p>提示：在 TensorFlow 中，如果<code>A</code>和<code>B</code>是两个维度大于 2 的张量 —— 比如，分别是<code>[2, 3, 4, 5]</code>和<code>[2, 3, 5, 6]</code> —— 则<code>then tf.matmul(A, B)</code>会将这两个张量当做<code>2 × 3</code>的数组，每个单元都是一个矩阵，它会乘以对应的矩阵。<code>A</code>中第<code>i</code>行、第<code>j</code>列的矩阵，会乘以<code>B</code>的第<code>i</code>行、第<code>j</code>列的矩阵。因为<code>2 × 3</code>矩阵乘以<code>2 × 3</code>矩阵，结果是<code>2 × 3</code>矩阵，所以<code>tf.matmul(A, B)</code>的结果数组的形状是<code>[2, 3, 4, 6]</code>。</p>
 </blockquote>
 <p>如果忽略跳连接、归一化层、前馈块，且这是缩放点积注意力，不是多头注意力，则 Transformer 可以如下实现：</p>
-<pre><code class="lang-py">Z = encoder_in
+<pre><code class="lang-python">Z = encoder_in
 <span class="hljs-keyword">for</span> N <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">6</span>):
     Z = keras.layers.Attention(use_scale=<span class="hljs-literal">True</span>)([Z, Z])
 
@@ -991,7 +991,7 @@ outputs = keras.layers.TimeDistributed(
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"十六、使用 RNN 和注意力机制进行自然语言处理","level":"1.17","depth":1,"next":{"title":"十七、使用自编码器和 GAN 做表征学习和生成式学习","level":"1.18","depth":1,"path":"17.md","ref":"./17.md","articles":[]},"previous":{"title":"十五、使用 RNN 和 CNN 处理序列","level":"1.16","depth":1,"path":"15.md","ref":"./15.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"16.md","mtime":"2024-08-23T21:05:56.817Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"十六、使用 RNN 和注意力机制进行自然语言处理","level":"1.17","depth":1,"next":{"title":"十七、使用自编码器和 GAN 做表征学习和生成式学习","level":"1.18","depth":1,"path":"17.md","ref":"./17.md","articles":[]},"previous":{"title":"十五、使用 RNN 和 CNN 处理序列","level":"1.16","depth":1,"path":"15.md","ref":"./15.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"16.md","mtime":"2025-01-05T17:59:46.748Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

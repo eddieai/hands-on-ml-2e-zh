@@ -6,7 +6,7 @@
         <title>三、分类 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -402,7 +402,7 @@
 <h2 id="mnist">MNIST</h2>
 <p>在本章当中，我们将会使用 MNIST 这个数据集，它有着 70000 张规格较小的手写数字图片，由美国的高中生和美国人口调查局的职员手写而成。这相当于机器学习当中的“Hello World”，人们无论什么时候提出一个新的分类算法，都想知道该算法在这个数据集上的表现如何。机器学习的初学者迟早也会处理 MNIST 这个数据集。</p>
 <p>Scikit-Learn 提供了许多辅助函数，以便于下载流行的数据集。MNIST 是其中一个。下面的代码获取 MNIST</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> fetch_mldata
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> fetch_mldata
 <span class="hljs-meta">&gt;&gt;&gt; </span>mnist = fetch_mldata(<span class="hljs-string">'MNIST original'</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>mnist
 {<span class="hljs-string">'COL_NAMES'</span>: [<span class="hljs-string">'label'</span>, <span class="hljs-string">'data'</span>],
@@ -423,7 +423,7 @@
 <li><code>target</code>键存放一个标签数组</li>
 </ul>
 <p>让我们看一下这些数组</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>X, y = mnist[<span class="hljs-string">"data"</span>], mnist[<span class="hljs-string">"target"</span>]
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>X, y = mnist[<span class="hljs-string">"data"</span>], mnist[<span class="hljs-string">"target"</span>]
 <span class="hljs-meta">&gt;&gt;&gt; </span>X.shape
 (<span class="hljs-number">70000</span>, <span class="hljs-number">784</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>y.shape
@@ -446,21 +446,21 @@ plt.show()
 </code></pre><p>图 3-1 展示了一些来自 MNIST 数据集的图片。当你处理更加复杂的分类任务的时候，它会让你更有感觉。</p>
 <p><img src="img/chapter3.2.jpeg" alt=""></img></p>
 <p>先等一下！你总是应该先创建测试集，并且在验证数据之前先把测试集晾到一边。MNIST 数据集已经事先被分成了一个训练集（前 60000 张图片）和一个测试集（最后 10000 张图片）</p>
-<pre><code class="lang-py">X_train, X_test, y_train, y_test = X[:<span class="hljs-number">60000</span>], X[<span class="hljs-number">60000</span>:], y[:<span class="hljs-number">60000</span>], y[<span class="hljs-number">60000</span>:]
+<pre><code class="lang-python">X_train, X_test, y_train, y_test = X[:<span class="hljs-number">60000</span>], X[<span class="hljs-number">60000</span>:], y[:<span class="hljs-number">60000</span>], y[<span class="hljs-number">60000</span>:]
 </code></pre>
 <p>让我们打乱训练集。这可以保证交叉验证的每一折都是相似（你不会期待某一折缺少某类数字）。而且，一些学习算法对训练样例的顺序敏感，当它们在一行当中得到许多相似的样例，这些算法将会表现得非常差。打乱数据集将保证这种情况不会发生。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 
 shuffle_index = np.random.permutation(<span class="hljs-number">60000</span>)
 X_train, y_train = X_train[shuffle_index], y_train[shuffle_index]
 </code></pre>
 <h2 id="训练一个二分类器">训练一个二分类器</h2>
 <p>现在我们简化一下问题，只尝试去识别一个数字，比如说，数字 5。这个“数字 5 检测器”就是一个二分类器，能够识别两类别，“是 5”和“非 5”。让我们为这个分类任务创建目标向量：</p>
-<pre><code class="lang-py">y_train_5 = (y_train == <span class="hljs-number">5</span>) <span class="hljs-comment"># True for all 5s, False for all other digits.</span>
+<pre><code class="lang-python">y_train_5 = (y_train == <span class="hljs-number">5</span>) <span class="hljs-comment"># True for all 5s, False for all other digits.</span>
 y_test_5 = (y_test == <span class="hljs-number">5</span>)
 </code></pre>
 <p>现在让我们挑选一个分类器去训练它。用随机梯度下降分类器 SGD，是一个不错的开始。使用 Scikit-Learn 的<code>SGDClassifier</code>类。这个分类器有一个好处是能够高效地处理非常大的数据集。这部分原因在于 SGD 一次只处理一条数据，这也使得 SGD 适合在线学习（online learning）。我们在稍后会看到它。让我们创建一个<code>SGDClassifier</code>和在整个数据集上训练它。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> SGDClassifier
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> SGDClassifier
 sgd_clf = SGDClassifier(random_state=<span class="hljs-number">42</span>)
 sgd_clf.fit(X_train, y_train_5)
 </code></pre>
@@ -468,7 +468,7 @@ sgd_clf.fit(X_train, y_train_5)
 <p><code>SGDClassifier</code>依赖于训练集的随机程度（所以被命名为 stochastic，随机之义）。如果你想重现结果，你应该固定参数<code>random_state</code> </p>
 </blockquote>
 <p>现在你可以用它来查出数字 5 的图片。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>sgd_clf.predict([some_digit])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>sgd_clf.predict([some_digit])
 array([ <span class="hljs-literal">True</span>], dtype=<span class="hljs-built_in">bool</span>)
 </code></pre>
 <p>分类器猜测这个数字代表 5（<code>True</code>）。看起来在这个例子当中，它猜对了。现在让我们评估这个模型的性能。</p>
@@ -478,7 +478,7 @@ array([ <span class="hljs-literal">True</span>], dtype=<span class="hljs-built_i
 <p>评估一个模型的好方法是使用交叉验证，就像第二章所做的那样。</p>
 <h3 id="实现交叉验证">实现交叉验证</h3>
 <p>在交叉验证过程中，有时候你会需要更多的控制权，相较于函数<code>cross_val_score()</code>或者其他相似函数所提供的功能。这种情况下，你可以实现你自己版本的交叉验证。事实上它相当简单。以下代码粗略地做了和<code>cross_val_score()</code>相同的事情，并且输出相同的结果。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> StratifiedKFold
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> StratifiedKFold
 <span class="hljs-keyword">from</span> sklearn.base <span class="hljs-keyword">import</span> clone
 skfolds = StratifiedKFold(n_splits=<span class="hljs-number">3</span>, random_state=<span class="hljs-number">42</span>)
 <span class="hljs-keyword">for</span> train_index, test_index <span class="hljs-keyword">in</span> skfolds.split(X_train, y_train_5):
@@ -496,12 +496,12 @@ skfolds = StratifiedKFold(n_splits=<span class="hljs-number">3</span>, random_st
 <p><code>StratifiedKFold</code>类实现了分层采样（详见第二章的解释），生成的折（fold）包含了各类相应比例的样例。在每一次迭代，上述代码生成分类器的一个克隆版本，在训练折（training folds）的克隆版本上进行训练，在测试折（test folds）上进行预测。然后它计算出被正确预测的数目和输出正确预测的比例。</p>
 </blockquote>
 <p>让我们使用<code>cross_val_score()</code>函数来评估<code>SGDClassifier</code>模型，同时使用 K 折交叉验证，此处让<code>k=3</code>。记住：K 折交叉验证意味着把训练集分成 K 折（此处 3 折），然后使用一个模型对其中一折进行预测，对其他折进行训练。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> cross_val_score
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> cross_val_score
 <span class="hljs-meta">&gt;&gt;&gt; </span>cross_val_score(sgd_clf, X_train, y_train_5, cv=<span class="hljs-number">3</span>, scoring=<span class="hljs-string">"accuracy"</span>)
 array([ <span class="hljs-number">0.9502</span> , <span class="hljs-number">0.96565</span>, <span class="hljs-number">0.96495</span>]
 </code></pre>
 <p>哇！在交叉验证上有大于 95% 的精度（accuracy）？这看起来很令人吃惊。先别高兴，让我们来看一个非常笨的分类器去分类，看看其在“非 5”这个类上的表现。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.base <span class="hljs-keyword">import</span> BaseEstimator
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.base <span class="hljs-keyword">import</span> BaseEstimator
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">Never5Classifier</span>(<span class="hljs-title class_ inherited__">BaseEstimator</span>):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">fit</span>(<span class="hljs-params">self, X, y=<span class="hljs-literal">None</span></span>):
         <span class="hljs-keyword">pass</span>
@@ -509,7 +509,7 @@ array([ <span class="hljs-number">0.9502</span> , <span class="hljs-number">0.96
         <span class="hljs-keyword">return</span> np.zeros((<span class="hljs-built_in">len</span>(X), <span class="hljs-number">1</span>), dtype=<span class="hljs-built_in">bool</span>)
 </code></pre>
 <p>你能猜到这个模型的精度吗？揭晓谜底：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>never_5_clf = Never5Classifier()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>never_5_clf = Never5Classifier()
 <span class="hljs-meta">&gt;&gt;&gt; </span>cross_val_score(never_5_clf, X_train, y_train_5, cv=<span class="hljs-number">3</span>, scoring=<span class="hljs-string">"accuracy"</span>)
 array([ <span class="hljs-number">0.909</span> , <span class="hljs-number">0.90715</span>, <span class="hljs-number">0.9128</span> ])
 </code></pre>
@@ -518,18 +518,18 @@ array([ <span class="hljs-number">0.909</span> , <span class="hljs-number">0.907
 <h3 id="混淆矩阵">混淆矩阵</h3>
 <p>对分类器来说，一个好得多的性能评估指标是混淆矩阵。大体思路是：输出类别 A 被分类成类别 B 的次数。举个例子，为了知道分类器将 5 误分为 3 的次数，你需要查看混淆矩阵的第五行第三列。</p>
 <p>为了计算混淆矩阵，首先你需要有一系列的预测值，这样才能将预测值与真实值做比较。你或许想在测试集上做预测。但是我们现在先不碰它。（记住，只有当你处于项目的尾声，当你准备上线一个分类器的时候，你才应该使用测试集）。相反，你应该使用<code>cross_val_predict()</code>函数</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> cross_val_predict
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> cross_val_predict
 y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=<span class="hljs-number">3</span>)
 </code></pre>
 <p>就像 <code>cross_val_score()</code>，<code>cross_val_predict()</code>也使用 K 折交叉验证。它不是返回一个评估分数，而是返回基于每一个测试折做出的一个预测值。这意味着，对于每一个训练集的样例，你得到一个干净的预测（“干净”是说一个模型在训练过程当中没有用到测试集的数据）。</p>
 <p>现在使用 <code>confusion_matrix()</code>函数，你将会得到一个混淆矩阵。传递目标类(<code>y_train_5</code>)和预测类（<code>y_train_pred</code>）给它。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> confusion_matrix
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> confusion_matrix
 <span class="hljs-meta">&gt;&gt;&gt; </span>confusion_matrix(y_train_5, y_train_pred)
 array([[<span class="hljs-number">53272</span>, <span class="hljs-number">1307</span>],
         [ <span class="hljs-number">1077</span>, <span class="hljs-number">4344</span>]])
 </code></pre>
 <p>混淆矩阵中的每一行表示一个实际的类, 而每一列表示一个预测的类。该矩阵的第一行认为“非 5”（反例）中的 53272 张被正确归类为 “非 5”（他们被称为真反例，true negatives）, 而其余 1307 被错误归类为"是 5" （假正例，false positives）。第二行认为“是 5” （正例）中的 1077 被错误地归类为“非 5”（假反例，false negatives），其余 4344 正确分类为 “是 5”类（真正例，true positives）。一个完美的分类器将只有真反例和真正例，所以混淆矩阵的非零值仅在其主对角线（左上至右下）。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>confusion_matrix(y_train_5, y_train_perfect_predictions)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>confusion_matrix(y_train_5, y_train_perfect_predictions)
 array([[<span class="hljs-number">54579</span>, <span class="hljs-number">0</span>],
         [ <span class="hljs-number">0</span>, <span class="hljs-number">5421</span>]])
 </code></pre>
@@ -545,7 +545,7 @@ array([[<span class="hljs-number">54579</span>, <span class="hljs-number">0</spa
 <p><img src="img/chapter3.3.jpeg" alt=""></img></p>
 <h3 id="准确率与召回率">准确率与召回率</h3>
 <p>Scikit-Learn 提供了一些函数去计算分类器的指标，包括准确率和召回率。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> precision_score, recall_score
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> precision_score, recall_score
 <span class="hljs-meta">&gt;&gt;&gt; </span>precision_score(y_train_5, y_pred) <span class="hljs-comment"># == 4344 / (4344 + 1307)</span>
 <span class="hljs-number">0.76871350203503808</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>recall_score(y_train_5, y_train_pred) <span class="hljs-comment"># == 4344 / (4344 + 1077)</span>
@@ -556,7 +556,7 @@ array([[<span class="hljs-number">54579</span>, <span class="hljs-number">0</spa
 <p>公式 3-3 F1 值</p>
 <p><img src="img/tex-dba6270fb2a2c1da75f72bdd3137f6ec.gif" alt=""></img></p>
 <p>为了计算 F1 值，简单调用<code>f1_score()</code></p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> f1_score
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> f1_score
 <span class="hljs-meta">&gt;&gt;&gt; </span>f1_score(y_train_5, y_train_pred)
 <span class="hljs-number">0.78468208092485547</span>
 </code></pre>
@@ -567,7 +567,7 @@ array([[<span class="hljs-number">54579</span>, <span class="hljs-number">0</spa
 提高阈值（移动到右侧的箭头），假正例（数字 6）成为一个真反例，从而提高准确率（在这种情况下高达 100%），但一个真正例 变成假反例，召回率降低到 50%。相反，降低阈值可提高召回率、降低准确率。</p>
 <p><img src="img/chapter3.3-3.jpeg" alt=""></img></p>
 <p>Scikit-Learn 不让你直接设置阈值，但是它给你提供了设置决策分数的方法，这个决策分数可以用来产生预测。它不是调用分类器的<code>predict()</code>方法，而是调用<code>decision_function()</code>方法。这个方法返回每一个样例的分数值，然后基于这个分数值，使用你想要的任何阈值做出预测。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>y_scores = sgd_clf.decision_function([some_digit])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>y_scores = sgd_clf.decision_function([some_digit])
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_scores
 array([ <span class="hljs-number">161855.74572176</span>])
 <span class="hljs-meta">&gt;&gt;&gt; </span>threshold = <span class="hljs-number">0</span>
@@ -575,22 +575,22 @@ array([ <span class="hljs-number">161855.74572176</span>])
 array([ <span class="hljs-literal">True</span>], dtype=<span class="hljs-built_in">bool</span>)
 </code></pre>
 <p><code>SGDClassifier</code>用了一个等于 0 的阈值，所以前面的代码返回了跟<code>predict()</code>方法一样的结果（都返回了<code>true</code>）。让我们提高这个阈值：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>threshold = <span class="hljs-number">200000</span>
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>threshold = <span class="hljs-number">200000</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_some_digit_pred = (y_scores &gt; threshold)
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_some_digit_pred
 array([<span class="hljs-literal">False</span>], dtype=<span class="hljs-built_in">bool</span>)
 </code></pre>
 <p>这证明了提高阈值会降调召回率。这个图片实际就是数字 5，当阈值等于 0 的时候，分类器可以探测到这是一个 5，当阈值提高到 20000 的时候，分类器将不能探测到这是数字 5。</p>
 <p>那么，你应该如何使用哪个阈值呢？首先，你需要再次使用<code>cross_val_predict()</code>得到每一个样例的分数值，但是这一次指定返回一个决策分数，而不是预测值。</p>
-<pre><code class="lang-py">y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=<span class="hljs-number">3</span>, 
+<pre><code class="lang-python">y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=<span class="hljs-number">3</span>, 
                             method=<span class="hljs-string">"decision_function"</span>)
 </code></pre>
 <p>现在有了这些分数值。对于任何可能的阈值，使用<code>precision_recall_curve()</code>,你都可以计算准确率和召回率:</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> precision_recall_curve
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> precision_recall_curve
 precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores)
 </code></pre>
 <p>最后，你可以使用 Matplotlib 画出准确率和召回率（图 3-4），这里把准确率和召回率当作是阈值的一个函数。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_precision_recall_vs_threshold</span>(<span class="hljs-params">precisions, recalls, thresholds</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_precision_recall_vs_threshold</span>(<span class="hljs-params">precisions, recalls, thresholds</span>):
     plt.plot(thresholds, precisions[:-<span class="hljs-number">1</span>], <span class="hljs-string">"b--"</span>, label=<span class="hljs-string">"Precision"</span>)
     plt.plot(thresholds, recalls[:-<span class="hljs-number">1</span>], <span class="hljs-string">"g-"</span>, label=<span class="hljs-string">"Recall"</span>)
     plt.xlabel(<span class="hljs-string">"Threshold"</span>)
@@ -607,10 +607,10 @@ plt.show()
 <p><img src="img/chapter3.5.jpeg" alt=""></img></p>
 <p>可以看到，在召回率在 80% 左右的时候，准确率急剧下降。你可能会想选择在急剧下降之前选择出一个准确率/召回率折衷点。比如说，在召回率 60% 左右的点。当然，这取决于你的项目需求。</p>
 <p>我们假设你决定达到 90% 的准确率。你查阅第一幅图（放大一些），在 70000 附近找到一个阈值。为了作出预测（目前为止只在训练集上预测），你可以运行以下代码，而不是运行分类器的<code>predict()</code>方法。</p>
-<pre><code class="lang-py">y_train_pred_90 = (y_scores &gt; <span class="hljs-number">70000</span>)
+<pre><code class="lang-python">y_train_pred_90 = (y_scores &gt; <span class="hljs-number">70000</span>)
 </code></pre>
 <p>让我们检查这些预测的准确率和召回率：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>precision_score(y_train_5, y_train_pred_90)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>precision_score(y_train_5, y_train_pred_90)
 <span class="hljs-number">0.8998702983138781</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>recall_score(y_train_5, y_train_pred_90)
 <span class="hljs-number">0.63991883416343853</span>
@@ -622,11 +622,11 @@ plt.show()
 <h3 id="roc-曲线">ROC 曲线</h3>
 <p>受试者工作特征（ROC）曲线是另一个二分类器常用的工具。它非常类似与准确率/召回率曲线，但不是画出准确率对召回率的曲线，ROC 曲线是真正例率（true positive rate，另一个名字叫做召回率）对假正例率（false positive rate, FPR）的曲线。FPR 是反例被错误分成正例的比率。它等于 1 减去真反例率（true negative rate， TNR）。TNR 是反例被正确分类的比率。TNR 也叫做特异性。所以 ROC 曲线画出召回率对（1 减特异性）的曲线。</p>
 <p>为了画出 ROC 曲线，你首先需要计算各种不同阈值下的 TPR、FPR，使用<code>roc_curve()</code>函数：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> roc_curve
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> roc_curve
 fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)
 </code></pre>
 <p>然后你可以使用 matplotlib，画出 FPR 对 TPR 的曲线。下面的代码生成图 3-6.</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_roc_curve</span>(<span class="hljs-params">fpr, tpr, label=<span class="hljs-literal">None</span></span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_roc_curve</span>(<span class="hljs-params">fpr, tpr, label=<span class="hljs-literal">None</span></span>):
     plt.plot(fpr, tpr, linewidth=<span class="hljs-number">2</span>, label=label)
     plt.plot([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>], <span class="hljs-string">'k--'</span>)
     plt.axis([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>])
@@ -638,30 +638,30 @@ plt.show()
 <p><img src="img/chapter3.6.jpeg" alt=""></img></p>
 <p>这里同样存在折衷的问题：召回率（TPR）越高，分类器就会产生越多的假正例（FPR）。图中的点线是一个完全随机的分类器生成的 ROC 曲线；一个好的分类器的 ROC 曲线应该尽可能远离这条线（即向左上角方向靠拢）。</p>
 <p>一个比较分类器之间优劣的方法是：测量 ROC 曲线下的面积（AUC）。一个完美的分类器的 ROC AUC 等于 1，而一个纯随机分类器的 ROC AUC 等于 0.5。Scikit-Learn 提供了一个函数来计算 ROC AUC：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> roc_auc_score
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> roc_auc_score
 <span class="hljs-meta">&gt;&gt;&gt; </span>roc_auc_score(y_train_5, y_scores)
 <span class="hljs-number">0.97061072797174941</span>
 </code></pre>
 <p>因为 ROC 曲线跟准确率/召回率曲线（或者叫 PR）很类似，你或许会好奇如何决定使用哪一个曲线呢？一个笨拙的规则是，优先使用 PR 曲线当正例很少，或者当你关注假正例多于假反例的时候。其他情况使用 ROC 曲线。举例子，回顾前面的 ROC 曲线和 ROC AUC 数值，你或许认为这个分类器很棒。但是这几乎全是因为只有少数正例（“是 5”），而大部分是反例（“非 5”）。相反，PR 曲线清楚显示出这个分类器还有很大的改善空间（PR 曲线应该尽可能地靠近右上角）。</p>
 <p>让我们训练一个<code>RandomForestClassifier</code>，然后拿它的的 ROC 曲线和 ROC AUC 数值去跟<code>SGDClassifier</code>的比较。首先你需要得到训练集每个样例的数值。但是由于随机森林分类器的工作方式，<code>RandomForestClassifier</code>不提供<code>decision_function()</code>方法。相反，它提供了<code>predict_proba()</code>方法。Skikit-Learn 分类器通常二者中的一个。<code>predict_proba()</code>方法返回一个数组，数组的每一行代表一个样例，每一列代表一个类。数组当中的值的意思是：给定一个样例属于给定类的概率。比如，70% 的概率这幅图是数字 5。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier
 forest_clf = RandomForestClassifier(random_state=<span class="hljs-number">42</span>)
 y_probas_forest = cross_val_predict(forest_clf, X_train, y_train_5, cv=<span class="hljs-number">3</span>,
                                     method=<span class="hljs-string">"predict_proba"</span>)
 </code></pre>
 <p>但是要画 ROC 曲线，你需要的是样例的分数，而不是概率。一个简单的解决方法是使用正例的概率当作样例的分数。</p>
-<pre><code class="lang-py">y_scores_forest = y_probas_forest[:, <span class="hljs-number">1</span>] <span class="hljs-comment"># score = proba of positive class</span>
+<pre><code class="lang-python">y_scores_forest = y_probas_forest[:, <span class="hljs-number">1</span>] <span class="hljs-comment"># score = proba of positive class</span>
 fpr_forest, tpr_forest, thresholds_forest = roc_curve(y_train_5,y_scores_forest)
 </code></pre>
 <p>现在你即将得到 ROC 曲线。将前面一个分类器的 ROC 曲线一并画出来是很有用的，可以清楚地进行比较。见图 3-7。</p>
-<pre><code class="lang-py">plt.plot(fpr, tpr, <span class="hljs-string">"b:"</span>, label=<span class="hljs-string">"SGD"</span>)
+<pre><code class="lang-python">plt.plot(fpr, tpr, <span class="hljs-string">"b:"</span>, label=<span class="hljs-string">"SGD"</span>)
 plot_roc_curve(fpr_forest, tpr_forest, <span class="hljs-string">"Random Forest"</span>)
 plt.legend(loc=<span class="hljs-string">"bottom right"</span>)
 plt.show()
 </code></pre>
 <p><img src="img/chapter3.7.jpeg" alt=""></img></p>
 <p>如你所见，<code>RandomForestClassifier</code>的 ROC 曲线比<code>SGDClassifier</code>的好得多：它更靠近左上角。所以，它的 ROC AUC 也会更大。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>roc_auc_score(y_train_5, y_scores_forest)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>roc_auc_score(y_train_5, y_scores_forest)
 <span class="hljs-number">0.99312433660038291</span>
 </code></pre>
 <p>计算一下准确率和召回率：98.5% 的准确率，82.8% 的召回率。还不错。</p>
@@ -673,13 +673,13 @@ plt.show()
 <p>另一个策略是对每一对数字都训练一个二分类器：一个分类器用来处理数字 0 和数字 1，一个用来处理数字 0 和数字 2，一个用来处理数字 1 和 2，以此类推。这叫做“一对一”（OvO）策略。如果有 N 个类。你需要训练<code>N*(N-1)/2</code>个分类器。对于 MNIST 问题，需要训练 45 个二分类器！当你想对一张图片进行分类，你必须将这张图片跑在全部 45 个二分类器上。然后看哪个类胜出。OvO 策略的主要优点是：每个分类器只需要在训练集的部分数据上面进行训练。这部分数据是它所需要区分的那两个类对应的数据。</p>
 <p>一些算法（比如 SVM 分类器）在训练集的大小上很难扩展，所以对于这些算法，OvO 是比较好的，因为它可以在小的数据集上面可以更多地训练，较之于巨大的数据集而言。但是，对于大部分的二分类器来说，OvA 是更好的选择。</p>
 <p>Scikit-Learn 可以探测出你想使用一个二分类器去完成多分类的任务，它会自动地执行 OvA（除了 SVM 分类器，它使用 OvO）。让我们试一下<code>SGDClassifier</code>.</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>sgd_clf.fit(X_train, y_train) <span class="hljs-comment"># y_train, not y_train_5</span>
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>sgd_clf.fit(X_train, y_train) <span class="hljs-comment"># y_train, not y_train_5</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>sgd_clf.predict([some_digit])
 array([ <span class="hljs-number">5.</span>])
 </code></pre>
 <p>很容易。上面的代码在训练集上训练了一个<code>SGDClassifier</code>。这个分类器处理原始的目标类，从 0 到 9（<code>y_train</code>），而不是仅仅探测是否为 5 （<code>y_train_5</code>）。然后它做出一个判断（在这个案例下只有一个正确的数字）。在幕后，Scikit-Learn 实际上训练了 10 个二分类器，每个分类器都产到一张图片的决策数值，选择数值最高的那个类。</p>
 <p>为了证明这是真实的，你可以调用<code>decision_function()</code>方法。不是返回每个样例的一个数值，而是返回 10 个数值，一个数值对应于一个类。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>some_digit_scores = sgd_clf.decision_function([some_digit])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>some_digit_scores = sgd_clf.decision_function([some_digit])
 <span class="hljs-meta">&gt;&gt;&gt; </span>some_digit_scores
 array([[-<span class="hljs-number">311402.62954431</span>, -<span class="hljs-number">363517.28355739</span>, -<span class="hljs-number">446449.5306454</span> ,
         -<span class="hljs-number">183226.61023518</span>, -<span class="hljs-number">414337.15339485</span>, <span class="hljs-number">161855.74572176</span>,
@@ -687,7 +687,7 @@ array([[-<span class="hljs-number">311402.62954431</span>, -<span class="hljs-nu
         -<span class="hljs-number">536774.63961222</span>]])
 </code></pre>
 <p>最高数值是对应于类别 5 ：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>np.argmax(some_digit_scores)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>np.argmax(some_digit_scores)
 <span class="hljs-number">5</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>sgd_clf.classes_
 array([ <span class="hljs-number">0.</span>, <span class="hljs-number">1.</span>, <span class="hljs-number">2.</span>, <span class="hljs-number">3.</span>, <span class="hljs-number">4.</span>, <span class="hljs-number">5.</span>, <span class="hljs-number">6.</span>, <span class="hljs-number">7.</span>, <span class="hljs-number">8.</span>, <span class="hljs-number">9.</span>])
@@ -698,7 +698,7 @@ array([ <span class="hljs-number">0.</span>, <span class="hljs-number">1.</span>
 <p>一个分类器被训练好了之后，它会保存目标类别列表到它的属性<code>classes_</code> 中去，按照值排序。在本例子当中，在<code>classes_</code> 数组当中的每个类的索引方便地匹配了类本身，比如，索引为 5 的类恰好是类别 5 本身。但通常不会这么幸运。</p>
 </blockquote>
 <p>如果你想强制 Scikit-Learn 使用 OvO 策略或者 OvA 策略，你可以使用<code>OneVsOneClassifier</code>类或者<code>OneVsRestClassifier</code>类。创建一个样例，传递一个二分类器给它的构造函数。举例子，下面的代码会创建一个多类分类器，使用 OvO 策略，基于<code>SGDClassifier</code>。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.multiclass <span class="hljs-keyword">import</span> OneVsOneClassifier
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.multiclass <span class="hljs-keyword">import</span> OneVsOneClassifier
 <span class="hljs-meta">&gt;&gt;&gt; </span>ovo_clf = OneVsOneClassifier(SGDClassifier(random_state=<span class="hljs-number">42</span>))
 <span class="hljs-meta">&gt;&gt;&gt; </span>ovo_clf.fit(X_train, y_train)
 <span class="hljs-meta">&gt;&gt;&gt; </span>ovo_clf.predict([some_digit])
@@ -707,21 +707,21 @@ array([ <span class="hljs-number">5.</span>])
 <span class="hljs-number">45</span>
 </code></pre>
 <p>训练一个<code>RandomForestClassifier</code>同样简单：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>forest_clf.fit(X_train, y_train)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>forest_clf.fit(X_train, y_train)
 <span class="hljs-meta">&gt;&gt;&gt; </span>forest_clf.predict([some_digit])
 array([ <span class="hljs-number">5.</span>])
 </code></pre>
 <p>这次 Scikit-Learn 没有必要去运行 OvO 或者 OvA，因为随机森林分类器能够直接将一个样例分到多个类别。你可以调用<code>predict_proba()</code>，得到样例对应的类别的概率值的列表：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>forest_clf.predict_proba([some_digit])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>forest_clf.predict_proba([some_digit])
 array([[ <span class="hljs-number">0.1</span>, <span class="hljs-number">0.</span> , <span class="hljs-number">0.</span> , <span class="hljs-number">0.1</span>, <span class="hljs-number">0.</span> , <span class="hljs-number">0.8</span>, <span class="hljs-number">0.</span> , <span class="hljs-number">0.</span> , <span class="hljs-number">0.</span> , <span class="hljs-number">0.</span> ]])
 </code></pre>
 <p>你可以看到这个分类器相当确信它的预测：在数组的索引 5 上的 0.8，意味着这个模型以 80% 的概率估算这张图片代表数字 5。它也认为这个图片可能是数字 0 或者数字 3，分别都是 10% 的几率。</p>
 <p>现在当然你想评估这些分类器。像平常一样，你想使用交叉验证。让我们用<code>cross_val_score()</code>来评估<code>SGDClassifier</code>的精度。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>cross_val_score(sgd_clf, X_train, y_train, cv=<span class="hljs-number">3</span>, scoring=<span class="hljs-string">"accuracy"</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>cross_val_score(sgd_clf, X_train, y_train, cv=<span class="hljs-number">3</span>, scoring=<span class="hljs-string">"accuracy"</span>)
 array([ <span class="hljs-number">0.84063187</span>, <span class="hljs-number">0.84899245</span>, <span class="hljs-number">0.86652998</span>])
 </code></pre>
 <p>在所有测试折（test fold）上，它有 84% 的精度。如果你是用一个随机的分类器，你将会得到 10% 的正确率。所以这不是一个坏的分数，但是你可以做的更好。举例子，简单将输入正则化，将会提高精度到 90% 以上。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> StandardScaler
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> StandardScaler
 <span class="hljs-meta">&gt;&gt;&gt; </span>scaler = StandardScaler()
 <span class="hljs-meta">&gt;&gt;&gt; </span>X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))
 <span class="hljs-meta">&gt;&gt;&gt; </span>cross_val_score(sgd_clf, X_train_scaled, y_train, cv=<span class="hljs-number">3</span>, scoring=<span class="hljs-string">"accuracy"</span>)
@@ -730,7 +730,7 @@ array([ <span class="hljs-number">0.91011798</span>, <span class="hljs-number">0
 <h2 id="误差分析">误差分析</h2>
 <p>当然，如果这是一个实际的项目，你会在你的机器学习项目当中，跟随以下步骤（见附录 B）：探索准备数据的候选方案，尝试多种模型，把最好的几个模型列为入围名单，用<code>GridSearchCV</code>调试超参数，尽可能地自动化，像你前面的章节做的那样。在这里，我们假设你已经找到一个不错的模型，你试图找到方法去改善它。一个方式是分析模型产生的误差的类型。</p>
 <p>首先，你可以检查混淆矩阵。你需要使用<code>cross_val_predict()</code>做出预测，然后调用<code>confusion_matrix()</code>函数，像你早前做的那样。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>y_train_pred = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=<span class="hljs-number">3</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>y_train_pred = cross_val_predict(sgd_clf, X_train_scaled, y_train, cv=<span class="hljs-number">3</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>conf_mx = confusion_matrix(y_train, y_train_pred)
 <span class="hljs-meta">&gt;&gt;&gt; </span>conf_mx
 array([[<span class="hljs-number">5725</span>, <span class="hljs-number">3</span>, <span class="hljs-number">24</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>, <span class="hljs-number">49</span>, <span class="hljs-number">50</span>, <span class="hljs-number">10</span>, <span class="hljs-number">39</span>, <span class="hljs-number">4</span>],
@@ -745,17 +745,17 @@ array([[<span class="hljs-number">5725</span>, <span class="hljs-number">3</span
         [ <span class="hljs-number">43</span>, <span class="hljs-number">35</span>, <span class="hljs-number">26</span>, <span class="hljs-number">92</span>, <span class="hljs-number">178</span>, <span class="hljs-number">28</span>, <span class="hljs-number">2</span>, <span class="hljs-number">223</span>, <span class="hljs-number">82</span>, <span class="hljs-number">5240</span>]])
 </code></pre>
 <p>这里是一对数字。使用 Matplotlib 的<code>matshow()</code>函数，将混淆矩阵以图像的方式呈现，将会更加方便。</p>
-<pre><code class="lang-py">plt.matshow(conf_mx, cmap=plt.cm.gray)
+<pre><code class="lang-python">plt.matshow(conf_mx, cmap=plt.cm.gray)
 plt.show()
 </code></pre>
 <p><img src="img/chapter3.8.jpeg" alt=""></img></p>
 <p>这个混淆矩阵看起来相当好，因为大多数的图片在主对角线上。在主对角线上意味着被分类正确。数字 5 对应的格子看起来比其他数字要暗淡许多。这可能是数据集当中数字 5 的图片比较少，又或者是分类器对于数字 5 的表现不如其他数字那么好。你可以验证两种情况。</p>
 <p>让我们关注仅包含误差数据的图像呈现。首先你需要将混淆矩阵的每一个值除以相应类别的图片的总数目。这样子，你可以比较错误率，而不是绝对的错误数（这对大的类别不公平）。</p>
-<pre><code class="lang-py">row_sums = conf_mx.<span class="hljs-built_in">sum</span>(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)
+<pre><code class="lang-python">row_sums = conf_mx.<span class="hljs-built_in">sum</span>(axis=<span class="hljs-number">1</span>, keepdims=<span class="hljs-literal">True</span>)
 norm_conf_mx = conf_mx / row_sums
 </code></pre>
 <p>现在让我们用 0 来填充对角线。这样子就只保留了被错误分类的数据。让我们画出这个结果。</p>
-<pre><code class="lang-py">np.fill_diagonal(norm_conf_mx, <span class="hljs-number">0</span>)
+<pre><code class="lang-python">np.fill_diagonal(norm_conf_mx, <span class="hljs-number">0</span>)
 plt.matshow(norm_conf_mx, cmap=plt.cm.gray)
 plt.show()
 </code></pre>
@@ -763,7 +763,7 @@ plt.show()
 <p>现在你可以清楚看出分类器制造出来的各类误差。记住：行代表实际类别，列代表预测的类别。第 8、9 列相当亮，这告诉你许多图片被误分成数字 8 或者数字 9。相似的，第 8、9 行也相当亮，告诉你数字 8、数字 9 经常被误以为是其他数字。相反，一些行相当黑，比如第一行：这意味着大部分的数字 1 被正确分类（一些被误分类为数字 8 ）。留意到误差图不是严格对称的。举例子，比起将数字 8 误分类为数字 5 的数量，有更多的数字 5 被误分类为数字 8。</p>
 <p>分析混淆矩阵通常可以给你提供深刻的见解去改善你的分类器。回顾这幅图，看样子你应该努力改善分类器在数字 8 和数字 9 上的表现，和纠正<code>3/5</code>的混淆。举例子，你可以尝试去收集更多的数据，或者你可以构造新的、有助于分类器的特征。举例子，写一个算法去数闭合的环（比如，数字 8 有两个环，数字 6 有一个， 5 没有）。又或者你可以预处理图片（比如，使用 Scikit-Learn，Pillow， OpenCV）去构造一个模式，比如闭合的环。</p>
 <p>分析独特的误差，是获得关于你的分类器是如何工作及其为什么失败的洞见的一个好途径。但是这相对难和耗时。举例子，我们可以画出数字 3 和 5 的例子</p>
-<pre><code class="lang-py">cl_a, cl_b = <span class="hljs-number">3</span>, <span class="hljs-number">5</span>
+<pre><code class="lang-python">cl_a, cl_b = <span class="hljs-number">3</span>, <span class="hljs-number">5</span>
 X_aa = X_train[(y_train == cl_a) &amp; (y_train_pred == cl_a)]
 X_ab = X_train[(y_train == cl_a) &amp; (y_train_pred == cl_b)]
 X_ba = X_train[(y_train == cl_b) &amp; (y_train_pred == cl_a)]
@@ -781,7 +781,7 @@ plt.show()
 <h2 id="多标签分类">多标签分类</h2>
 <p>到目前为止，所有的样例都总是被分配到仅一个类。有些情况下，你也许想让你的分类器给一个样例输出多个类别。比如说，思考一个人脸识别器。如果对于同一张图片，它识别出几个人，它应该做什么？当然它应该给每一个它识别出的人贴上一个标签。比方说，这个分类器被训练成识别三个人脸，Alice，Bob，Charlie；然后当它被输入一张含有 Alice 和 Bob 的图片，它应该输出<code>[1, 0, 1]</code>（意思是：Alice 是，Bob 不是，Charlie 是）。这种输出多个二值标签的分类系统被叫做多标签分类系统。</p>
 <p>目前我们不打算深入脸部识别。我们可以先看一个简单点的例子，仅仅是为了阐明的目的。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.neighbors <span class="hljs-keyword">import</span> KNeighborsClassifier
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.neighbors <span class="hljs-keyword">import</span> KNeighborsClassifier
 y_train_large = (y_train &gt;= <span class="hljs-number">7</span>)
 y_train_odd = (y_train % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>)
 y_multilabel = np.c_[y_train_large, y_train_odd]
@@ -789,12 +789,12 @@ knn_clf = KNeighborsClassifier()
 knn_clf.fit(X_train, y_multilabel)
 </code></pre>
 <p>这段代码创造了一个<code>y_multilabel</code>数组，里面包含两个目标标签。第一个标签指出这个数字是否为大数字（7，8 或者 9），第二个标签指出这个数字是否是奇数。接下来几行代码会创建一个<code>KNeighborsClassifier</code>样例（它支持多标签分类，但不是所有分类器都可以），然后我们使用多目标数组来训练它。现在你可以生成一个预测，然后它输出两个标签：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>knn_clf.predict([some_digit])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>knn_clf.predict([some_digit])
 array([[<span class="hljs-literal">False</span>, <span class="hljs-literal">True</span>]], dtype=<span class="hljs-built_in">bool</span>)
 </code></pre>
 <p>它工作正确。数字 5 不是大数（<code>False</code>），同时是一个奇数（<code>True</code>）。</p>
 <p>有许多方法去评估一个多标签分类器，和选择正确的量度标准，这取决于你的项目。举个例子，一个方法是对每个个体标签去量度 F1 值（或者前面讨论过的其他任意的二分类器的量度标准），然后计算平均值。下面的代码计算全部标签的平均 F1 值：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>y_train_knn_pred = cross_val_predict(knn_clf, X_train, y_train, cv=<span class="hljs-number">3</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>y_train_knn_pred = cross_val_predict(knn_clf, X_train, y_train, cv=<span class="hljs-number">3</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>f1_score(y_train, y_train_knn_pred, average=<span class="hljs-string">"macro"</span>)
 <span class="hljs-number">0.96845540180280221</span>
 </code></pre>
@@ -806,7 +806,7 @@ array([[<span class="hljs-literal">False</span>, <span class="hljs-literal">True
 <p>分类与回归之间的界限是模糊的，比如这个例子。按理说，预测一个像素的强度更类似于一个回归任务，而不是一个分类任务。而且，多输出系统不限于分类任务。你甚至可以让你一个系统给每一个样例都输出多个标签，包括类标签和值标签。</p>
 </blockquote>
 <p>让我们从 MNIST 的图片创建训练集和测试集开始，然后给图片的像素强度添加噪声，这里是用 NumPy 的<code>randint()</code>函数。目标图像是原始图像。</p>
-<pre><code class="lang-py">noise = rnd.randint(<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, (<span class="hljs-built_in">len</span>(X_train), <span class="hljs-number">784</span>))
+<pre><code class="lang-python">noise = rnd.randint(<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, (<span class="hljs-built_in">len</span>(X_train), <span class="hljs-number">784</span>))
 noise = rnd.randint(<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, (<span class="hljs-built_in">len</span>(X_test), <span class="hljs-number">784</span>))
 X_train_mod = X_train + noise
 X_test_mod = X_test + noise
@@ -816,7 +816,7 @@ y_test_mod = X_test
 <p>让我们看一下测试集当中的一张图片（是的，我们在窥探测试集，所以你应该马上邹眉）：</p>
 <p><img src="img/chapter3.11.jpeg" alt=""></img></p>
 <p>左边的加噪声的输入图片。右边是干净的目标图片。现在我们训练分类器，让它清洁这张图片：</p>
-<pre><code class="lang-py">knn_clf.fit(X_train_mod, y_train_mod)
+<pre><code class="lang-python">knn_clf.fit(X_train_mod, y_train_mod)
 clean_digit = knn_clf.predict([X_test_mod[some_index]])
 plot_digit(clean_digit)
 </code></pre>
@@ -880,7 +880,7 @@ plot_digit(clean_digit)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"三、分类","level":"1.5","depth":1,"next":{"title":"四、训练模型","level":"1.6","depth":1,"path":"4.md","ref":"./4.md","articles":[]},"previous":{"title":"二、端到端的机器学习项目","level":"1.4","depth":1,"path":"2.md","ref":"./2.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"3.md","mtime":"2024-08-23T21:05:56.824Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"三、分类","level":"1.5","depth":1,"next":{"title":"四、训练模型","level":"1.6","depth":1,"path":"4.md","ref":"./4.md","articles":[]},"previous":{"title":"二、端到端的机器学习项目","level":"1.4","depth":1,"path":"2.md","ref":"./2.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"3.md","mtime":"2025-01-05T17:59:46.758Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

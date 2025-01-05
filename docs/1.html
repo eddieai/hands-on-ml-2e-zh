@@ -6,7 +6,7 @@
         <title>一、机器学习概览 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -572,7 +572,7 @@
 <p>最后，可以准备运行模型进行预测了。例如，假如你想知道塞浦路斯人有多幸福，但 OECD 没有它的数据。幸运的是，你可以用模型进行预测：查询塞浦路斯的人均 GDP，为 22587 美元，然后应用模型得到生活满意度，后者的值在<code>4.85 + 22,587 × 4.91 × 10-5 = 5.96</code>左右。</p>
 <p>为了激起你的兴趣，案例 1-1 展示了加载数据、准备、创建散点图的 Python 代码，然后训练线性模型并进行预测。</p>
 <p>案例 1-1，使用 Scikit-Learn 训练并运行线性模型。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> matplotlib
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> matplotlib
 <span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
 <span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 <span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
@@ -605,10 +605,10 @@ X_new = [[<span class="hljs-number">22587</span>]]  <span class="hljs-comment">#
 <blockquote>
 <p>注解：如果你之前接触过基于实例学习算法，你会发现斯洛文尼亚的人均 GDP（20732 美元）和塞浦路斯差距很小，OECD 数据上斯洛文尼亚的生活满意度是 5.7，就可以预测塞浦路斯的生活满意度也是 5.7。如果放大一下范围，看一下接下来两个临近的国家，你会发现葡萄牙和西班牙的生活满意度分别是 5.1 和 6.5。对这三个值进行平均得到 5.77，就和基于模型的预测值很接近。这个简单的算法叫做 k 近邻回归（这个例子中，<code>k=3</code>）。</p>
 <p>在前面的代码中替换线性回归模型为 K 近邻模型，只需更换下面一行：</p>
-<pre><code class="lang-py">clf = sklearn.linear_model.LinearRegression()
+<pre><code class="lang-python">clf = sklearn.linear_model.LinearRegression()
 </code></pre>
 <p>为：</p>
-<pre><code class="lang-py">clf = sklearn.neighbors.KNeighborsRegressor(n_neighbors=<span class="hljs-number">3</span>)
+<pre><code class="lang-python">clf = sklearn.neighbors.KNeighborsRegressor(n_neighbors=<span class="hljs-number">3</span>)
 </code></pre>
 </blockquote>
 <p>如果一切顺利，你的模型就可以作出好的预测。如果不能，你可能需要使用更多的属性（就业率、健康、空气污染等等），获取更多更好的训练数据，或选择一个更好的模型（比如，多项式回归模型）。</p>
@@ -785,7 +785,7 @@ X_new = [[<span class="hljs-number">22587</span>]]  <span class="hljs-comment">#
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"一、机器学习概览","level":"1.3","depth":1,"next":{"title":"二、端到端的机器学习项目","level":"1.4","depth":1,"path":"2.md","ref":"./2.md","articles":[]},"previous":{"title":"零、前言","level":"1.2","depth":1,"path":"0.md","ref":"./0.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"1.md","mtime":"2024-08-23T21:05:56.806Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"一、机器学习概览","level":"1.3","depth":1,"next":{"title":"二、端到端的机器学习项目","level":"1.4","depth":1,"path":"2.md","ref":"./2.md","articles":[]},"previous":{"title":"零、前言","level":"1.2","depth":1,"path":"0.md","ref":"./0.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"1.md","mtime":"2025-01-05T17:59:46.738Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

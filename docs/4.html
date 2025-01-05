@@ -6,7 +6,7 @@
         <title>四、训练模型 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -449,30 +449,30 @@
 <li><code>y</code>是一个向量，其包含了<code>y^(1)</code>到<code>y^(m)</code>的值</li>
 </ul>
 <p>让我们生成一些近似线性的数据（如图 4-1）来测试一下这个方程。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 X = <span class="hljs-number">2</span> * np.random.rand(<span class="hljs-number">100</span>, <span class="hljs-number">1</span>)
 y = <span class="hljs-number">4</span> + <span class="hljs-number">3</span> * X + np.random.randn(<span class="hljs-number">100</span>, <span class="hljs-number">1</span>)
 </code></pre>
 <p><img src="img/图 4-1.PNG" alt=""></img></p>
 <p>图 4-1：随机线性数据集</p>
 <p>现在让我们使用正规方程来计算<code>θ_hat</code>，我们将使用 Numpy 的线性代数模块（<code>np.linalg</code>）中的<code>inv()</code>函数来计算矩阵的逆，以及<code>dot()</code>方法来计算矩阵的乘法。</p>
-<pre><code class="lang-py">X_b = np.c_[np.ones((<span class="hljs-number">100</span>, <span class="hljs-number">1</span>)), X]
+<pre><code class="lang-python">X_b = np.c_[np.ones((<span class="hljs-number">100</span>, <span class="hljs-number">1</span>)), X]
 theta_best = np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(y)
 </code></pre>
 <p>我们生产数据的函数实际上是<code>y = 4 + 3x[0] + 高斯噪声</code>。让我们看一下最后的计算结果。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>theta_best
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>theta_best
 array([[<span class="hljs-number">4.21509616</span>],[<span class="hljs-number">2.77011339</span>]])
 </code></pre>
 <p>我们希望最后得到的参数为<code>θ[0] = 4, θ[1] = 3</code>而不是<code>θ[0] = 3.865, θ[1] = 3.139</code>（译者注：我认为应该是<code>θ[0] = 4.2150, θ[1] = 2.7701</code>）。这已经足够了，由于存在噪声，参数不可能达到到原始函数的值。</p>
 <p>现在我们能够使用<code>θ_hat</code>来进行预测：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>X_new = np.array([[<span class="hljs-number">0</span>],[<span class="hljs-number">2</span>]])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>X_new = np.array([[<span class="hljs-number">0</span>],[<span class="hljs-number">2</span>]])
 <span class="hljs-meta">&gt;&gt;&gt; </span>X_new_b = np.c_[np.ones((<span class="hljs-number">2</span>, <span class="hljs-number">1</span>)), X_new]
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_predict = X_new_b.dot(theta_best)
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_predict
 array([[<span class="hljs-number">4.21509616</span>],[<span class="hljs-number">9.75532293</span>]])
 </code></pre>
 <p>画出这个模型的图像，如图 4-2</p>
-<pre><code class="lang-py">plt.plot(X_new,y_predict,<span class="hljs-string">"r-"</span>)
+<pre><code class="lang-python">plt.plot(X_new,y_predict,<span class="hljs-string">"r-"</span>)
 plt.plot(X,y,<span class="hljs-string">"b."</span>)
 plt.axis([<span class="hljs-number">0</span>,<span class="hljs-number">2</span>,<span class="hljs-number">0</span>,<span class="hljs-number">15</span>])
 plt.show()
@@ -480,7 +480,7 @@ plt.show()
 <p><img src="img/图 4-2.PNG" alt=""></img></p>
 <p>图 4-2：线性回归预测</p>
 <p>使用下面的 Scikit-Learn 代码可以达到相同的效果：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LinearRegression
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LinearRegression
 <span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg = LinearRegression()
 <span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg.fit(X,y)
 <span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg.intercept_, lin_reg.coef_
@@ -536,7 +536,7 @@ array([[<span class="hljs-number">4.21509616</span>],[<span class="hljs-number">
 <p>公式 4-7：梯度下降步长</p>
 <p><img src="img/tex-e25626090e2c767f539550e3c02fa6c8.gif" alt=""></img></p>
 <p>让我们看一下这个算法的应用：</p>
-<pre><code class="lang-py">eta = <span class="hljs-number">0.1</span> <span class="hljs-comment"># 学习率</span>
+<pre><code class="lang-python">eta = <span class="hljs-number">0.1</span> <span class="hljs-comment"># 学习率</span>
 n_iterations = <span class="hljs-number">1000</span>
 m = <span class="hljs-number">100</span>
 
@@ -547,7 +547,7 @@ theta = np.random.randn(<span class="hljs-number">2</span>,<span class="hljs-num
     theta = theta - eta * gradients
 </code></pre>
 <p>这不是太难，让我们看一下最后的结果<code>θ</code>：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>theta
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>theta
 array([[<span class="hljs-number">4.21509616</span>],[<span class="hljs-number">2.77011339</span>]])
 </code></pre>
 <p>看！正规方程的表现非常好。完美地求出了梯度下降的参数。但是当你换一个学习率会发生什么？图 4-8 展示了使用了三个不同的学习率进行梯度下降的前 10 步运算（虚线代表起始位置）。</p>
@@ -568,7 +568,7 @@ array([[<span class="hljs-number">4.21509616</span>],[<span class="hljs-number">
 <p>当损失函数很不规则时（如图 4-6），随机梯度下降算法能够跳过局部最小值。因此，随机梯度下降在寻找全局最小值上比批量梯度下降表现要好。</p>
 <p>虽然随机性可以很好的跳过局部最优值，但同时它却不能达到最小值。解决这个难题的一个办法是逐渐降低学习率。 开始时，走的每一步较大（这有助于快速前进同时跳过局部最小值），然后变得越来越小，从而使算法到达全局最小值。 这个过程被称为模拟退火，因为它类似于熔融金属慢慢冷却的冶金学退火过程。 决定每次迭代的学习率的函数称为<code>learning schedule</code>。 如果学习速度降低得过快，你可能会陷入局部最小值，甚至在到达最小值的半路就停止了。 如果学习速度降低得太慢，你可能在最小值的附近长时间摆动，同时如果过早停止训练，最终只会出现次优解。</p>
 <p>下面的代码使用一个简单的<code>learning schedule</code>来实现随机梯度下降：</p>
-<pre><code class="lang-py">n_epochs = <span class="hljs-number">50</span>
+<pre><code class="lang-python">n_epochs = <span class="hljs-number">50</span>
 t0, t1 = <span class="hljs-number">5</span>, <span class="hljs-number">50</span>  <span class="hljs-comment">#learning_schedule 的超参数</span>
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">learning_schedule</span>(<span class="hljs-params">t</span>):
@@ -586,7 +586,7 @@ theta = np.random.randn(<span class="hljs-number">2</span>,<span class="hljs-num
         theta = theta - eta * gradients
 </code></pre>
 <p>按习惯来讲，我们进行<code>m</code>轮的迭代，每一轮迭代被称为一代。在整个训练集上，随机梯度下降迭代了 1000 次时，一般在第 50 次的时候就可以达到一个比较好的结果。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>theta
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>theta
 array([[<span class="hljs-number">4.21076011</span>],[<span class="hljs-number">2.748560791</span>]])
 </code></pre>
 <p>图 4-10 展示了前 10 次的训练过程（注意每一步的不规则程度）。</p>
@@ -594,7 +594,7 @@ array([[<span class="hljs-number">4.21076011</span>],[<span class="hljs-number">
 <p>图 4-10：随机梯度下降的前 10 次迭代</p>
 <p>由于每个实例的选择是随机的，有的实例可能在每一代中都被选到，这样其他的实例也可能一直不被选到。如果你想保证每一代迭代过程，算法可以遍历所有实例，一种方法是将训练集打乱重排，然后选择一个实例，之后再继续打乱重排，以此类推一直进行下去。但是这样收敛速度会非常的慢。</p>
 <p>通过使用 Scikit-Learn 完成线性回归的随机梯度下降，你需要使用<code>SGDRegressor</code>类，这个类默认优化的是均方差损失函数。下面的代码迭代了 50 代，其学习率<code>η</code>为 0.1（<code>eta0=0.1</code>），使用默认的<code>learning schedule</code>（与前面的不一样），同时也没有添加任何正则项（<code>penalty = None</code>）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> SGDRegressor
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> SGDRegressor
 sgd_reg = SGDRegressor(n_iter=<span class="hljs-number">50</span>, penalty=<span class="hljs-literal">None</span>, eta0=<span class="hljs-number">0.1</span>)
 sgd_reg.fit(X,y.ravel())
 </code></pre>
@@ -616,14 +616,14 @@ sgd_reg.fit(X,y.ravel())
 <h2 id="多项式回归">多项式回归</h2>
 <p>如果你的数据实际上比简单的直线更复杂呢？ 令人惊讶的是，你依然可以使用线性模型来拟合非线性数据。 一个简单的方法是对每个特征进行加权后作为新的特征，然后训练一个线性模型在这个扩展的特征集。 这种方法称为多项式回归。</p>
 <p>让我们看一个例子。 首先，我们根据一个简单的二次方程（并加上一些噪声，如图 4-12）来生成一些非线性数据：</p>
-<pre><code class="lang-py">m = <span class="hljs-number">100</span>
+<pre><code class="lang-python">m = <span class="hljs-number">100</span>
 X = <span class="hljs-number">6</span> * np.random.rand(m, <span class="hljs-number">1</span>) - <span class="hljs-number">3</span>
 y = <span class="hljs-number">0.5</span> * X**<span class="hljs-number">2</span> + X + <span class="hljs-number">2</span> + np.random.randn(m, <span class="hljs-number">1</span>)
 </code></pre>
 <p><img src="img/图 4-12.PNG" alt=""></img></p>
 <p>图 4-12：生产加入噪声的非线性数据</p>
 <p>很清楚的看出，直线不能恰当的拟合这些数据。于是，我们使用 Scikit-Learning 的<code>PolynomialFeatures</code>类进行训练数据集的转换，让训练集中每个特征的平方（2 次多项式）作为新特征（在这种情况下，仅存在一个特征）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> PolynomialFeatures
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> PolynomialFeatures
 <span class="hljs-meta">&gt;&gt;&gt; </span>poly_features = PolynomialFeatures(degree=<span class="hljs-number">2</span>,include_bias=<span class="hljs-literal">False</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>X_poly = poly_features.fit_transform(X)
 <span class="hljs-meta">&gt;&gt;&gt; </span>X[<span class="hljs-number">0</span>]
@@ -632,7 +632,7 @@ array([-<span class="hljs-number">0.75275929</span>])
 array([-<span class="hljs-number">0.75275929</span>, <span class="hljs-number">0.56664654</span>])
 </code></pre>
 <p><code>X_poly</code>现在包含原始特征<code>X</code>并加上了这个特征的平方<code>X^2</code>。现在你可以在这个扩展训练集上使用<code>LinearRegression</code>模型进行拟合，如图 4-13：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg = LinearRegression()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg = LinearRegression()
 <span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg.fit(X_poly, y)
 <span class="hljs-meta">&gt;&gt;&gt; </span>lin_reg.intercept_, lin_reg.coef_
 (array([ <span class="hljs-number">1.78134581</span>]), array([[ <span class="hljs-number">0.93366893</span>, <span class="hljs-number">0.56456263</span>]]))
@@ -652,7 +652,7 @@ array([-<span class="hljs-number">0.75275929</span>, <span class="hljs-number">0
 <p>当然，这种高阶多项式回归模型在这个训练集上严重过拟合了，线性模型则欠拟合。在这个训练集上，二次模型有着较好的泛化能力。那是因为在生成数据时使用了二次模型，但是一般我们不知道这个数据生成函数是什么，那我们该如何决定我们模型的复杂度呢？你如何告诉我你的模型是过拟合还是欠拟合？</p>
 <p>在第二章，你可以使用交叉验证来估计一个模型的泛化能力。如果一个模型在训练集上表现良好，通过交叉验证指标却得出其泛化能力很差，那么你的模型就是过拟合了。如果在这两方面都表现不好，那么它就是欠拟合了。这种方法可以告诉我们，你的模型是太复杂还是太简单了。</p>
 <p>另一种方法是观察学习曲线：画出模型在训练集上的表现，同时画出以训练集规模为自变量的训练集函数。为了得到图像，需要在训练集的不同规模子集上进行多次训练。下面的代码定义了一个函数，用来画出给定训练集后的模型学习曲线：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> mean_squared_error
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> mean_squared_error
 <span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> train_test_split
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">plot_learning_curves</span>(<span class="hljs-params">model, X, y</span>):
@@ -668,7 +668,7 @@ array([-<span class="hljs-number">0.75275929</span>, <span class="hljs-number">0
     plt.plot(np.sqrt(val_errors), <span class="hljs-string">"b-"</span>, linewidth=<span class="hljs-number">3</span>, label=<span class="hljs-string">"val"</span>)
 </code></pre>
 <p>我们一起看一下简单线性回归模型的学习曲线（图 4-15）：</p>
-<pre><code class="lang-py">lin_reg = LinearRegression()
+<pre><code class="lang-python">lin_reg = LinearRegression()
 plot_learning_curves(lin_reg, X, y)
 </code></pre>
 <p><img src="img/图 4-15.PNG" alt=""></img></p>
@@ -680,7 +680,7 @@ plot_learning_curves(lin_reg, X, y)
 <p>如果你的模型在训练集上是欠拟合的，添加更多的样本是没用的。你需要使用一个更复杂的模型或者找到更好的特征。</p>
 </blockquote>
 <p>现在让我们看一个在相同数据上 10 阶多项式模型拟合的学习曲线（图 4-16）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.pipeline <span class="hljs-keyword">import</span> Pipeline
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.pipeline <span class="hljs-keyword">import</span> Pipeline
 
 polynomial_regression = Pipeline((
     (<span class="hljs-string">"poly_features"</span>, PolynomialFeatures(degree=<span class="hljs-number">10</span>, include_bias=<span class="hljs-literal">False</span>)),
@@ -731,14 +731,14 @@ plot_learning_curves(polynomial_regression, X, y)
 <p>公式 4-9：岭回归的封闭方程的解</p>
 <p><img src="img/tex-2ef1c91a9cc8eeb7da8227d4016d702e.gif" alt=""></img></p>
 <p>下面是如何使用 Scikit-Learn 来进行封闭方程的求解（使用 Cholesky 法进行矩阵分解对公式 4-9 进行变形）:</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> Ridge
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> Ridge
 <span class="hljs-meta">&gt;&gt;&gt; </span>ridge_reg = Ridge(alpha=<span class="hljs-number">1</span>, solver=<span class="hljs-string">"cholesky"</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>ridge_reg.fit(X, y)
 <span class="hljs-meta">&gt;&gt;&gt; </span>ridge_reg.predict([[<span class="hljs-number">1.5</span>]])
 array([[ <span class="hljs-number">1.55071465</span>]]
 </code></pre>
 <p>使用随机梯度法进行求解：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>sgd_reg = SGDRegressor(penalty=<span class="hljs-string">"l2"</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>sgd_reg = SGDRegressor(penalty=<span class="hljs-string">"l2"</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>sgd_reg.fit(X, y.ravel())
 <span class="hljs-meta">&gt;&gt;&gt; </span>sgd_reg.predict([[<span class="hljs-number">1.5</span>]])
 array([[ <span class="hljs-number">1.13500145</span>]])
@@ -763,7 +763,7 @@ array([[ <span class="hljs-number">1.13500145</span>]])
 <p>公式 4-11：Lasso 回归子梯度向量</p>
 <p><img src="img/tex-93eea6b5c197bbc8d7be8b4c14e9f8f3.gif" alt=""></img></p>
 <p>下面是一个使用 Scikit-Learn 的<code>Lasso</code>类的小例子。你也可以使用<code>SGDRegressor(penalty="l1")</code>来代替它。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> Lasso
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> Lasso
 <span class="hljs-meta">&gt;&gt;&gt; </span>lasso_reg = Lasso(alpha=<span class="hljs-number">0.1</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>lasso_reg.fit(X, y)
 <span class="hljs-meta">&gt;&gt;&gt; </span>lasso_reg.predict([[<span class="hljs-number">1.5</span>]])
@@ -774,7 +774,7 @@ array([ <span class="hljs-number">1.53788174</span>]
 <p>公式 4-12：弹性网络损失函数</p>
 <p><img src="img/tex-e4da079f692fe35778bbdf1fdf120d99.gif" alt=""></img></p>
 <p>那么我们该如何选择线性回归，岭回归，Lasso 回归，弹性网络呢？一般来说有一点正则项的表现更好，因此通常你应该避免使用简单的线性回归。岭回归是一个很好的首选项，但是如果你的特征仅有少数是真正有用的，你应该选择 Lasso 和弹性网络。就像我们讨论的那样，它两能够将无用特征的权重降为零。一般来说，弹性网络的表现要比 Lasso 好，因为当特征数量比样本的数量大的时候，或者特征之间有很强的相关性时，Lasso 可能会表现的不规律。下面是一个使用 Scikit-Learn <code>ElasticNet</code>（<code>l1_ratio</code>指的就是混合率<code>r</code>）的简单样本：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> ElasticNet
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> ElasticNet
 <span class="hljs-meta">&gt;&gt;&gt; </span>elastic_net = ElasticNet(alpha=<span class="hljs-number">0.1</span>, l1_ratio=<span class="hljs-number">0.5</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>elastic_net.fit(X, y)
 <span class="hljs-meta">&gt;&gt;&gt; </span>elastic_net.predict([[<span class="hljs-number">1.5</span>]])
@@ -789,7 +789,7 @@ array([ <span class="hljs-number">1.54333232</span>])
 <p>随机梯度和小批量梯度下降不是平滑曲线，你可能很难知道它是否达到最小值。 一种解决方案是，只有在验证误差高于最小值一段时间后（你确信该模型不会变得更好了），才停止，之后将模型参数回滚到验证误差最小值。</p>
 </blockquote>
 <p>下面是一个早期停止法的基础应用：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.base <span class="hljs-keyword">import</span> clone
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.base <span class="hljs-keyword">import</span> clone
 sgd_reg = SGDRegressor(n_iter=<span class="hljs-number">1</span>, warm_start=<span class="hljs-literal">True</span>, penalty=<span class="hljs-literal">None</span>,learning_rate=<span class="hljs-string">"constant"</span>, eta0=<span class="hljs-number">0.0005</span>)
 
 minimum_val_error = <span class="hljs-built_in">float</span>(<span class="hljs-string">"inf"</span>)
@@ -837,7 +837,7 @@ best_model = <span class="hljs-literal">None</span>
 <p><img src="img/图 4-22.PNG" alt=""></img></p>
 <p>图 4-22：三种不同的鸢尾花</p>
 <p>让我们尝试建立一个分类器，仅仅使用花瓣的宽度特征来识别 Virginica，首先让我们加载数据：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn <span class="hljs-keyword">import</span> datasets
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn <span class="hljs-keyword">import</span> datasets
 <span class="hljs-meta">&gt;&gt;&gt; </span>iris = datasets.load_iris()
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">list</span>(iris.keys())
 [<span class="hljs-string">'data'</span>, <span class="hljs-string">'target_names'</span>, <span class="hljs-string">'feature_names'</span>, <span class="hljs-string">'target'</span>, <span class="hljs-string">'DESCR'</span>]
@@ -845,13 +845,13 @@ best_model = <span class="hljs-literal">None</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>y = (iris[<span class="hljs-string">"target"</span>] == <span class="hljs-number">2</span>).astype(np.<span class="hljs-built_in">int</span>)
 </code></pre>
 <p>接下来，我们训练一个逻辑回归模型：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LogisticRegression
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LogisticRegression
 
 log_reg = LogisticRegression()
 log_reg.fit(X, y)
 </code></pre>
 <p>我们来看看模型估计的花瓣宽度从 0 到 3 厘米的概率估计（如图 4-23）：</p>
-<pre><code class="lang-py">X_new = np.linspace(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1000</span>).reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)
+<pre><code class="lang-python">X_new = np.linspace(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1000</span>).reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)
 y_proba = log_reg.predict_proba(X_new)
 plt.plot(X_new, y_proba[:, <span class="hljs-number">1</span>], <span class="hljs-string">"g-"</span>, label=<span class="hljs-string">"Iris-Virginica"</span>)
 plt.plot(X_new, y_proba[:, <span class="hljs-number">0</span>], <span class="hljs-string">"b--"</span>, label=<span class="hljs-string">"Not Iris-Virginica"</span>)
@@ -859,7 +859,7 @@ plt.plot(X_new, y_proba[:, <span class="hljs-number">0</span>], <span class="hlj
 <p><img src="img/图 4-23.PNG" alt=""></img></p>
 <p>图 4-23：概率估计和决策边界</p>
 <p>Virginica 花的花瓣宽度（用三角形表示）在 1.4 厘米到 2.5 厘米之间，而其他种类的花（由正方形表示）通常具有较小的花瓣宽度，范围从 0.1 厘米到 1.8 厘米。注意，它们之间会有一些重叠。在大约 2 厘米以上时，分类器非常肯定这朵花是 Virginica 花（分类器此时输出一个非常高的概率值），而在 1 厘米以下时，它非常肯定这朵花不是 Virginica 花（不是 Virginica 花有非常高的概率）。在这两个极端之间，分类器是不确定的。但是，如果你使用它进行预测（使用<code>predict()</code>方法而不是<code>predict_proba()</code>方法），它将返回一个最可能的结果。因此，在 1.6 厘米左右存在一个决策边界，这时两类情况出现的概率都等于 50%：如果花瓣宽度大于 1.6 厘米，则分类器将预测该花是 Virginica，否则预测它不是（即使它有可能错了）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>log_reg.predict([[<span class="hljs-number">1.7</span>], [<span class="hljs-number">1.5</span>]])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>log_reg.predict([[<span class="hljs-number">1.7</span>], [<span class="hljs-number">1.5</span>]])
 array([<span class="hljs-number">1</span>, <span class="hljs-number">0</span>])
 </code></pre>
 <p>图 4-24 表示相同的数据集，但是这次使用了两个特征进行判断：花瓣的宽度和长度。 一旦训练完毕，Logistic 回归分类器就可以根据这两个特征来估计一朵花是 Virginica 的可能性。 虚线表示这时两类情况出现的概率都等于 50%：这是模型的决策边界。 请注意，它是一个线性边界。每条平行线都代表一个分类标准下的两两个不同类的概率，从 15%（左下角）到 90%（右上角）。越过右上角分界线的点都有超过 90% 的概率是 Virginica 花。</p>
@@ -912,14 +912,14 @@ array([<span class="hljs-number">1</span>, <span class="hljs-number">0</span>])
 <p><img src="img/tex-5dfdb421c5936031346fc0e53a028caf.gif" alt=""></img></p>
 <p>现在你可以计算每一类的梯度向量，然后使用梯度下降（或者其他的优化算法）找到使得损失函数达到最小值的参数矩阵<code>θ</code>。</p>
 <p>让我们使用 Softmax 回归对三种鸢尾花进行分类。当你使用<code>LogisticRregression</code>对模型进行训练时，Scikit Learn 默认使用的是一对多模型，但是你可以设置<code>multi_class</code>参数为“multinomial”来把它改变为 Softmax 回归。你还必须指定一个支持 Softmax 回归的求解器，例如“lbfgs”求解器（有关更多详细信息，请参阅 Scikit-Learn 的文档）。其默认使用<code>l2</code>正则化，你可以使用超参数<code>C</code>控制它。</p>
-<pre><code class="lang-py">X = iris[<span class="hljs-string">"data"</span>][:, (<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)] <span class="hljs-comment"># petal length, petal width</span>
+<pre><code class="lang-python">X = iris[<span class="hljs-string">"data"</span>][:, (<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)] <span class="hljs-comment"># petal length, petal width</span>
 y = iris[<span class="hljs-string">"target"</span>]
 
 softmax_reg = LogisticRegression(multi_class=<span class="hljs-string">"multinomial"</span>,solver=<span class="hljs-string">"lbfgs"</span>, C=<span class="hljs-number">10</span>)
 softmax_reg.fit(X, y)
 </code></pre>
 <p>所以下次你发现一个花瓣长为 5 厘米，宽为 2 厘米的鸢尾花时，你可以问你的模型你它是哪一类鸢尾花，它会回答 94.2% 是 Virginica 花（第二类），或者 5.8% 是其他鸢尾花。</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>softmax_reg.predict([[<span class="hljs-number">5</span>, <span class="hljs-number">2</span>]])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>softmax_reg.predict([[<span class="hljs-number">5</span>, <span class="hljs-number">2</span>]])
 array([<span class="hljs-number">2</span>])
 <span class="hljs-meta">&gt;&gt;&gt; </span>softmax_reg.predict_proba([[<span class="hljs-number">5</span>, <span class="hljs-number">2</span>]])
 array([[ <span class="hljs-number">6.33134078e-07</span>, <span class="hljs-number">5.75276067e-02</span>, <span class="hljs-number">9.42471760e-01</span>]])是
@@ -991,7 +991,7 @@ array([[ <span class="hljs-number">6.33134078e-07</span>, <span class="hljs-numb
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"四、训练模型","level":"1.6","depth":1,"next":{"title":"五、支持向量机","level":"1.7","depth":1,"path":"5.md","ref":"./5.md","articles":[]},"previous":{"title":"三、分类","level":"1.5","depth":1,"path":"3.md","ref":"./3.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"4.md","mtime":"2024-08-23T21:05:56.825Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"四、训练模型","level":"1.6","depth":1,"next":{"title":"五、支持向量机","level":"1.7","depth":1,"path":"5.md","ref":"./5.md","articles":[]},"previous":{"title":"三、分类","level":"1.5","depth":1,"path":"3.md","ref":"./3.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"4.md","mtime":"2025-01-05T17:59:46.727Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

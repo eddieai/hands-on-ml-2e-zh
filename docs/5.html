@@ -6,7 +6,7 @@
         <title>五、支持向量机 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -420,7 +420,7 @@
 <p>如果你的 SVM 模型过拟合，你可以尝试通过减小超参数<code>C</code>去调整。 </p>
 </blockquote>
 <p>以下的 Scikit-Learn 代码加载了内置的鸢尾花（Iris）数据集，缩放特征，并训练一个线性 SVM 模型（使用<code>LinearSVC</code>类，超参数<code>C=1</code>，hinge 损失函数）来检测 Virginica 鸢尾花，生成的模型在图 5-4 的右图。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 <span class="hljs-keyword">from</span> sklearn <span class="hljs-keyword">import</span> datasets
 <span class="hljs-keyword">from</span> sklearn.pipeline <span class="hljs-keyword">import</span> Pipeline
 <span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> StandardScaler
@@ -455,7 +455,7 @@ array([ <span class="hljs-number">1.</span>])
 <p>尽管线性 SVM 分类器在许多案例上表现得出乎意料的好，但是很多数据集并不是线性可分的。一种处理非线性数据集方法是增加更多的特征，例如多项式特征（正如你在第 4 章所做的那样）；在某些情况下可以变成线性可分的数据。在图 5-5 的左图中，它只有一个特征<code>x1</code>的简单的数据集，正如你看到的，该数据集不是线性可分的。但是如果你增加了第二个特征 <code>x2=(x1)^2</code>，产生的 2D 数据集就能很好的线性可分。</p>
 <p><img src="img/5-5.jpg" alt=""></img></p>
 <p>为了实施这个想法，通过 Scikit-Learn，你可以创建一个流水线（Pipeline）去包含多项式特征（PolynomialFeatures）变换（在 121 页的“Polynomial Regression”中讨论），然后一个<code>StandardScaler</code>和<code>LinearSVC</code>。让我们在卫星数据集（moons datasets）测试一下效果。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> make_moons
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> make_moons
 <span class="hljs-keyword">from</span> sklearn.pipeline <span class="hljs-keyword">import</span> Pipeline
 <span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> PolynomialFeatures
 
@@ -471,7 +471,7 @@ polynomial_svm_clf.fit(X, y)
 <h3 id="多项式核">多项式核</h3>
 <p>添加多项式特征很容易实现，不仅仅在 SVM，在各种机器学习算法都有不错的表现，但是低次数的多项式不能处理非常复杂的数据集，而高次数的多项式却产生了大量的特征，会使模型变得慢。</p>
 <p>幸运的是，当你使用 SVM 时，你可以运用一个被称为“核技巧”（kernel trick）的神奇数学技巧。它可以取得就像你添加了许多多项式，甚至有高次数的多项式，一样好的结果。所以不会大量特征导致的组合爆炸，因为你并没有增加任何特征。这个技巧可以用 SVC 类来实现。让我们在卫星数据集测试一下效果。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> SVC
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> SVC
 poly_kernel_svm_clf = Pipeline((
         (<span class="hljs-string">"scaler"</span>, StandardScaler()),
         (<span class="hljs-string">"svm_clf"</span>, SVC(kernel=<span class="hljs-string">"poly"</span>, degree=<span class="hljs-number">3</span>, coef0=<span class="hljs-number">1</span>, C=<span class="hljs-number">5</span>))
@@ -490,7 +490,7 @@ poly_kernel_svm_clf.fit(X, y)
 <p>你可能想知道如何选择地标。最简单的方法是在数据集中的每一个样本的位置创建地标。这将产生更多的维度从而增加了转换后数据集是线性可分的可能性。但缺点是，<code>m</code>个样本，<code>n</code>个特征的训练集被转换成了<code>m</code>个实例，<code>m</code>个特征的训练集（假设你删除了原始特征）。这样一来，如果你的训练集非常大，你最终会得到同样大的特征。</p>
 <h3 id="高斯-rbf-核">高斯 RBF 核</h3>
 <p>就像多项式特征法一样，相似特征法对各种机器学习算法同样也有不错的表现。但是在所有额外特征上的计算成本可能很高，特别是在大规模的训练集上。然而，“核” 技巧再一次显现了它在 SVM 上的神奇之处：高斯核让你可以获得同样好的结果成为可能，就像你在相似特征法添加了许多相似特征一样，但事实上，你并不需要在 RBF 添加它们。我们使用 SVC 类的高斯 RBF 核来检验一下。</p>
-<pre><code class="lang-py">rbf_kernel_svm_clf = Pipeline((
+<pre><code class="lang-python">rbf_kernel_svm_clf = Pipeline((
         (<span class="hljs-string">"scaler"</span>, StandardScaler()),
         (<span class="hljs-string">"svm_clf"</span>, SVC(kernel=<span class="hljs-string">"rbf"</span>, gamma=<span class="hljs-number">5</span>, C=<span class="hljs-number">0.001</span>))
     ))
@@ -513,14 +513,14 @@ rbf_kernel_svm_clf.fit(X, y)
 <p><img src="img/5-10.jpg" alt=""></img></p>
 <p>添加更多的数据样本在间隔之内并不会影响模型的预测，因此，这个模型认为是不敏感的（ϵ-insensitive）。</p>
 <p>你可以使用 Scikit-Learn 的<code>LinearSVR</code>类去实现线性 SVM 回归。下面的代码产生的模型在图 5-10 左图（训练数据需要被中心化和标准化）</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> LinearSVR
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> LinearSVR
 svm_reg = LinearSVR(epsilon=<span class="hljs-number">1.5</span>)
 svm_reg.fit(X, y)
 </code></pre>
 <p>处理非线性回归任务，你可以使用核化的 SVM 模型。比如，图 5-11 显示了在随机二次方的训练集，使用二次方多项式核函数的 SVM 回归。左图是较小的正则化（即更大的<code>C</code>值），右图则是更大的正则化（即小的<code>C</code>值）</p>
 <p><img src="img/5-11.jpg" alt=""></img></p>
 <p>下面的代码的模型在图 5-11，其使用了 Scikit-Learn 的<code>SVR</code>类（支持核技巧）。在回归任务上，<code>SVR</code>类和<code>SVC</code>类是一样的，并且<code>LinearSVR</code>是和<code>LinearSVC</code>等价。<code>LinearSVR</code>类和训练集的大小成线性（就像<code>LinearSVC</code>类），当训练集变大，<code>SVR</code>会变的很慢（就像<code>SVC</code>类）</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> SVR
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> SVR
 
 svm_poly_reg = SVR(kernel=<span class="hljs-string">"poly"</span>, degree=<span class="hljs-number">2</span>, C=<span class="hljs-number">100</span>, epsilon=<span class="hljs-number">0.1</span>)
 svm_poly_reg.fit(X, y)
@@ -669,7 +669,7 @@ svm_poly_reg.fit(X, y)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"五、支持向量机","level":"1.7","depth":1,"next":{"title":"六、决策树","level":"1.8","depth":1,"path":"6.md","ref":"./6.md","articles":[]},"previous":{"title":"四、训练模型","level":"1.6","depth":1,"path":"4.md","ref":"./4.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"5.md","mtime":"2024-08-23T21:05:56.826Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"五、支持向量机","level":"1.7","depth":1,"next":{"title":"六、决策树","level":"1.8","depth":1,"path":"6.md","ref":"./6.md","articles":[]},"previous":{"title":"四、训练模型","level":"1.6","depth":1,"path":"4.md","ref":"./4.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"5.md","mtime":"2025-01-05T17:59:46.727Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

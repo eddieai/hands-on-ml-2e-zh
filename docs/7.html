@@ -6,7 +6,7 @@
         <title>七、集成学习和随机森林 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -413,7 +413,7 @@
 <p>同样的，假设你创建了一个包含 1000 个分类器的集成模型，其中每个分类器的正确率只有 51%（仅比瞎猜好一点点）。如果你用投票去预测类别，你可能得到 75% 的准确率！然而，这仅仅在所有的分类器都独立运行的很好、不会发生有相关性的错误的情况下才会这样，然而每一个分类器都在同一个数据集上训练，导致其很可能会发生这样的错误。他们可能会犯同一种错误，所以也会有很多票投给了错误类别导致集成的准确率下降。</p>
 <p>如果使每一个分类器都独立自主的分类，那么集成模型会工作的很好。去得到多样的分类器的方法之一就是用完全不同的算法，这会使它们会做出不同种类的错误，这会提高集成的正确率</p>
 <p>接下来的代码创建和训练了在 sklearn 中的投票分类器。这个分类器由三个不同的分类器组成（训练集是第五章中的 moons 数据集）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier 
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier 
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> VotingClassifier 
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> LogisticRegression 
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> SVC
@@ -425,7 +425,7 @@
 <span class="hljs-meta">&gt;&gt;&gt; </span>voting_clf.fit(X_train, y_train)
 </code></pre>
 <p>让我们看一下在测试集上的准确率：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score 
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score 
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">for</span> clf <span class="hljs-keyword">in</span> (log_clf, rnd_clf, svm_clf, voting_clf): 
 <span class="hljs-meta">&gt;&gt;&gt; </span>    clf.fit(X_train, y_train) 
 <span class="hljs-meta">&gt;&gt;&gt; </span>    y_pred = clf.predict(X_test) 
@@ -445,7 +445,7 @@ VotingClassifier <span class="hljs-number">0.896</span>
 <p>正如你在图 7-4 上所看到的，分类器可以通过不同的 CPU 核或其他的服务器一起被训练。相似的，分类器也可以一起被制作。这就是为什么 Bagging 和 Pasting 是如此流行的原因之一：它们的可扩展性很好。</p>
 <h3 id="在-sklearn-中的-bagging-和-pasting">在 sklearn 中的 Bagging 和 Pasting</h3>
 <p>sklearn 为 Bagging 和 Pasting 提供了一个简单的 API：<code>BaggingClassifier</code>类（或者对于回归可以是<code>BaggingRegressor</code>。接下来的代码训练了一个 500 个决策树分类器的集成，每一个都是在数据集上有放回采样 100 个训练实例下进行训练（这是 Bagging 的例子，如果你想尝试 Pasting，就设置<code>bootstrap=False</code>）。<code>n_jobs</code>参数告诉 sklearn 用于训练和预测所需要 CPU 核的数量。（-1 代表着 sklearn 会使用所有空闲核）：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> BaggingClassifier 
+<pre><code class="lang-python">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> BaggingClassifier 
 &gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeClassifier
 &gt;&gt;&gt;bag_clf = BaggingClassifier(DecisionTreeClassifier(), n_estimators=<span class="hljs-number">500</span>,        
 <span class="hljs-meta">&gt;&gt;&gt; </span> max_samples=<span class="hljs-number">100</span>, bootstrap=<span class="hljs-literal">True</span>, n_jobs=-<span class="hljs-number">1</span>) 
@@ -460,20 +460,20 @@ VotingClassifier <span class="hljs-number">0.896</span>
 <p>对于 Bagging 来说，一些实例可能被一些分类器重复采样，但其他的有可能不会被采样。<code>BaggingClassifier</code>默认采样。<code>BaggingClassifier</code>默认是有放回的采样<code>m</code>个实例 （<code>bootstrap=True</code>），其中<code>m</code>是训练集的大小，这意味着平均下来只有 63% 的训练实例被每个分类器采样，剩下的 37% 个没有被采样的训练实例就叫做 <em>Out-of-Bag</em> 实例。注意对于每一个的分类器它们的 37% 不是相同的。</p>
 <p>因为在训练中分类器从来没有看到过 oob 实例，所以它可以在这些实例上进行评估，而不需要单独的验证集或交叉验证。你可以拿出每一个分类器的 oob 来评估集成本身。</p>
 <p>在 sklearn 中，你可以在训练后需要创建一个<code>BaggingClassifier</code>来自动评估时设置<code>oob_score=True</code>来自动评估。接下来的代码展示了这个操作。评估结果通过变量<code>oob_score_</code>来显示：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>bag_clf = BaggingClassifier(DecisionTreeClassifier(), n_estimators=<span class="hljs-number">500</span>,bootstrap=<span class="hljs-literal">True</span>, n_jobs=-<span class="hljs-number">1</span>, oob_score=<span class="hljs-literal">True</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>bag_clf = BaggingClassifier(DecisionTreeClassifier(), n_estimators=<span class="hljs-number">500</span>,bootstrap=<span class="hljs-literal">True</span>, n_jobs=-<span class="hljs-number">1</span>, oob_score=<span class="hljs-literal">True</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>bag_clf.fit(X_train, y_train) 
 <span class="hljs-meta">&gt;&gt;&gt; </span>bag_clf.oob_score_ 
 <span class="hljs-number">0.93066666666666664</span>
 </code></pre>
 <p>根据这个 obb 评估，<code>BaggingClassifier</code>可以再测试集上达到 93.1% 的准确率，让我们修改一下：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score 
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score 
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_pred = bag_clf.predict(X_test) 
 <span class="hljs-meta">&gt;&gt;&gt; </span>accuracy_score(y_test, y_pred) 
 <span class="hljs-number">0.93600000000000005</span>
 </code></pre>
 <p>我们在测试集上得到了 93.6% 的准确率，足够接近了！</p>
 <p>对于每个训练实例 oob 决策函数也可通过<code>oob_decision_function_</code>变量来展示。在这种情况下（当基决策器有<code>predict_proba()</code>时）决策函数会对每个训练实例返回类别概率。例如，oob 评估预测第二个训练实例有 60.6% 的概率属于正类（39.4% 属于负类）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>bag_clf.oob_decision_function_ 
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>bag_clf.oob_decision_function_ 
 array([[ <span class="hljs-number">0.</span>,  <span class="hljs-number">1.</span>], [ <span class="hljs-number">0.60588235</span>,  <span class="hljs-number">0.39411765</span>],[ <span class="hljs-number">1.</span>, <span class="hljs-number">0.</span> ], 
 <span class="hljs-meta">... </span> [ <span class="hljs-number">1.</span> ,  <span class="hljs-number">0.</span> ],[ <span class="hljs-number">0.</span>,  <span class="hljs-number">1.</span>],[ <span class="hljs-number">0.48958333</span>,  <span class="hljs-number">0.51041667</span>]])
 </code></pre>
@@ -483,14 +483,14 @@ array([[ <span class="hljs-number">0.</span>,  <span class="hljs-number">1.</spa
 <p>采样特征导致更多的预测多样性，用高偏差换低方差。</p>
 <h2 id="随机森林">随机森林</h2>
 <p>正如我们所讨论的，随机森林是决策树的一种集成，通常是通过 bagging 方法（有时是 pasting 方法）进行训练，通常用<code>max_samples</code>设置为训练集的大小。与建立一个<code>BaggingClassifier</code>然后把它放入<code>DecisionTreeClassifier</code>相反，你可以使用更方便的也是对决策树优化够的<code>RandomForestClassifier</code>（对于回归是<code>RandomForestRegressor</code>）。接下来的代码训练了带有 500 个树（每个被限制为 16 叶子结点）的决策森林，使用所有空闲的 CPU 核：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier
+<pre><code class="lang-python">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier
 &gt;&gt;&gt;rnd_clf = RandomForestClassifier(n_estimators=<span class="hljs-number">500</span>, max_leaf_nodes=<span class="hljs-number">16</span>, n_jobs=-<span class="hljs-number">1</span>) 
 &gt;&gt;&gt;rnd_clf.fit(X_train, y_train)
 &gt;&gt;&gt;y_pred_rf = rnd_clf.predict(X_test)
 </code></pre>
 <p>除了一些例外，<code>RandomForestClassifier</code>使用<code>DecisionTreeClassifier</code>的所有超参数（决定数怎么生长），把<code>BaggingClassifier</code>的超参数加起来来控制集成本身。</p>
 <p>随机森林算法在树生长时引入了额外的随机；与在节点分裂时需要找到最好分裂特征相反（详见第六章），它在一个随机的特征集中找最好的特征。它导致了树的差异性，并且再一次用高偏差换低方差，总的来说是一个更好的模型。以下是<code>BaggingClassifier</code>大致相当于之前的<code>randomforestclassifier</code>：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;bag_clf = BaggingClassifier(DecisionTreeClassifier(splitter=<span class="hljs-string">"random"</span>, max_leaf_nodes=<span class="hljs-number">16</span>),n_estimators=<span class="hljs-number">500</span>, max_samples=<span class="hljs-number">1.0</span>, bootstrap=<span class="hljs-literal">True</span>, n_jobs=-<span class="hljs-number">1</span>)
+<pre><code class="lang-python">&gt;&gt;&gt;bag_clf = BaggingClassifier(DecisionTreeClassifier(splitter=<span class="hljs-string">"random"</span>, max_leaf_nodes=<span class="hljs-number">16</span>),n_estimators=<span class="hljs-number">500</span>, max_samples=<span class="hljs-number">1.0</span>, bootstrap=<span class="hljs-literal">True</span>, n_jobs=-<span class="hljs-number">1</span>)
 </code></pre>
 <h3 id="极随机树">极随机树</h3>
 <p>当你在随机森林上生长树时，在每个结点分裂时只考虑随机特征集上的特征（正如之前讨论过的一样）。相比于找到更好的特征我们可以通过使用对特征使用随机阈值使树更加随机（像规则决策树一样）。</p>
@@ -499,7 +499,7 @@ array([[ <span class="hljs-number">0.</span>,  <span class="hljs-number">1.</spa
 <p>我们很难去分辨<code>ExtraTreesClassifier</code>和<code>RandomForestClassifier</code>到底哪个更好。通常情况下是通过交叉验证来比较它们（使用网格搜索调整超参数）。</p>
 <h3 id="特征重要度">特征重要度</h3>
 <p>最后，如果你观察一个单一决策树，重要的特征会出现在更靠近根部的位置，而不重要的特征会经常出现在靠近叶子的位置。因此我们可以通过计算一个特征在森林的全部树中出现的平均深度来预测特征的重要性。sklearn 在训练后会自动计算每个特征的重要度。你可以通过<code>feature_importances_</code>变量来查看结果。例如如下代码在鸢尾花数据集（第四章介绍）上训练了一个<code>RandomForestClassifier</code>模型，然后输出了每个特征的重要性。看来，最重要的特征是花瓣长度（44%）和宽度（42%），而萼片长度和宽度相对比较是不重要的（分别为 11% 和 2%）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_iris 
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> sklearn.datasets <span class="hljs-keyword">import</span> load_iris 
 <span class="hljs-meta">&gt;&gt;&gt; </span>iris = load_iris() 
 <span class="hljs-meta">&gt;&gt;&gt; </span>rnd_clf = RandomForestClassifier(n_estimators=<span class="hljs-number">500</span>, n_jobs=-<span class="hljs-number">1</span>) 
 <span class="hljs-meta">&gt;&gt;&gt; </span>rnd_clf.fit(iris[<span class="hljs-string">"data"</span>], iris[<span class="hljs-string">"target"</span>]) 
@@ -542,7 +542,7 @@ petal width (cm) <span class="hljs-number">0.423357996355</span>
 <p>其中<code>N</code>是分类器的数量。</p>
 <p>sklearn 通常使用 Adaboost 的多分类版本 <em>SAMME</em>（这就代表了 <em>分段加建模使用多类指数损失函数</em>）。如果只有两类别，那么 <em>SAMME</em> 是与 Adaboost 相同的。如果分类器可以预测类别概率（例如如果它们有<code>predict_proba()</code>），如果 sklearn 可以使用 <em>SAMME</em> 叫做<code>SAMME.R</code>的变量（<code>R</code>代表“REAL”），这种依赖于类别概率的通常比依赖于分类器的更好。</p>
 <p>接下来的代码训练了使用 sklearn 的<code>AdaBoostClassifier</code>基于 200 个决策树桩 Adaboost 分类器（正如你说期待的，对于回归也有<code>AdaBoostRegressor</code>）。一个决策树桩是<code>max_depth=1</code>的决策树-换句话说，是一个单一的决策节点加上两个叶子结点。这就是<code>AdaBoostClassifier</code>的默认基分类器：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> AdaBoostClassifier
+<pre><code class="lang-python">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> AdaBoostClassifier
 &gt;&gt;&gt;ada_clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=<span class="hljs-number">1</span>), n_estimators=<span class="hljs-number">200</span>,algorithm=<span class="hljs-string">"SAMME.R"</span>, learning_rate=<span class="hljs-number">0.5</span>) 
 &gt;&gt;&gt;ada_clf.fit(X_train, y_train)
 </code></pre>
@@ -550,26 +550,26 @@ petal width (cm) <span class="hljs-number">0.423357996355</span>
 <h3 id="梯度提升">梯度提升</h3>
 <p>另一个非常著名的提升算法是梯度提升。与 Adaboost 一样，梯度提升也是通过向集成中逐步增加分类器运行的，每一个分类器都修正之前的分类结果。然而，它并不像 Adaboost 那样每一次迭代都更改实例的权重，这个方法是去使用新的分类器去拟合前面分类器预测的<em>残差</em> 。</p>
 <p>让我们通过一个使用决策树当做基分类器的简单的回归例子（回归当然也可以使用梯度提升）。这被叫做梯度提升回归树（GBRT，<em>Gradient Tree Boosting</em> 或者 <em>Gradient Boosted Regression Trees</em>）。首先我们用<code>DecisionTreeRegressor</code>去拟合训练集（例如一个有噪二次训练集）：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeRegressor 
+<pre><code class="lang-python">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.tree <span class="hljs-keyword">import</span> DecisionTreeRegressor 
 &gt;&gt;&gt;tree_reg1 = DecisionTreeRegressor(max_depth=<span class="hljs-number">2</span>) 
 &gt;&gt;&gt;tree_reg1.fit(X, y)
 </code></pre>
 <p>现在在第一个分类器的残差上训练第二个分类器：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;y2 = y - tree_reg1.predict(X) 
+<pre><code class="lang-python">&gt;&gt;&gt;y2 = y - tree_reg1.predict(X) 
 &gt;&gt;&gt;tree_reg2 = DecisionTreeRegressor(max_depth=<span class="hljs-number">2</span>) 
 &gt;&gt;&gt;tree_reg2.fit(X, y2)
 </code></pre>
 <p>随后在第二个分类器的残差上训练第三个分类器：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;y3 = y2 - tree_reg1.predict(X) 
+<pre><code class="lang-python">&gt;&gt;&gt;y3 = y2 - tree_reg1.predict(X) 
 &gt;&gt;&gt;tree_reg3 = DecisionTreeRegressor(max_depth=<span class="hljs-number">2</span>) 
 &gt;&gt;&gt;tree_reg3.fit(X, y3)
 </code></pre>
 <p>现在我们有了一个包含三个回归器的集成。它可以通过集成所有树的预测来在一个新的实例上进行预测。</p>
-<pre><code class="lang-py">&gt;&gt;&gt;y_pred = <span class="hljs-built_in">sum</span>(tree.predict(X_new) <span class="hljs-keyword">for</span> tree <span class="hljs-keyword">in</span> (tree_reg1, tree_reg2, tree_reg3))
+<pre><code class="lang-python">&gt;&gt;&gt;y_pred = <span class="hljs-built_in">sum</span>(tree.predict(X_new) <span class="hljs-keyword">for</span> tree <span class="hljs-keyword">in</span> (tree_reg1, tree_reg2, tree_reg3))
 </code></pre>
 <p>图 7-9 在左栏展示了这三个树的预测，在右栏展示了集成的预测。在第一行，集成只有一个树，所以它与第一个树的预测相似。在第二行，一个新的树在第一个树的残差上进行训练。在右边栏可以看出集成的预测等于前两个树预测的和。相同的，在第三行另一个树在第二个数的残差上训练。你可以看到集成的预测会变的更好。</p>
 <p>我们可以使用 sklean 中的<code>GradientBoostingRegressor</code>来训练 GBRT 集成。与<code>RandomForestClassifier</code>相似，它也有超参数去控制决策树的生长（例如<code>max_depth</code>，<code>min_samples_leaf</code>等等），也有超参数去控制集成训练，例如基分类器的数量（<code>n_estimators</code>）。接下来的代码创建了与之前相同的集成：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> GradientBoostingRegressor
+<pre><code class="lang-python">&gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> GradientBoostingRegressor
 &gt;&gt;&gt;gbrt = GradientBoostingRegressor(max_depth=<span class="hljs-number">2</span>, n_estimators=<span class="hljs-number">3</span>, learning_rate=<span class="hljs-number">1.0</span>) 
 &gt;&gt;&gt;gbrt.fit(X, y)
 </code></pre>
@@ -577,7 +577,7 @@ petal width (cm) <span class="hljs-number">0.423357996355</span>
 <p>超参数<code>learning_rate</code> 确立了每个树的贡献。如果你把它设置为一个很小的树，例如 0.1，在集成中就需要更多的树去拟合训练集，但预测通常会更好。这个正则化技术叫做 <em>shrinkage</em>。图 7-10 展示了两个在低学习率上训练的 GBRT 集成：其中左面是一个没有足够树去拟合训练集的树，右面是有过多的树过拟合训练集的树。</p>
 <p><img src="img/7-10.png" alt=""></img></p>
 <p>为了找到树的最优数量，你可以使用早停技术（第四章讨论）。最简单使用这个技术的方法就是使用<code>staged_predict()</code>：它在训练的每个阶段（用一棵树，两棵树等）返回一个迭代器。接下来的代码用 120 个树训练了一个 GBRT 集成，然后在训练的每个阶段验证错误以找到树的最佳数量，最后使用 GBRT 树的最优数量训练另一个集成：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np 
+<pre><code class="lang-python">&gt;&gt;&gt;<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np 
 &gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> train_test_split
 &gt;&gt;&gt;<span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> mean_squared_error
 
@@ -593,7 +593,7 @@ petal width (cm) <span class="hljs-number">0.423357996355</span>
 <p>验证错误在图 7-11 的左面展示，最优模型预测被展示在右面。</p>
 <p><img src="img/7-11.png" alt=""></img></p>
 <p>你也可以早早的停止训练来实现早停（与先在一大堆树中训练，然后再回头去找最优数目相反）。你可以通过设置<code>warm_start=True</code>来实现 ，这使得当<code>fit()</code>方法被调用时 sklearn 保留现有树，并允许增量训练。接下来的代码在当一行中的五次迭代验证错误没有改善时会停止训练：</p>
-<pre><code class="lang-py">&gt;&gt;&gt;gbrt = GradientBoostingRegressor(max_depth=<span class="hljs-number">2</span>, warm_start=<span class="hljs-literal">True</span>)
+<pre><code class="lang-python">&gt;&gt;&gt;gbrt = GradientBoostingRegressor(max_depth=<span class="hljs-number">2</span>, warm_start=<span class="hljs-literal">True</span>)
 min_val_error = <span class="hljs-built_in">float</span>(<span class="hljs-string">"inf"</span>) 
 error_going_up = <span class="hljs-number">0</span> 
 <span class="hljs-keyword">for</span> n_estimators <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">120</span>):    
@@ -677,7 +677,7 @@ error_going_up = <span class="hljs-number">0</span>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"七、集成学习和随机森林","level":"1.9","depth":1,"next":{"title":"八、降维","level":"1.10","depth":1,"path":"8.md","ref":"./8.md","articles":[]},"previous":{"title":"六、决策树","level":"1.8","depth":1,"path":"6.md","ref":"./6.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"7.md","mtime":"2024-08-23T21:05:56.828Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"七、集成学习和随机森林","level":"1.9","depth":1,"next":{"title":"八、降维","level":"1.10","depth":1,"path":"8.md","ref":"./8.md","articles":[]},"previous":{"title":"六、决策树","level":"1.8","depth":1,"path":"6.md","ref":"./6.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"7.md","mtime":"2025-01-05T17:59:46.697Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

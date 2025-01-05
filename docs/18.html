@@ -6,7 +6,7 @@
         <title>十八、强化学习 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -431,15 +431,15 @@
 <p>强化学习的一个挑战是，为了训练对象，首先需要有一个工作环境。如果你想设计一个可以学习 Atari 游戏的程序，你需要一个 Atari 游戏模拟器。如果你想设计一个步行机器人，那么环境就是真实的世界，你可以直接在这个环境中训练你的机器人，但是这有其局限性：如果机器人从悬崖上掉下来，你不能仅仅点击“撤消”。你也不能加快时间；增加更多的计算能力不会让机器人移动得更快。一般来说，同时训练 1000 个机器人是非常昂贵的。简而言之，训练在现实世界中是困难和缓慢的，所以你通常需要一个模拟环境，至少需要引导训练。例如，你可以使用 PyBullet 或 MuJoCo 来做 3D 物理模拟。</p>
 <p>OpenAI Gym 是一个工具包，它提供各种各样的模拟环境（Atari 游戏，棋盘游戏，2D 和 3D 物理模拟等等），所以你可以训练，比较，或开发新的 RL 算法。</p>
 <p>安装之前，如果你是用虚拟环境创建的独立的环境，需要先激活：</p>
-<pre><code class="lang-py">$ cd $ML_PATH                <span class="hljs-comment"># 工作目录 (e.g., $HOME/ml)</span>
+<pre><code class="lang-python">$ cd $ML_PATH                <span class="hljs-comment"># 工作目录 (e.g., $HOME/ml)</span>
 $ source my_env/<span class="hljs-built_in">bin</span>/activate <span class="hljs-comment"># Linux or MacOS</span>
 $ .\my_env\Scripts\activate  <span class="hljs-comment"># Windows</span>
 </code></pre>
 <p>接下来安装 OpenAI gym。可通过<code>pip</code>安装：</p>
-<pre><code class="lang-py">$ python3 -m pip install --upgrade gym
+<pre><code class="lang-python">$ python3 -m pip install --upgrade gym
 </code></pre>
 <p>取决于系统，你可能还要安装 Mesa OpenGL Utility（GLU）库（比如，在 Ubuntu 18.04 上，你需要运行<code>apt install libglu1-mesa</code>）。这个库用来渲染第一个环境。接着，打开一个 Python 终端或 Jupyter 笔记本，用<code>make()</code>创建一个环境：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> gym
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> gym
 <span class="hljs-meta">&gt;&gt;&gt; </span>env = gym.make(<span class="hljs-string">"CartPole-v1"</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>obs = env.reset()
 <span class="hljs-meta">&gt;&gt;&gt; </span>obs
@@ -447,7 +447,7 @@ array([-<span class="hljs-number">0.01258566</span>, -<span class="hljs-number">
 </code></pre>
 <p>这里创建了一个 CartPole 环境。这是一个 2D 模拟，其中推车可以被左右加速，以平衡放置在它上面的平衡杆（见图 18-4）。你可以用<code>gym.envs.registry.all()</code>获得所有可用的环境。在创建环境之后，需要使用<code>reset()</code>初始化。这会返回第一个观察结果。观察取决于环境的类型。对于 CartPole 环境，每个观测是包含四个浮点数的 1D Numpy 向量：这些浮点数代表推车的水平位置（0.0 为中心）、速度（正是右）、杆的角度（0.0 为垂直）及角速度（正为顺时针）。</p>
 <p>用<code>render()</code>方法展示环境（见图 18-4）。在 Windows 上，这需要安装 X Server，比如 VcXsrv 或 Xming：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.render()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.render()
 <span class="hljs-literal">True</span>
 </code></pre>
 <p><img src="img/7b57b1ce0ad32e3981d5bdcdc2562cfb.png" alt=""></img></p>
@@ -456,16 +456,16 @@ array([-<span class="hljs-number">0.01258566</span>, -<span class="hljs-number">
 <p>提示：如果你在使用无头服务器（即，没有显示器），比如云上的虚拟机，渲染就会失败。解决的唯一方法是使用假 X server，比如 Xvfb 或 Xdummy。例如，装好 Xvfb 之后（Ubuntu 或 Debian 上运行<code>apt install xvfb</code>），用这条命令启动 Python：<code>xvfb-run -s "-screen 0 1400x900x24" python3</code>。或者，安装 Xvfb 和<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fpyvd" target="_blank"><code>pyvirtualdisplay</code> 库</a>（这个库包装了 Xvfb），在程序启动处运行<code>pyvirtualdisplay.Display(visible=0, size=(1400, 900)).start()</code>。</p>
 </blockquote>
 <p>如果你想让<code>render()</code>让图像以一个 Numpy 数组格式返回，可以将<code>mode</code>参数设置为<code>rgb_array</code>（注意，这个环境会渲染环境到屏幕上）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>img = env.render(mode=<span class="hljs-string">"rgb_array"</span>) 
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>img = env.render(mode=<span class="hljs-string">"rgb_array"</span>) 
 <span class="hljs-meta">&gt;&gt;&gt; </span>img.shape  <span class="hljs-comment"># height, width, channels (3=RGB) </span>
 (<span class="hljs-number">800</span>, <span class="hljs-number">1200</span>, <span class="hljs-number">3</span>)
 </code></pre>
 <p>询问环境，可以采取的可能行动：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.action_space
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.action_space
 Discrete(<span class="hljs-number">2</span>)
 </code></pre>
 <p><code>Discrete(2)</code>的意思是可能的行动是整数 0 和 1，表示向左（0）或向右（1）加速。其它的环境可能有其它离散的行动，或其它种类的行动（例如，连续性行动）。因为棍子是向右偏的（<code>obs[2] &gt; 0</code>），让车子向右加速：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>action = <span class="hljs-number">1</span>  <span class="hljs-comment"># accelerate right</span>
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>action = <span class="hljs-number">1</span>  <span class="hljs-comment"># accelerate right</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>obs, reward, done, info = env.step(action)
 <span class="hljs-meta">&gt;&gt;&gt; </span>obs
 array([-<span class="hljs-number">0.01261699</span>,  <span class="hljs-number">0.19292789</span>,  <span class="hljs-number">0.04204097</span>, -<span class="hljs-number">0.28092127</span>])
@@ -489,7 +489,7 @@ array([-<span class="hljs-number">0.01261699</span>,  <span class="hljs-number">
 <p>提示：使用完环境后，应当调用它的<code>close()</code>方法释放资源。</p>
 </blockquote>
 <p>让我们硬编码一个简单的策略，当杆向左倾斜时向左边加速，当杆向右倾斜时加速向右边加速。我们使用这个策略来获得超过 500 步的平均回报：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">basic_policy</span>(<span class="hljs-params">obs</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">basic_policy</span>(<span class="hljs-params">obs</span>):
     angle = obs[<span class="hljs-number">2</span>]
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> angle &lt; <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>
 
@@ -506,7 +506,7 @@ totals = []
     totals.append(episode_rewards)
 </code></pre>
 <p>这段代码不难。让我们看看结果：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 <span class="hljs-meta">&gt;&gt;&gt; </span>np.mean(totals), np.std(totals), np.<span class="hljs-built_in">min</span>(totals), np.<span class="hljs-built_in">max</span>(totals)
 (<span class="hljs-number">41.718</span>, <span class="hljs-number">8.858356280936096</span>, <span class="hljs-number">24.0</span>, <span class="hljs-number">68.0</span>)
 </code></pre>
@@ -518,7 +518,7 @@ totals = []
 <p>你可能奇怪为什么我们根据神经网络给出的概率来选择随机的动作，而不是选择最高分数的动作。这种方法使智能体在<strong>探索新的行为</strong>和<strong>利用那些已知可行的行动</strong>之间找到正确的平衡。举个类比：假设你第一次去餐馆，所有的菜看起来同样吸引人，所以你随机挑选一个。如果菜好吃，你可以增加下一次点它的概率，但是你不应该把这个概率提高到 100%，否则你将永远不会尝试其他菜肴，其中一些甚至比你尝试的更好。</p>
 <p>还要注意，在这个特定的环境中，过去的动作和观察可以被放心地忽略，因为每个观察都包含环境的完整状态。如果有一些隐藏状态，那么你也需要考虑过去的行为和观察。例如，如果环境仅仅揭示了推车的位置，而不是它的速度，那么你不仅要考虑当前的观测，还要考虑先前的观测，以便估计当前的速度。另一个例子是当观测是有噪声的的，在这种情况下，通常你想用过去的观察来估计最可能的当前状态。因此，CartPole 问题是简单的；观测是无噪声的，而且它们包含环境的全状态。</p>
 <p>下面是用<code>tf.keras</code>创建这个神经网络策略的代码：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
 <span class="hljs-keyword">from</span> tensorflow <span class="hljs-keyword">import</span> keras
 
 n_inputs = <span class="hljs-number">4</span> <span class="hljs-comment"># == env.observation_space.shape[0]</span>
@@ -549,7 +549,7 @@ model = keras.models.Sequential([
 </li>
 </ol>
 <p>让我们使用<code>tf.keras</code>实现这个算法。我们将训练我们早先建立的神经网络策略，让它学会平衡车上的平衡杆。首先，需要一个能执行一步的函数。假定做出的动作都是对的，激素亲戚损失和梯度（梯度会保存一会，根据动作的结果再对其修改）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">play_one_step</span>(<span class="hljs-params">env, obs, model, loss_fn</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">play_one_step</span>(<span class="hljs-params">env, obs, model, loss_fn</span>):
     <span class="hljs-keyword">with</span> tf.GradientTape() <span class="hljs-keyword">as</span> tape:
         left_proba = model(obs[np.newaxis])
         action = (tf.random.uniform([<span class="hljs-number">1</span>, <span class="hljs-number">1</span>]) &gt; left_proba)
@@ -573,7 +573,7 @@ model = keras.models.Sequential([
 </li>
 </ul>
 <p>现在，创建另一个函数基于<code>play_one_step()</code>的多次执行函数，返回所有奖励和每个周期和步骤的梯度：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">play_multiple_episodes</span>(<span class="hljs-params">env, n_episodes, n_max_steps, model, loss_fn</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">play_multiple_episodes</span>(<span class="hljs-params">env, n_episodes, n_max_steps, model, loss_fn</span>):
     all_rewards = []
     all_grads = []
     <span class="hljs-keyword">for</span> episode <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n_episodes):
@@ -592,7 +592,7 @@ model = keras.models.Sequential([
 </code></pre>
 <p>这段代码返回了奖励列表（每个周期一个奖励列表，每个步骤一个奖励），还有一个梯度列表（每个周期一个梯度列表，每个步骤一个梯度元组，每个元组每个变脸有一个梯度张量）。</p>
 <p>算法会使用<code>play_multiple_episodes()</code>函数，多次执行游戏（比如，10 次），然后会检查所有奖励，做衰减，然后归一化。要这么做，需要多个函数：第一个计算每个步骤的未来衰减奖励的和，第二个归一化所有这些衰减奖励（减去平均值，除以标准差）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">discount_rewards</span>(<span class="hljs-params">rewards, discount_factor</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">discount_rewards</span>(<span class="hljs-params">rewards, discount_factor</span>):
     discounted = np.array(rewards)
     <span class="hljs-keyword">for</span> step <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(rewards) - <span class="hljs-number">2</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>):
         discounted[step] += discounted[step + <span class="hljs-number">1</span>] * discount_factor
@@ -608,7 +608,7 @@ model = keras.models.Sequential([
             <span class="hljs-keyword">for</span> discounted_rewards <span class="hljs-keyword">in</span> all_discounted_rewards]
 </code></pre>
 <p>检测其是否有效：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>discount_rewards([<span class="hljs-number">10</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">50</span>], discount_factor=<span class="hljs-number">0.8</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>discount_rewards([<span class="hljs-number">10</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">50</span>], discount_factor=<span class="hljs-number">0.8</span>)
 array([-<span class="hljs-number">22</span>, -<span class="hljs-number">40</span>, -<span class="hljs-number">50</span>])
 <span class="hljs-meta">&gt;&gt;&gt; </span>discount_and_normalize_rewards([[<span class="hljs-number">10</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">50</span>], [<span class="hljs-number">10</span>, <span class="hljs-number">20</span>]],
 <span class="hljs-meta">... </span>                               discount_factor=<span class="hljs-number">0.8</span>)
@@ -618,17 +618,17 @@ array([-<span class="hljs-number">22</span>, -<span class="hljs-number">40</span
 </code></pre>
 <p>调用<code>discount_rewards()</code>，返回了我们想要的结果（见图 18-6）。可以确认函数<code>discount_and_normalize_rewards()</code>返回了每个周期每个步骤的归一化的行动的结果。可以看到，第一个周期的表现比第二个周期的表现糟糕，所以归一化的结果都是负的；第一个周期中的动作都是不好的，而第二个周期中的动作被认为是好的。</p>
 <p>可以准备运行算法了！现在定义超参数。运行 150 个训练迭代，每次迭代完成 10 次周期，每个周期最多 200 个步骤。衰减因子是 0.95：</p>
-<pre><code class="lang-py">n_iterations = <span class="hljs-number">150</span>
+<pre><code class="lang-python">n_iterations = <span class="hljs-number">150</span>
 n_episodes_per_update = <span class="hljs-number">10</span>
 n_max_steps = <span class="hljs-number">200</span>
 discount_factor = <span class="hljs-number">0.95</span>
 </code></pre>
 <p>还需要一个优化器和损失函数。优化器用普通的 Adam 就成，学习率用 0.01，因为是二元分类器，使用二元交叉熵损失函数：</p>
-<pre><code class="lang-py">optimizer = keras.optimizers.Adam(lr=<span class="hljs-number">0.01</span>)
+<pre><code class="lang-python">optimizer = keras.optimizers.Adam(lr=<span class="hljs-number">0.01</span>)
 loss_fn = keras.losses.binary_crossentropy
 </code></pre>
 <p>接下来创建和运行训练循环。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">for</span> iteration <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n_iterations):
+<pre><code class="lang-python"><span class="hljs-keyword">for</span> iteration <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n_iterations):
     all_rewards, all_grads = play_multiple_episodes(
         env, n_episodes_per_update, n_max_steps, model, loss_fn)
     all_final_rewards = discount_and_normalize_rewards(all_rewards,
@@ -695,7 +695,7 @@ loss_fn = keras.losses.binary_crossentropy
 <p>一旦你有了最佳的 Q 值，定义最优的策略<code>π*(s)</code>，就没什么作用了：当智能体处于状态<code>S</code>时，它应该选择具有最高 Q 值的动作，用于该状态：</p>
 <p><img src="img/ba4f57f77b996e8f6f4844c4f935ca12.png" alt=""></img></p>
 <p>让我们把这个算法应用到图 18-8 所示的 MDP 中。首先，我们需要定义 MDP：</p>
-<pre><code class="lang-py">transition_probabilities = [ <span class="hljs-comment"># shape=[s, a, s']</span>
+<pre><code class="lang-python">transition_probabilities = [ <span class="hljs-comment"># shape=[s, a, s']</span>
         [[<span class="hljs-number">0.7</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>], [<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>], [<span class="hljs-number">0.8</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.0</span>]],
         [[<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>], <span class="hljs-literal">None</span>, [<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>]],
         [<span class="hljs-literal">None</span>, [<span class="hljs-number">0.8</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0.1</span>], <span class="hljs-literal">None</span>]]
@@ -706,12 +706,12 @@ rewards = [ <span class="hljs-comment"># shape=[s, a, s']</span>
 possible_actions = [[<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">0</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">1</span>]]
 </code></pre>
 <p>例如，要想知道经过动作<code>a1</code>，从<code>s2</code>到<code>s0</code>的过渡概率，我们需要查询<code>transition_probabilities[2][1][0]</code>（等于 0.8）。相似的，要得到奖励，需要查询<code>rewards[2][1][0]</code>（等于 +40）。要得到<code>s2</code>的可能的动作，需要查询<code>possible_actions[2]</code>（结果是<code>a1</code>）。然后，必须将 Q 值初始化为 0（对于不可能的动作，Q 值设为<code>–∞</code>）：</p>
-<pre><code class="lang-py">Q_values = np.full((<span class="hljs-number">3</span>, <span class="hljs-number">3</span>), -np.inf) <span class="hljs-comment"># -np.inf for impossible actions</span>
+<pre><code class="lang-python">Q_values = np.full((<span class="hljs-number">3</span>, <span class="hljs-number">3</span>), -np.inf) <span class="hljs-comment"># -np.inf for impossible actions</span>
 <span class="hljs-keyword">for</span> state, actions <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(possible_actions):
     Q_values[state, actions] = <span class="hljs-number">0.0</span>  <span class="hljs-comment"># for all possible actions</span>
 </code></pre>
 <p>现在运行 Q 值迭代算法。它反复对 Q 值的每个状态和可能的动作应用公式 18-3：</p>
-<pre><code class="lang-py">gamma = <span class="hljs-number">0.90</span> <span class="hljs-comment"># the discount factor</span>
+<pre><code class="lang-python">gamma = <span class="hljs-number">0.90</span> <span class="hljs-comment"># the discount factor</span>
 
 <span class="hljs-keyword">for</span> iteration <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">50</span>):
     Q_prev = Q_values.copy()
@@ -723,14 +723,14 @@ possible_actions = [[<span class="hljs-number">0</span>, <span class="hljs-numbe
                 <span class="hljs-keyword">for</span> sp <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)])
 </code></pre>
 <p>Q 值的结果如下：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>Q_values
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>Q_values
 array([[<span class="hljs-number">18.91891892</span>, <span class="hljs-number">17.02702702</span>, <span class="hljs-number">13.62162162</span>],
        [ <span class="hljs-number">0</span>\.        ,        -inf, -<span class="hljs-number">4.87971488</span>],
        [       -inf, <span class="hljs-number">50.13365013</span>,        -inf]])
 </code></pre>
 <p>例如，当智能体处于状态<code>s0</code>，选择动作<code>a1</code>，衰减未来奖励的期望和大约是 17.0。</p>
 <p>对于每个状态，查询拥有最高 Q 值的动作：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>np.argmax(Q_values, axis=<span class="hljs-number">1</span>) <span class="hljs-comment"># optimal action for each state</span>
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>np.argmax(Q_values, axis=<span class="hljs-number">1</span>) <span class="hljs-comment"># optimal action for each state</span>
 array([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>])
 </code></pre>
 <p>这样就得到了衰减因子等于 0.9 时，这个 MDP 的最佳策略是什么：状态<code>s0</code>时选择动作<code>a0</code>；在状态<code>s1</code>时选择动作<code>a0</code>；在状态<code>s2</code>时选择动作<code>a1</code>。有趣的是，如果将衰减因子提高到 0.95，最佳策略发生了改变：在状态<code>s1</code>时，最佳动作变为<code>a2</code>（通过火！）。道理很明显，如果未来期望越高，忍受当前的痛苦是值得的。</p>
@@ -762,18 +762,18 @@ array([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <
 <p>公式 18-5 Q 学习算法</p>
 <p>对于每一个状态动作对<code>(s,a)</code>，该算法跟踪智能体在以动作<code>A</code>离开状态<code>S</code>时获得的即时奖励平均值<code>R</code>，加上它期望稍后得到的奖励。由于目标策略将最优地运行，所以我们取下一状态的 Q 值估计的最大值。</p>
 <p>以下是如何实现 Q 学习算法。首先，需要让一个智能体探索环境。要这么做的话，我们需要一个步骤函数，好让智能体执行一个动作，并返回结果状态和奖励：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">step</span>(<span class="hljs-params">state, action</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">step</span>(<span class="hljs-params">state, action</span>):
     probas = transition_probabilities[state][action]
     next_state = np.random.choice([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>], p=probas)
     reward = rewards[state][action][next_state]
     <span class="hljs-keyword">return</span> next_state, reward
 </code></pre>
 <p>现在，实现智能体的探索策略。因为状态空间很小，使用简单随机策略就可以。如果长时间运行算法，智能体会多次访问每个状态，也会多次尝试每个可能的动作：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">exploration_policy</span>(<span class="hljs-params">state</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">exploration_policy</span>(<span class="hljs-params">state</span>):
     <span class="hljs-keyword">return</span> np.random.choice(possible_actions[state])
 </code></pre>
 <p>然后，和之前一样初始化 Q 值，使用学习率递降的方式运行 Q 学习算法（使用第 11 章介绍过的指数调度算法）：</p>
-<pre><code class="lang-py">alpha0 = <span class="hljs-number">0.05</span> <span class="hljs-comment"># initial learning rate</span>
+<pre><code class="lang-python">alpha0 = <span class="hljs-number">0.05</span> <span class="hljs-comment"># initial learning rate</span>
 decay = <span class="hljs-number">0.005</span> <span class="hljs-comment"># learning rate decay</span>
 gamma = <span class="hljs-number">0.90</span> <span class="hljs-comment"># discount factor</span>
 state = <span class="hljs-number">0</span> <span class="hljs-comment"># initial state</span>
@@ -812,7 +812,7 @@ state = <span class="hljs-number">0</span> <span class="hljs-comment"># initial 
 <p>有了这个目标 Q 值，可以使用梯度下降运行一步训练算法。具体地，要最小化 Q 值<code>Q(s, a)</code>和目标 Q 值的平方根方差（或使用 Huber 损失降低算法对大误差的敏感度）。这就是基础的深度 Q 学习算法。下面用其处理平衡车问题。</p>
 <h2 id="实现深度-q-学习">实现深度 Q 学习</h2>
 <p>首先需要的是一个深度 Q 网络。理论上，需要一个输入是状态-动作对、输出是近似 Q 值的神经网络，但在实际中，使用输入是状态、输出是每个可能动作的近似 Q 值的神经网络，会更加高效。要处理 CartPole 环境，我们不需要非常复杂的神经网络；只要几个隐藏层就够了：</p>
-<pre><code class="lang-py">env = gym.make(<span class="hljs-string">"CartPole-v0"</span>)
+<pre><code class="lang-python">env = gym.make(<span class="hljs-string">"CartPole-v0"</span>)
 input_shape = [<span class="hljs-number">4</span>] <span class="hljs-comment"># == env.observation_space.shape</span>
 n_outputs = <span class="hljs-number">2</span> <span class="hljs-comment"># == env.action_space.n</span>
 
@@ -823,7 +823,7 @@ model = keras.models.Sequential([
 ])
 </code></pre>
 <p>使用这个 DQN 选择一个动作，选择 Q 值最大的动作。要保证智能体探索环境，使用的是ε 贪婪策略（即，选择概率为ε的随机动作）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">epsilon_greedy_policy</span>(<span class="hljs-params">state, epsilon=<span class="hljs-number">0</span></span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">epsilon_greedy_policy</span>(<span class="hljs-params">state, epsilon=<span class="hljs-number">0</span></span>):
     <span class="hljs-keyword">if</span> np.random.rand() &lt; epsilon:
         <span class="hljs-keyword">return</span> np.random.randint(<span class="hljs-number">2</span>)
     <span class="hljs-keyword">else</span>:
@@ -831,7 +831,7 @@ model = keras.models.Sequential([
         <span class="hljs-keyword">return</span> np.argmax(Q_values[<span class="hljs-number">0</span>])
 </code></pre>
 <p>不仅只根据最新的经验训练 DQN，将所有经验存储在接力缓存（或接力记忆）中，每次训练迭代，从中随机采样一个批次。这样可以降低训练批次中的经验相关性，可以极大的提高训练效果。如下，使用双端列表实现：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque
 
 replay_buffer = deque(maxlen=<span class="hljs-number">2000</span>)
 </code></pre>
@@ -839,7 +839,7 @@ replay_buffer = deque(maxlen=<span class="hljs-number">2000</span>)
 <p>提示：双端列表是一个链表，每个元素指向后一个和前一个元素。插入和删除元素都非常快，但双端列表越长，随机访问越慢。如果需要一个非常大的接力缓存，可以使用环状缓存；见笔记本中的<code>Deque vs Rotating List</code>章节。</p>
 </blockquote>
 <p>每个经验包含五个元素：状态，智能体选择的动作，奖励，下一个状态，一个知识是否结束的布尔值（<code>done</code>）。需要一个小函数从接力缓存随机采样。返回的是五个 NumPy 数组，对应五个经验：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">sample_experiences</span>(<span class="hljs-params">batch_size</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">sample_experiences</span>(<span class="hljs-params">batch_size</span>):
     indices = np.random.randint(<span class="hljs-built_in">len</span>(replay_buffer), size=batch_size)
     batch = [replay_buffer[index] <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> indices]
     states, actions, rewards, next_states, dones = [
@@ -848,14 +848,14 @@ replay_buffer = deque(maxlen=<span class="hljs-number">2000</span>)
     <span class="hljs-keyword">return</span> states, actions, rewards, next_states, dones
 </code></pre>
 <p>再创建一个使用ε 贪婪策略的单次玩游戏函数，然后将结果经验存储在接力缓存中：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">play_one_step</span>(<span class="hljs-params">env, state, epsilon</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">play_one_step</span>(<span class="hljs-params">env, state, epsilon</span>):
     action = epsilon_greedy_policy(state, epsilon)
     next_state, reward, done, info = env.step(action)
     replay_buffer.append((state, action, reward, next_state, done))
     <span class="hljs-keyword">return</span> next_state, reward, done, info
 </code></pre>
 <p>最后，再创建最后一个批次采样函数，用单次梯度下降训练这个 DQN：</p>
-<pre><code class="lang-py">batch_size = <span class="hljs-number">32</span>
+<pre><code class="lang-python">batch_size = <span class="hljs-number">32</span>
 discount_factor = <span class="hljs-number">0.95</span>
 optimizer = keras.optimizers.Adam(lr=<span class="hljs-number">1e-3</span>)
 loss_fn = keras.losses.mean_squared_error
@@ -889,7 +889,7 @@ loss_fn = keras.losses.mean_squared_error
 </li>
 </ul>
 <p>这是最难的部分。现在，训练模型就简单了：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">for</span> episode <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">600</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">for</span> episode <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">600</span>):
     obs = env.reset()
     <span class="hljs-keyword">for</span> step <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">200</span>):
         epsilon = <span class="hljs-built_in">max</span>(<span class="hljs-number">1</span> - episode / <span class="hljs-number">500</span>, <span class="hljs-number">0.01</span>)
@@ -913,21 +913,21 @@ loss_fn = keras.losses.mean_squared_error
 <p>下面看几个深度 Q 学习算法的变体，它们不仅训练稳定而且很快。</p>
 <h3 id="固定-q-值目标">固定 Q 值目标</h3>
 <p>在基本的深度 Q 学习算法中，模型不仅做预测还自己设置目标。有点像一只狗追自己的尾巴。反馈循环使得网络不稳定：会发生分叉、摇摆、冻结，等等。要解决问题，DeepMind 在 2013 年的论文中使用了两个 DQN，而不是一个：第一个是在线模型，它在每一步进行学习，并移动智能体；另一个是目标模型只定义目标。目标模型只是在线模型的克隆：</p>
-<pre><code class="lang-py">target = keras.models.clone_model(model)
+<pre><code class="lang-python">target = keras.models.clone_model(model)
 target.set_weights(model.get_weights())
 </code></pre>
 <p>然后，在<code>training_step()</code>函数中，只需要变动一行，使用目标模型计算接下来状态的 Q 值：</p>
-<pre><code class="lang-py">next_Q_values = target.predict(next_states)
+<pre><code class="lang-python">next_Q_values = target.predict(next_states)
 </code></pre>
 <p>最后，在训练循环中，必须每隔一段周期（比如，每 50 个周期），将在线模型的权重复制到目标模型中：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">if</span> episode % <span class="hljs-number">50</span> == <span class="hljs-number">0</span>:
+<pre><code class="lang-python"><span class="hljs-keyword">if</span> episode % <span class="hljs-number">50</span> == <span class="hljs-number">0</span>:
     target.set_weights(model.get_weights())
 </code></pre>
 <p>因为目标模型更新的没有在线模型频繁，Q 值目标更加稳定，前面讨论反馈循环减弱了。这个方法是 DeepMind 在 2013 年的论文中提出的方法之一，可以让智能体从零学习 Atari 游戏。要稳定训练，他们使用的学习率是 0.00025，很小，每隔 10000 步才更新目标模型，接力缓存的大小是 1 百万。并且<code>epsilon</code>降低的很慢，用 1 百万步从 1 降到 0.1，他们让算法运行了 5000 万步。</p>
 <p>本章后面会用这些超参数，使用 TF-Agents 库训练 DQN 智能体来玩 Breakout。在此之前，再看另一个性能更好的 DQN 变体。</p>
 <h3 id="双-dqn">双 DQN</h3>
 <p>在 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fdoubledqn" target="_blank">2015 年的论文</a>中，DeepMind 调节了他们的 DQN 算法，提高了性能，也稳定化了训练。他们称这个变体为双 DQN。算法更新的原因，是观察到目标网络倾向于高估 Q 值。事实上，假设所有动作都一样好：目标模型预测的 Q 值应该一样，但因为是估计值，其中一些可能存在更大的几率。目标模型会选择最大的 Q 值，最大的 Q 值要比平均 Q 值稍大，就像高估真正的 Q 值（就像在测量池塘深度时，测量随机水波的最高峰）。要修正这个问题，他们提出使用在线模型，而不是目标模型，来选择下一状态的最佳动作，只用目标模型估计这些最佳动作的 Q 值。下面是改善后的<code>training_step()</code>函数：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">training_step</span>(<span class="hljs-params">batch_size</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">training_step</span>(<span class="hljs-params">batch_size</span>):
     experiences = sample_experiences(batch_size)
     states, actions, rewards, next_states, dones = experiences
     next_Q_values = model.predict(next_states)
@@ -947,7 +947,7 @@ target.set_weights(model.get_weights())
 <p>接下来是最后一个重要的 DQN 算法的变体。</p>
 <h3 id="决斗-dqn">决斗 DQN</h3>
 <p>决斗 DQN 算法（DDQN，不要与双 DQN 混淆）是 DeepMind 在另一篇 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fddqn" target="_blank">2015 年的论文</a>中提出的。要明白原理，首先状态-动作对<code>(s, a)</code>的 Q 值，可以表示为<code>Q(s, a) = V(s) + A(s, a)</code>，其中<code>V(s)</code>是状态<code>s</code>的值，<code>A(s, a)</code>是状态<code>s</code>采取行动<code>a</code>的结果。另外，状态的值等于状态最佳动作<code>a*</code>的 Q 值（因为最优策略会选最佳动作），因此<code>V(s) = Q(s, a*)</code>，即<code>A(s, a*) = 0</code>。在决斗 DQN 中，模型估计状态值和每个动作的结果。因为最佳动作的结果是 0，模型减去最大预测结果。下面是一个简单的决斗 DQN，用函数式 API 实现：</p>
-<pre><code class="lang-py">K = keras.backend
+<pre><code class="lang-python">K = keras.backend
 input_states = keras.layers.Input(shape=[<span class="hljs-number">4</span>])
 hidden1 = keras.layers.Dense(<span class="hljs-number">32</span>, activation=<span class="hljs-string">"elu"</span>)(input_states)
 hidden2 = keras.layers.Dense(<span class="hljs-number">32</span>, activation=<span class="hljs-string">"elu"</span>)(hidden1)
@@ -965,35 +965,35 @@ model = keras.Model(inputs=[input_states], outputs=[Q_values])
 <p>图 18-11 Breakout 游戏</p>
 <h3 id="安装-tf-agents">安装 TF-Agents</h3>
 <p>先安装 TF-Agents 。可以使用 PIP 安装（如果使用的是虚拟环境，一定要先激活；如果不激活，要使用选项<code>--user</code>，或用管理员权限）：</p>
-<pre><code class="lang-py">$ python3 -m pip install --upgrade tf-agents
+<pre><code class="lang-python">$ python3 -m pip install --upgrade tf-agents
 </code></pre>
 <blockquote>
 <p>警告：写作本书时，TF-Agents 还很新，每天都有新进展，因此 API 可能会和现在有所不同 —— 但大体相同。如果代码不能运行，我会更新 Jupyter 笔记本。</p>
 </blockquote>
 <p>然后，创建一个 TF-Agents 包装了 OpenAI GGym 的 Breakout 的环境。要这么做，需要先安装 OpenAI Gym 的 Atari 依赖：</p>
-<pre><code class="lang-py">$ python3 -m pip install --upgrade <span class="hljs-string">'gym[atari]'</span>
+<pre><code class="lang-python">$ python3 -m pip install --upgrade <span class="hljs-string">'gym[atari]'</span>
 </code></pre>
 <p>这条命令安装了<code>atari-py</code>，这是 Arcade 学习环境的 Python 接口，这个学习环境是基于 Atari 2600 模拟器 Stella。</p>
 <h3 id="tf-agents-环境">TF-Agents 环境</h3>
 <p>如果一切正常，就能引入 TF-Agents，创建 Breakout 环境了：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> tf_agents.environments <span class="hljs-keyword">import</span> suite_gym
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> tf_agents.environments <span class="hljs-keyword">import</span> suite_gym
 <span class="hljs-meta">&gt;&gt;&gt; </span>env = suite_gym.load(<span class="hljs-string">"Breakout-v4"</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>env
 &lt;tf_agents.environments.wrappers.TimeLimit at <span class="hljs-number">0x10c523c18</span>&gt;
 </code></pre>
 <p>这是 OpenAI Gym 环境的包装，可以通过属性<code>gym</code>访问：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.gym
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.gym
 &lt;gym.envs.atari.atari_env.AtariEnv at <span class="hljs-number">0x24dcab940</span>&gt;
 </code></pre>
 <p>TF-Agents 环境和 OpenAI Gym 环境非常相似，但有些差别。首先，<code>reset()</code>方法不返回观察；返回的是<code>TimeStep</code>对象，它包装了观察，和一些其它信息：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.reset()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.reset()
 TimeStep(step_type=array(<span class="hljs-number">0</span>, dtype=int32),
          reward=array(<span class="hljs-number">0.</span>, dtype=float32),
          discount=array(<span class="hljs-number">1.</span>, dtype=float32),
          observation=array([[[<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>], [<span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>, <span class="hljs-number">0.</span>],...]]], dtype=float32))
 </code></pre>
 <p><code>step()</code>方法返回的也是<code>TimeStep</code>对象：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.step(<span class="hljs-number">1</span>) <span class="hljs-comment"># Fire</span>
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.step(<span class="hljs-number">1</span>) <span class="hljs-comment"># Fire</span>
 TimeStep(step_type=array(<span class="hljs-number">1</span>, dtype=int32),
          reward=array(<span class="hljs-number">0.</span>, dtype=float32),
          discount=array(<span class="hljs-number">1.</span>, dtype=float32),
@@ -1005,7 +1005,7 @@ TimeStep(step_type=array(<span class="hljs-number">1</span>, dtype=int32),
 </blockquote>
 <h3 id="环境配置">环境配置</h3>
 <p>TF-Agents 环境提供了配置，包括观察、动作、时间步，以及它们的形状、数据类型、名字，还有最小值和最大值：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.observation_spec()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.observation_spec()
 BoundedArraySpec(shape=(<span class="hljs-number">210</span>, <span class="hljs-number">160</span>, <span class="hljs-number">3</span>), dtype=dtype(<span class="hljs-string">'float32'</span>), name=<span class="hljs-literal">None</span>,
                  minimum=[[[<span class="hljs-number">0</span>\. <span class="hljs-number">0</span>\. <span class="hljs-number">0.</span>], [<span class="hljs-number">0</span>\. <span class="hljs-number">0</span>\. <span class="hljs-number">0.</span>],...]],
                  maximum=[[[<span class="hljs-number">255.</span>, <span class="hljs-number">255.</span>, <span class="hljs-number">255.</span>], [<span class="hljs-number">255.</span>, <span class="hljs-number">255.</span>, <span class="hljs-number">255.</span>], ...]])
@@ -1020,7 +1020,7 @@ TimeStep(step_type=ArraySpec(shape=(), dtype=dtype(<span class="hljs-string">'in
 </code></pre>
 <p>可以看到，观察就是 Atari 屏幕的截图，用形状是<code>[210, 160, 3]</code>的 NumPy 数组表示。要渲染环境，可以调用<code>env.render(mode="human")</code>，如果想用 NumPy 数组的形式返回图片，可以调用<code>env.render(mode="rgb_array")</code>（与 OpenAI Gym 不同，这是默认模式）。</p>
 <p>有四个可能的动作。Gym 的 Atari 环境有另一个方法，可以知道每个动作对应什么：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>env.gym.get_action_meanings()
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>env.gym.get_action_meanings()
 [<span class="hljs-string">'NOOP'</span>, <span class="hljs-string">'FIRE'</span>, <span class="hljs-string">'RIGHT'</span>, <span class="hljs-string">'LEFT'</span>]
 </code></pre>
 <blockquote>
@@ -1054,12 +1054,12 @@ TimeStep(step_type=ArraySpec(shape=(), dtype=dtype(<span class="hljs-string">'in
 <li>记录环境的视频。</li>
 </ul>
 <p>要创建包装环境，需要先创建一个包装器，将包装过的环境传递给构造器。例如，下面的代码将一个环境包装在<code>ActionRepeat</code>中，让每个动作重复四次：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.environments.wrappers <span class="hljs-keyword">import</span> ActionRepeat
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.environments.wrappers <span class="hljs-keyword">import</span> ActionRepeat
 
 repeating_env = ActionRepeat(env, times=<span class="hljs-number">4</span>)
 </code></pre>
 <p>OpenAI Gym 在<code>gym.wrappers</code>中有一些环境包装器。但它们是用来包装 Gym 环境，不是 TF-Agents 环境，所以要使用的话，必须用 Gym 包装器包装 Gym 环境，再用 TF-Agents 包装器再包装起来。<code>suite_gym.wrap_env()</code>函数可以实现，只要传入 Gym 环境和 Gym 包装器列表，和/或 TF-Agents 包装器的列表。另外，<code>suite_gym.load()</code>函数既能创建 Gym 环境，如果传入包装器，也能做包装。每个包装器在包装时没有参数，所以如果想设置参数，必须传入<code>lambda</code>。例如，下面的代码创建了一个 Breakout 环境，每个周期最多运行 10000 步，每个动作重复四次：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> gym.wrappers <span class="hljs-keyword">import</span> TimeLimit
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> gym.wrappers <span class="hljs-keyword">import</span> TimeLimit
 
 limited_repeating_env = suite_gym.load(
     <span class="hljs-string">"Breakout-v4"</span>,
@@ -1082,7 +1082,7 @@ limited_repeating_env = suite_gym.load(
 <p>丢命损失</p>
 <p>在某些游戏中，奖励是基于得分的，所以智能体死掉的话，不会立即受到惩罚。一种方法是当死掉时，立即结束游戏。这种做法有些争议，所以默认是关掉的。</p>
 <p>因为默认 Atari 环境已经应用了随机跳帧和最大池化，我们需要加载原生不跳帧的变体，<code>BreakoutNoFrameskip-v4</code>。另外，从 Breakout 游戏中的一帧并不能知道球的方向和速度，这会使得智能体很难玩好游戏（除非这是一个 RNN 智能体，它可以在步骤之间保存状态）。应对方法之一是使用一个环境包装器，沿着每个频道维度，将多个帧叠起来做输出。<code>FrameStack4</code>包装器实现了这个策略，返回四个帧的栈式结果。下面就创建一个包装过的 Atari 环境。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.environments <span class="hljs-keyword">import</span> suite_atari
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.environments <span class="hljs-keyword">import</span> suite_atari
 <span class="hljs-keyword">from</span> tf_agents.environments.atari_preprocessing <span class="hljs-keyword">import</span> AtariPreprocessing
 <span class="hljs-keyword">from</span> tf_agents.environments.atari_wrappers <span class="hljs-keyword">import</span> FrameStack4
 
@@ -1098,7 +1098,7 @@ env = suite_atari.load(
 <p><img src="img/9356aa31cd291c52120abee2144cfcae.png" alt=""></img></p>
 <p>图 18-12 预处理 Breakout 观察</p>
 <p>最后，可以将环境包装进<code>TFPyEnvironment</code>：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.environments.tf_py_environment <span class="hljs-keyword">import</span> TFPyEnvironment
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.environments.tf_py_environment <span class="hljs-keyword">import</span> TFPyEnvironment
 
 tf_env = TFPyEnvironment(env)
 </code></pre>
@@ -1123,7 +1123,7 @@ tf_env = TFPyEnvironment(env)
 <p>现在创建好了所有组件：先是深度 Q 网络，然后是 DQN 智能体（负责创建收集策略），然后是接力缓存和观测器，一些训练指标，驱动，最后是数据集。有了所有组件之后，先用一些轨迹填充接力缓存，然后运行主训练循环。因此，从创建深度 Q 网络开始。</p>
 <h3 id="创建深度-q-网络">创建深度 Q 网络</h3>
 <p>TF-Agents 库在<code>tf_agents.networks</code>包和子包中提供了许多网络。我们使用<code>tf_agents.networks.q_network.QNetwork</code>类：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.networks.q_network <span class="hljs-keyword">import</span> QNetwork
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.networks.q_network <span class="hljs-keyword">import</span> QNetwork
 
 preprocessing_layer = keras.layers.Lambda(
                           <span class="hljs-keyword">lambda</span> obs: tf.cast(obs, np.float32) / <span class="hljs-number">255.</span>)
@@ -1149,7 +1149,7 @@ q_net = QNetwork(
 <p>有了 DQN，接下来创建 DQN 智能体。</p>
 <h3 id="创建-dqn-智能体">创建 DQN 智能体</h3>
 <p>利用<code>tf_agents​.agents</code>包和它的子包，TF-Agents 库实现了多种类型的智能体。我们使用类<code>tf_agents.agents​.dqn.dqn_agent.DqnAgent</code>：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.agents.dqn.dqn_agent <span class="hljs-keyword">import</span> DqnAgent
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.agents.dqn.dqn_agent <span class="hljs-keyword">import</span> DqnAgent
 
 train_step = tf.Variable(<span class="hljs-number">0</span>)
 update_period = <span class="hljs-number">4</span> <span class="hljs-comment"># train the model every 4 steps</span>
@@ -1186,7 +1186,7 @@ agent.initialize()
 <p>然后，创建接力缓存和观测器。</p>
 <h3 id="创建接力缓存和观测器">创建接力缓存和观测器</h3>
 <p>TF-Agents 库在<code>tf_agents.replay_buffers</code>包实现了多种接力缓存。一些是用纯 Python 写的（模块名开头是<code>py_</code>），其它是基于 TensorFlow 的（开头是<code>tf_</code>）。我们使用<code>tf_agents.replay_buffers.tf_uniform_replay_buffer</code>包追踪的<code>TFUniformReplayBuffer</code>类。它实现了高效均匀采样的接力缓存：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.replay_buffers <span class="hljs-keyword">import</span> tf_uniform_replay_buffer
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.replay_buffers <span class="hljs-keyword">import</span> tf_uniform_replay_buffer
 
 replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
     data_spec=agent.collect_data_spec,
@@ -1210,10 +1210,10 @@ replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
 <p>提示：当存储两个连续的轨迹，它们包含两个连续的观察，每个观察有四个帧（因为包装器是<code>FrameStack4</code>），但是第二个观察中的三个帧是多余的（第一个观察中已经存在了）。换句话说，使用的内存大小是必须的四倍。要避免这个问题，可以使用包<code>tf_agents.replay_buffers.py_hashed_replay_buffer</code>的<code>PyHashedReplayBuffer</code>：它能沿着观察的最后一个轴对存储的轨迹去重。</p>
 </blockquote>
 <p>现在创建向接力缓存写入轨迹的观测器。观测器就是一个接收轨迹参数的函数（或是调用对象），所以可以直接使用方法<code>add_method()</code>（绑定<code>replay_buffer</code>对象）作为观测器：</p>
-<pre><code class="lang-py">replay_buffer_observer = replay_buffer.add_batch
+<pre><code class="lang-python">replay_buffer_observer = replay_buffer.add_batch
 </code></pre>
 <p>如果想创建自己的观测器，可以一个包含参数<code>trajectory</code>的函数。如果必须有状态，可以写一个包含方法<code>__call__(self, trajectory)</code>的类。例如，下面是一个每次调用，计数器都会加 1 的观测器（除了轨迹表示周期间的边界，不算成一步），每隔 100 次累加，显示总数（<code>\r</code>和<code>end=""</code>保证展示的计数器处于一条线）。</p>
-<pre><code class="lang-py"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ShowProgress</span>:
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ShowProgress</span>:
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, total</span>):
         <span class="hljs-variable language_">self</span>.counter = <span class="hljs-number">0</span>
         <span class="hljs-variable language_">self</span>.total = total
@@ -1226,7 +1226,7 @@ replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
 <p>接下来创建一些训练指标。</p>
 <h3 id="创建训练指标">创建训练指标</h3>
 <p>TF-Agents 库再<code>tf_agents.metrics</code>包中实现了几个 RL 指标，一些是基于纯 Python 的，一些是基于 TensorFlow 的。创建一些指标统计周期数、步骤数、周期的平均数、平均周期长度：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.metrics <span class="hljs-keyword">import</span> tf_metrics
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.metrics <span class="hljs-keyword">import</span> tf_metrics
 
 train_metrics = [
     tf_metrics.NumberOfEpisodes(),
@@ -1239,7 +1239,7 @@ train_metrics = [
 <p>笔记：训练或实现策略时，对奖励做衰减是合理的，这是为了平衡当前奖励与未来奖励的平衡。但是，当周期结束时，可以通过对所有未衰减的奖励求和来做评估。出于这个原因，<code>AverageReturnMetric</code>计算了每个周期未衰减奖励的和，并追踪平均值。</p>
 </blockquote>
 <p>任何时候，可以调用<code>result()</code>方法获取指标（例如，<code>train_metrics[0].result()</code>）。或者，可以调用<code>log_metrics(train_metrics)</code>记录所有指标（这个函数位于<code>tf_agents.eval.metric_utils</code>包）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> tf_agents.<span class="hljs-built_in">eval</span>.metric_utils <span class="hljs-keyword">import</span> log_metrics
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> tf_agents.<span class="hljs-built_in">eval</span>.metric_utils <span class="hljs-keyword">import</span> log_metrics
 <span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> logging
 <span class="hljs-meta">&gt;&gt;&gt; </span>logging.get_logger().set_level(logging.INFO)
 <span class="hljs-meta">&gt;&gt;&gt; </span>log_metrics(train_metrics)
@@ -1263,7 +1263,7 @@ AverageEpisodeLength = <span class="hljs-number">0.0</span>
 <p>一些策略，比如 RNN 策略，是有状态的：策略根据给定的时间步和内部状态选择动作。有状态策略在动作步返回自己的状态，驱动会在下一个时间步将这个状态返回给策略。另外，驱动将策略状态保存到轨迹中（在字段<code>policy_info</code>中）：当智能体采样一条轨迹，它必须设置策略的状态设为采样时间步时的状态。</p>
 <p>另外，就像前面讨论的，环境可能是批次化的环境，这种情况下，驱动将批次化的时间步传给策略（即，时间步对象包含批次观察、批次步骤类型、批次奖励、批次衰减，这四个批次的大小相同）。驱动还传递前一批次的策略状态。然后，策略返回去批次动作步，包含着批次动作和批次策略状态。最后，驱动创建批次化轨迹（即，轨迹包含批次步骤类型、批次观察、批次动作、批次奖励，更一般地，每个轨迹属性一个批次，所有批次大小相同）。</p>
 <p>有两个主要的驱动类：<code>DynamicStepDriver</code>和<code>DynamicEpisodeDriver</code>。第一个收集给定数量步骤的经验，第二个收集给定数量周期数的经验。我们想收集每个训练迭代的四个步骤的经验（正如 2015 DQN 论文），所以创建一个<code>DynamicStepDriver</code>：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.drivers.dynamic_step_driver <span class="hljs-keyword">import</span> DynamicStepDriver
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.drivers.dynamic_step_driver <span class="hljs-keyword">import</span> DynamicStepDriver
 
 collect_driver = DynamicStepDriver(
     tf_env,
@@ -1272,7 +1272,7 @@ collect_driver = DynamicStepDriver(
     num_steps=update_period) <span class="hljs-comment"># collect 4 steps for each training iteration</span>
 </code></pre>
 <p>传入环境、智能体的收集策略、观测器列表（包括接力缓存观测器和训练指标），最后是要运行的步骤数（这个例子中是 4）。现在可以调用方法<code>run()</code>来运行，但最好先用纯随机策略收集的经验先填充接力缓存。要这么做，可以使用类<code>RandomTFPolicy</code>创建第二个驱动，运行 20000 步这个策略（等于 80000 个模拟帧，正如 2015 DQN 论文）。可以用<code>ShowProgress</code>观测器展示进展：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.policies.random_tf_policy <span class="hljs-keyword">import</span> RandomTFPolicy
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.policies.random_tf_policy <span class="hljs-keyword">import</span> RandomTFPolicy
 
 initial_collect_policy = RandomTFPolicy(tf_env.time_step_spec(),
                                         tf_env.action_spec())
@@ -1286,7 +1286,7 @@ final_time_step, final_policy_state = init_driver.run()
 <p>快要能运行训练循环了。只需要最后一个组件：数据集。</p>
 <h3 id="创建数据集">创建数据集</h3>
 <p>要从接力缓存采样批次的轨迹，可以调用<code>get_next()</code>方法。这返回了轨迹的批次，还返回了含有样本 id 和采样概率的<code>BufferInfo</code>对象（可能对有些算法有用，比如 PER）。例如，下面的代码采样了一个包含两条轨迹的批次（子周期），每个包含三个连续步。这些子周期见图 18-15（每行包含一个周期的三个连续步）：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>trajectories, buffer_info = replay_buffer.get_next(
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>trajectories, buffer_info = replay_buffer.get_next(
 <span class="hljs-meta">... </span>    sample_batch_size=<span class="hljs-number">2</span>, num_steps=<span class="hljs-number">3</span>)
 ...
 <span class="hljs-meta">&gt;&gt;&gt; </span>trajectories._fields
@@ -1306,7 +1306,7 @@ array([[<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, 
 <p>图 18-16 轨迹，过渡，时间步和动作步</p>
 <p>因此，如果有批次轨迹，每个轨迹有<code>t+1</code>步骤（从时间步<code>n</code>到时间步<code>n+t</code>），包含从时间步<code>n</code>到时间步<code>n+t</code>的所有数据，但没有奖励和时间步<code>n</code>的衰减（但包括时间步<code>n+t+1</code>的奖励和衰减）。这表示<code>t</code>过渡（<code>n</code>到<code>n + 1</code>, <code>n + 1</code>到<code>n + 2</code>，…，<code>n + t – 1</code>到<code>n + t</code>）</p>
 <p>模块<code>tf_agents.trajectories.trajectory</code>中的函数<code>to_transition()</code>将批次化的轨迹转变为包含批次<code>time_step</code>、<code>action_step</code>、<code>next_time_step</code>的列表。注意，第二个维度是 2，而不是 3，这是因为<code>t + 1</code>个时间步之间有<code>t</code>个过渡：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> tf_agents.trajectories.trajectory <span class="hljs-keyword">import</span> to_transition
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">from</span> tf_agents.trajectories.trajectory <span class="hljs-keyword">import</span> to_transition
 <span class="hljs-meta">&gt;&gt;&gt; </span>time_steps, action_steps, next_time_steps = to_transition(trajectories)
 <span class="hljs-meta">&gt;&gt;&gt; </span>time_steps.observation.shape
 TensorShape([<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">84</span>, <span class="hljs-number">84</span>, <span class="hljs-number">4</span>]) <span class="hljs-comment"># 3 time steps = 2 transitions</span>
@@ -1315,7 +1315,7 @@ TensorShape([<span class="hljs-number">2</span>, <span class="hljs-number">2</sp
 <p>笔记：采样的轨迹可能会将两个（或多个）周期重叠！这种情况下，会包含边界过渡，意味着过渡的<code>step_type</code>等于 2（结束），<code>next_step_type</code>等于 0（开始）。当然，TF-Agents 可以妥善处理这些轨迹（例如，通过在碰到边界时重新设置策略状态）。轨迹的方法<code>is_boundary()</code>返回只是每一步是否是边界的张量。</p>
 </blockquote>
 <p>对于主训练循环，不使用<code>get_next()</code>，而是用<code>tf.data.Dataset</code>。这样，就能借助 Data API 的高效（并行计算和预提取）。要这么做，可以调用接力缓存的<code>as_dataset()</code>方法：</p>
-<pre><code class="lang-py">dataset = replay_buffer.as_dataset(
+<pre><code class="lang-python">dataset = replay_buffer.as_dataset(
     sample_batch_size=<span class="hljs-number">64</span>,
     num_steps=<span class="hljs-number">2</span>,
     num_parallel_calls=<span class="hljs-number">3</span>).prefetch(<span class="hljs-number">3</span>)
@@ -1327,13 +1327,13 @@ TensorShape([<span class="hljs-number">2</span>, <span class="hljs-number">2</sp
 <p>有了所有组件之后，就可以训练模型了。</p>
 <h3 id="创建训练循环">创建训练循环</h3>
 <p>要加速训练，将主函数转换为 TensorFlow 函数。可以使用函数<code>tf_agents.utils.common.function()</code>，它包装了<code>tf.function()</code>，还有一些其它选项：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tf_agents.utils.common <span class="hljs-keyword">import</span> function
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tf_agents.utils.common <span class="hljs-keyword">import</span> function
 
 collect_driver.run = function(collect_driver.run)
 agent.train = function(agent.train)
 </code></pre>
 <p>写一个小函数，可以<code>n_iterations</code>次运行主训练循环：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">train_agent</span>(<span class="hljs-params">n_iterations</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">train_agent</span>(<span class="hljs-params">n_iterations</span>):
     time_step = <span class="hljs-literal">None</span>
     policy_state = agent.collect_policy.get_initial_state(tf_env.batch_size)
     iterator = <span class="hljs-built_in">iter</span>(dataset)
@@ -1347,7 +1347,7 @@ agent.train = function(agent.train)
             log_metrics(train_metrics)
 </code></pre>
 <p>这个函数先向收集策略询问初始状态（给定环境批次大小，这个例子中是 1）。因为策略是无状态的，返回的是空元组（所以可以写成<code>policy_state = ()</code>）。然后，创建一个数据集的迭代器，并运行训练循环。在每个迭代，调用驱动的<code>run()</code>方法，传入当前的时间步（最初是<code>None</code>）和当前的策略状态。运行收集策略，收集四步的经验，将收集到的轨迹广播给接力缓存和指标。然后，从数据集采样一个批次轨迹，传给智能体的<code>train()</code>方法。返回对象<code>train_loss</code>，可能根据智能体的类型有变动。接着，展示迭代数和训练损失，每隔 1000 次迭代，输出所有指标的日志。现在可以调用<code>train_agent()</code>做一些迭代，智能体就能逐渐学会玩 Breakout 了。</p>
-<pre><code class="lang-py">train_agent(<span class="hljs-number">10000000</span>)
+<pre><code class="lang-python">train_agent(<span class="hljs-number">10000000</span>)
 </code></pre>
 <p>训练需要大量算力和极大的耐心（根据硬件，可能需要几个小时甚至几天），可能还需要用不同的随机种子多次运行，以得到更好的结果，但是训练完成后，智能体在玩 Breakout 就比人厉害了。你还可以在其它 Atari 游戏上训练这个 DQN 智能体：智能体对于大多数动作游戏都可以超越人的表现，但是智能体对长故事线游戏不擅长。</p>
 <h2 id="流行-rl-算法概览">流行 RL 算法概览</h2>
@@ -1444,7 +1444,7 @@ agent.train = function(agent.train)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"十八、强化学习","level":"1.19","depth":1,"next":{"title":"十九、规模化训练和部署 TensorFlow 模型","level":"1.20","depth":1,"path":"19.md","ref":"./19.md","articles":[]},"previous":{"title":"十七、使用自编码器和 GAN 做表征学习和生成式学习","level":"1.18","depth":1,"path":"17.md","ref":"./17.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"18.md","mtime":"2024-08-23T21:05:56.820Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"十八、强化学习","level":"1.19","depth":1,"next":{"title":"十九、规模化训练和部署 TensorFlow 模型","level":"1.20","depth":1,"path":"19.md","ref":"./19.md","articles":[]},"previous":{"title":"十七、使用自编码器和 GAN 做表征学习和生成式学习","level":"1.18","depth":1,"path":"17.md","ref":"./17.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"18.md","mtime":"2025-01-05T17:59:46.748Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

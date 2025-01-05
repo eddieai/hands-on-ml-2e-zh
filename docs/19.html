@@ -6,7 +6,7 @@
         <title>十九、规模化训练和部署 TensorFlow 模型 · HonKit</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="generator" content="HonKit 6.0.2">
         
         
         
@@ -49,7 +49,7 @@
     
     
     <meta name="HandheldFriendly" content="true"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
@@ -407,7 +407,7 @@
 <p>假设你已经用<code>tf.keras</code>训练了一个 MNIST 模型，要将模型部署到 TF Serving。第一件事是输出模型到 TensorFlow 的 SavedModel 格式。</p>
 <h3 id="输出-savedmodel">输出 SavedModel</h3>
 <p>TensorFlow 提供了简便的函数<code>tf.saved_model.save()</code>，将模型输出为 SavedModel 格式。只需传入模型，配置名字、版本号，这个函数就能保存模型的计算图和权重：</p>
-<pre><code class="lang-py">model = keras.models.Sequential([...])
+<pre><code class="lang-python">model = keras.models.Sequential([...])
 model.<span class="hljs-built_in">compile</span>([...])
 history = model.fit([...])
 
@@ -421,7 +421,7 @@ tf.saved_model.save(model, model_path)
 <p>警告：因为 SavedModel 保存了计算图，所以只支持基于 TensorFlow 运算的模型，不支持<code>tf.py_function()</code>运算（它包装了任意 Python 代码）。也不支持动态<code>tf.keras</code>模型（见附录 G），因为这些模型不能转换成计算图。动态模型需要用其它工具（例如，Flask）服务化。</p>
 </blockquote>
 <p>SavedModel 表示了模型版本。它被保存为一个包含<code>saved_model.pb</code>文件的目录，它定义了计算图（表示为序列化协议缓存），变量子目录包含了变量值。对于含有大量权重的模型，这些变量值可能分割在多个文件中。SavedModel 还有一个<code>assets</code>子目录，包含着其余数据，比如词典文件、类名、一些模型的样本实例。目录结构如下（这个例子中，没有使用<code>assets</code>）：</p>
-<pre><code class="lang-py">my_mnist_model
+<pre><code class="lang-python">my_mnist_model
 └── 0001
     ├── assets
     ├── saved_model.pb
@@ -430,17 +430,17 @@ tf.saved_model.save(model, model_path)
         └── variables.index
 </code></pre>
 <p>可以使用函数<code>tf.saved_model.load()</code>加载 SavedModel。但是，返回的对象不是 Keras 模型：是 SavedModel，包括计算图和变量值。可以像函数一样做预测（输入是张量，还要设置参数<code>training</code>，通常设为<code>False</code>）：</p>
-<pre><code class="lang-py">saved_model = tf.saved_model.load(model_path)
+<pre><code class="lang-python">saved_model = tf.saved_model.load(model_path)
 y_pred = saved_model(X_new, training=<span class="hljs-literal">False</span>)
 </code></pre>
 <p>另外，可以将 SavedModel 的预测函数包装进 Keras 模型：</p>
-<pre><code class="lang-py">inputs = keras.layers.Input(shape=...)
+<pre><code class="lang-python">inputs = keras.layers.Input(shape=...)
 outputs = saved_model(inputs, training=<span class="hljs-literal">False</span>)
 model = keras.models.Model(inputs=[inputs], outputs=[outputs])
 y_pred = model.predict(X_new)
 </code></pre>
 <p>TensorFlow 还有一个命令行工具<code>saved_model_cli</code>，用于检查 SavedModel：</p>
-<pre><code class="lang-py">$ export ML_PATH=<span class="hljs-string">"$HOME/ml"</span> <span class="hljs-comment"># point to this project, wherever it is</span>
+<pre><code class="lang-python">$ export ML_PATH=<span class="hljs-string">"$HOME/ml"</span> <span class="hljs-comment"># point to this project, wherever it is</span>
 $ cd $ML_PATH
 $ saved_model_cli show --<span class="hljs-built_in">dir</span> my_mnist_model/0001 --<span class="hljs-built_in">all</span>
 MetaGraphDef <span class="hljs-keyword">with</span> tag-<span class="hljs-built_in">set</span>: <span class="hljs-string">'serve'</span> contains the following SignatureDefs:
@@ -462,10 +462,10 @@ signature_def[<span class="hljs-string">'serving_default'</span>]:
 </code></pre>
 <p>SavedModel 包含一个或多个元图。元图是计算图加上了函数签名定义（包括输入、输出名，类型和形状）。每个元图可以用一组标签做标识。例如，可以用一个元图包含所有的计算图，包括训练运算（例如，这个元图的标签是<code>"train"</code>）。但是，当你将<code>tf.keras</code>模型传给函数<code>tf.saved_model.save()</code>，默认存储的是一个简化的 SavedModel：保存一个元图，标签是<code>"serve"</code>，包含两个签名定义，一个初始化函数（<code>__saved_model_init_op</code>）和一个默认的服务函数（<code>serving_default</code>）。保存<code>tf.keras</code>模型时，默认服务函数对应模型的<code>call()</code>函数。</p>
 <p><code>saved_model_cli</code>也可以用来做预测（用于测试，不是生产）。假设有一个 NumPy 数组（<code>X_new</code>），包含三张用于预测的手写数字图片。首先将其输出为 NumPy 的<code>npy</code>格式：</p>
-<pre><code class="lang-py">np.save(<span class="hljs-string">"my_mnist_tests.npy"</span>, X_new)
+<pre><code class="lang-python">np.save(<span class="hljs-string">"my_mnist_tests.npy"</span>, X_new)
 </code></pre>
 <p>然后，如下使用<code>saved_model_cli</code>命令：</p>
-<pre><code class="lang-py">$ saved_model_cli run --<span class="hljs-built_in">dir</span> my_mnist_model/0001 --tag_set serve \
+<pre><code class="lang-python">$ saved_model_cli run --<span class="hljs-built_in">dir</span> my_mnist_model/0001 --tag_set serve \
                       --signature_def serving_default \
                       --inputs flatten_input=my_mnist_tests.npy
 [...] Result <span class="hljs-keyword">for</span> output key dense_1:
@@ -476,10 +476,10 @@ signature_def[<span class="hljs-string">'serving_default'</span>]:
 <p>输出包含 3 个实例的 10 个类的概率。现在有了可以工作的 SavedModel，下一步是安装 TF Serving。</p>
 <h3 id="安装-tensorflow-serving">安装 TensorFlow Serving</h3>
 <p>有多种方式安装 TF Serving：使用 Docker 镜像、使用系统的包管理器、从源代码安装，等等。我们使用 Docker 安装的方法，这是 TensorFlow 团队高度推荐的方法，不仅安装容易，不会扰乱系统，性能也很好。需要先安装 Docker。然后下载官方 TF Serving 的 Docker 镜像：</p>
-<pre><code class="lang-py">$ docker pull tensorflow/serving
+<pre><code class="lang-python">$ docker pull tensorflow/serving
 </code></pre>
 <p>创建一个 Docker 容器运行镜像：</p>
-<pre><code class="lang-py">$ docker run -it --rm -p <span class="hljs-number">8500</span>:<span class="hljs-number">8500</span> -p <span class="hljs-number">8501</span>:<span class="hljs-number">8501</span> \
+<pre><code class="lang-python">$ docker run -it --rm -p <span class="hljs-number">8500</span>:<span class="hljs-number">8500</span> -p <span class="hljs-number">8501</span>:<span class="hljs-number">8501</span> \
              -v <span class="hljs-string">"$ML_PATH/my_mnist_model:/models/my_mnist_model"</span> \
              -e MODEL_NAME=my_mnist_model \
              tensorflow/serving
@@ -507,7 +507,7 @@ signature_def[<span class="hljs-string">'serving_default'</span>]:
 <p>现在回到 Python 查询服务，先使用 REST API，然后使用 gRPC API。</p>
 <h3 id="用-rest-api-查询-tf-serving">用 REST API 查询 TF Serving</h3>
 <p>先创建查询。必须包含想要调用的函数签名的名字，和输入数据：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> json
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> json
 
 input_data_json = json.dumps({
     <span class="hljs-string">"signature_name"</span>: <span class="hljs-string">"serving_default"</span>,
@@ -515,12 +515,12 @@ input_data_json = json.dumps({
 })
 </code></pre>
 <p>注意，json 格式是 100% 基于文本的，因此<code>X_new</code>NumPy 数组要转换为 Python 列表，然后 json 格式化：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>input_data_json
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>input_data_json
 <span class="hljs-string">'{"signature_name": "serving_default", "instances": [[[0.0, 0.0, 0.0, [...]
 0.3294117647058824, 0.725490196078431, [...very long], 0.0, 0.0, 0.0, 0.0]]]}'</span>
 </code></pre>
 <p>通过发送 HTTP POST 请求，将数据发送给 TF Serving。使用<code>requests</code>就成：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> requests
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> requests
 
 SERVER_URL = <span class="hljs-string">'http://localhost:8501/v1/models/my_mnist_model:predict'</span>
 response = requests.post(SERVER_URL, data=input_data_json)
@@ -528,7 +528,7 @@ response.raise_for_status() <span class="hljs-comment"># raise an exception in c
 response = response.json()
 </code></pre>
 <p>响应是一个字典，唯一的键是<code>"predictions"</code>，它对应的值是预测列表。这是一个 Python 列表，将其转换为 NumPy 数组，小数点保留两位：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>y_proba = np.array(response[<span class="hljs-string">"predictions"</span>])
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>y_proba = np.array(response[<span class="hljs-string">"predictions"</span>])
 <span class="hljs-meta">&gt;&gt;&gt; </span>y_proba.<span class="hljs-built_in">round</span>(<span class="hljs-number">2</span>)
 array([[<span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">1</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  ],
        [<span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0.99</span>, <span class="hljs-number">0.01</span>, <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  ],
@@ -541,7 +541,7 @@ array([[<span class="hljs-number">0</span>\.  , <span class="hljs-number">0</spa
 </blockquote>
 <h3 id="用-grpc-api-查询-tf-serving">用 gRPC API 查询 TF Serving</h3>
 <p>gRPC API 的输入是序列化的<code>PredictRequest</code>协议缓存，输出是序列化的<code>PredictResponse</code>协议缓存。这些协议缓存是<code>tensorflow-serving-api</code>库的一部分（通过 PIP 安装）。首先，创建请求：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">from</span> tensorflow_serving.apis.predict_pb2 <span class="hljs-keyword">import</span> PredictRequest
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> tensorflow_serving.apis.predict_pb2 <span class="hljs-keyword">import</span> PredictRequest
 
 request = PredictRequest()
 request.model_spec.name = model_name
@@ -550,7 +550,7 @@ input_name = model.input_names[<span class="hljs-number">0</span>]
 request.inputs[input_name].CopyFrom(tf.make_tensor_proto(X_new))
 </code></pre>
 <p>这段代码创建了<code>PredictRequest</code>协议缓存，填充了需求字段，包括模型名（之前定义的），想要调用的函数签名，最后是输入数据，形式是<code>Tensor</code>协议缓存。<code>tf.make_tensor_proto()</code>函数创建了一个基于给定张量或 NumPy 数组（<code>X_new</code>）的<code>Tensor</code>协议缓存。接着，向服务器发送请求，得到响应（需要用 PIP 安装<code>grpcio</code>库）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> grpc
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> grpc
 <span class="hljs-keyword">from</span> tensorflow_serving.apis <span class="hljs-keyword">import</span> prediction_service_pb2_grpc
 
 channel = grpc.insecure_channel(<span class="hljs-string">'localhost:8500'</span>)
@@ -559,14 +559,14 @@ response = predict_service.Predict(request, timeout=<span class="hljs-number">10
 </code></pre>
 <p>这段代码很简单：引入包之后，创建一个 gRPC 通信通道，主机是<code>localhost</code>，端口是 8500，然后用这个通道创建 gRPC 服务，并发送请求，超时时间是 10 秒（因为是同步的，收到响应前是阻塞的）。在这个例子中，通道是不安全的（没有加密和认证），但 gRPC 和 TensorFlow Serving 也支持 SSL/TLS 安全通道。</p>
 <p>然后，将<code>PredictResponse</code>协议缓存转换为张量：</p>
-<pre><code class="lang-py">output_name = model.output_names[<span class="hljs-number">0</span>]
+<pre><code class="lang-python">output_name = model.output_names[<span class="hljs-number">0</span>]
 outputs_proto = response.outputs[output_name]
 y_proba = tf.make_ndarray(outputs_proto)
 </code></pre>
 <p>如果运行这段代码，打印<code>y_proba.numpy().round(2)</code>。会得到和之前完全相同的结果。</p>
 <h3 id="部署新模型版本">部署新模型版本</h3>
 <p>现在创建一个新版本模型，将 SavedModel 输出到路径<code>my_mnist_model/0002</code>：</p>
-<pre><code class="lang-py">model = keras.models.Sequential([...])
+<pre><code class="lang-python">model = keras.models.Sequential([...])
 model.<span class="hljs-built_in">compile</span>([...])
 history = model.fit([...])
 
@@ -576,7 +576,7 @@ model_path = os.path.join(model_name, model_version)
 tf.saved_model.save(model, model_path)
 </code></pre>
 <p>每隔一段时间（可配置），TensorFlow Serving 会检查新的模型版本。如果找到新版本，会自动过渡：默认的，会用上一个模型回复挂起的请求，用新版本模型处理新请求。挂起请求都答复后，前一模型版本就不加载了。可以在 TensorFlow 日志中查看：</p>
-<pre><code class="lang-py">[...]
+<pre><code class="lang-python">[...]
 reserved resources to load servable {name: my_mnist_model version: <span class="hljs-number">2</span>}
 [...]
 Reading SavedModel <span class="hljs-keyword">from</span>: /models/my_mnist_model/0002
@@ -657,7 +657,7 @@ Unloading servable version {name: my_mnist_model version: <span class="hljs-numb
 <li>稍高级的库：每个负责一个特别的服务，比如 GCS、Google BigQuery、Google Cloud Natural Language、Google Cloud Vision。所有这些库都可以用 PIP 安装（比如，GCS 客户端库是<code>google-cloud-storage</code>）。如果有可用的客户端库，最好不用 Google API 客户端，因为前者性能更好。</li>
 </ul>
 <p>在写作本书的时候，AI Platform 还没有客户端库，所以我们使用 Google API 客户端库。这需要使用服务账户的私钥；设定<code>GOOGLE_APPLICATION_CREDENTIALS</code>环境参数就成，可以在启动脚本之前，或在如下的脚本中：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> os
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> os
 
 os.environ[<span class="hljs-string">"GOOGLE_APPLICATION_CREDENTIALS"</span>] = <span class="hljs-string">"my_service_account_key.json"</span>
 </code></pre>
@@ -665,7 +665,7 @@ os.environ[<span class="hljs-string">"GOOGLE_APPLICATION_CREDENTIALS"</span>] = 
 <p>笔记：如果将应用部署到 Google Cloud Engine (GCE)的虚拟机上，或 Google Cloud Kubernetes Engine 的容器中，或 Google Cloud App Engine 的网页应用上，或者 Google Cloud Functions 的微服务，如果没有设置<code>GOOGLE_APPLICATION_CREDENTIALS</code>环境参数，会使用默认的服务账户（比如，如果在 GCE 上运行应用，就用默认 GCE 服务账户）。</p>
 </blockquote>
 <p>然后，必须创建一个包装了预测服务访问的资源对象：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> googleapiclient.discovery
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> googleapiclient.discovery
 
 project_id = <span class="hljs-string">"onyx-smoke-242003"</span> <span class="hljs-comment"># change this to your project ID</span>
 model_id = <span class="hljs-string">"my_mnist_model"</span>
@@ -673,7 +673,7 @@ model_path = <span class="hljs-string">"projects/{}/models/{}"</span>.<span clas
 ml_resource = googleapiclient.discovery.build(<span class="hljs-string">"ml"</span>, <span class="hljs-string">"v1"</span>).projects()
 </code></pre>
 <p>可以将<code>/versions/0001</code>（或其它版本号），追加到<code>model_path</code>，指定想要查询的版本：这么做可以用来 A/B 测试，或在推广前在小范围用户做试验。然后，写一个小函数，使用资源对象调用预测服务，获取预测结果：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">def</span> <span class="hljs-title function_">predict</span>(<span class="hljs-params">X</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">predict</span>(<span class="hljs-params">X</span>):
     input_data_json = {<span class="hljs-string">"signature_name"</span>: <span class="hljs-string">"serving_default"</span>,
                        <span class="hljs-string">"instances"</span>: X.tolist()}
     request = ml_resource.predict(name=model_path, body=input_data_json)
@@ -683,7 +683,7 @@ ml_resource = googleapiclient.discovery.build(<span class="hljs-string">"ml"</sp
     <span class="hljs-keyword">return</span> np.array([pred[output_name] <span class="hljs-keyword">for</span> pred <span class="hljs-keyword">in</span> response[<span class="hljs-string">"predictions"</span>]])
 </code></pre>
 <p>这个函数接收包含图片的 NumPy 数组，然后准备成字典，客户端库再将其转换为 JSON 格式。然后准备预测请求，并执行；如果响应有错误，就抛出异常；没有错误的话，就提取出每个实例的预测结果，绑定成 NumPy 数组。如下：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>Y_probas = predict(X_new)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>Y_probas = predict(X_new)
 <span class="hljs-meta">&gt;&gt;&gt; </span>np.<span class="hljs-built_in">round</span>(Y_probas, <span class="hljs-number">2</span>)
 array([[<span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">1</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  ],
        [<span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0.99</span>, <span class="hljs-number">0.01</span>, <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  , <span class="hljs-number">0</span>\.  ],
@@ -702,7 +702,7 @@ array([[<span class="hljs-number">0</span>\.  , <span class="hljs-number">0</spa
 </li>
 </ul>
 <p>要降低模型大小，TFLite 的模型转换器可以将 SavedModel 转换为基于 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgoogle.github.io%2Fflatbuffers%2F" target="_blank">FlatBuffers</a> 的轻量格式。这是一种高效的跨平台序列化库（有点类似协议缓存），最初是 Google 开发用于游戏的。FlatBuffers 可以直接加载进内存，无需预处理：这样可以减少加载时间和内存占用。一旦模型加载到了移动或嵌入设备上，TFLite 解释器会执行它并做预测。下面的代码将 SavedModel 转换成了 FlatBuffer，并存为了<code>.tflite</code>文件：</p>
-<pre><code class="lang-py">converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_path)
+<pre><code class="lang-python">converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_path)
 tflite_model = converter.convert()
 <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"converted_model.tflite"</span>, <span class="hljs-string">"wb"</span>) <span class="hljs-keyword">as</span> f:
     f.write(tflite_model)
@@ -716,7 +716,7 @@ tflite_model = converter.convert()
 <p><img src="img/b4d7204c8951f031bb07881b68cd5d69.png" alt=""></img></p>
 <p>图 19-8 从 32 位浮点数到 8 位整数，使用对称量化</p>
 <p>要使用后训练量化，只要在调用<code>convert()</code>前，将<code>OPTIMIZE_FOR_SIZE</code>添加到转换器优化的列表中：</p>
-<pre><code class="lang-py">converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
+<pre><code class="lang-python">converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
 </code></pre>
 <p>这种方法可以极大地减小模型，下载和存储更快。但是，运行时量化过的权重会转换为浮点数（复原的浮点数与原始的不同，但偏差不大）。为了避免总是重新计算，缓存复原的浮点数，所以并没有减少内存使用。计算速度没有降低。</p>
 <p>降低延迟和能量消耗的最高效的方法也是量化激活函数，让计算只用整数进行，没有浮点数运算。就算使用相同的位宽（例如，32 位整数，而不是 32 位浮点数），整数使用更少的 CPU 循环，耗能更少，热量更低。如果你还降低了位宽（例如，降到 8 位整数），速度提升会更多。另外，一些神经网络加速设备（比如边缘 TPU），只能处理整数，因此全量化权重和激活函数是必须的。后训练处理就成；需要校准步骤找到激活的最大绝对值，所以需要给 TFLite 提供一个训练样本，模型就能处理数据，并测量量化需要的激活数据（这一步很快）。</p>
@@ -731,7 +731,7 @@ tflite_model = converter.convert()
 <li>当网站服务是基于一些用户隐私数据时，在客户端做预测可以使用户数据不出用户机器，可以保护隐私。</li>
 </ul>
 <p>对于所有这些情况，可以将模型输出为特殊格式，用 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Ftensorflow.org%2Fjs" target="_blank">TensorFlow.js js 库</a>来加载。这个库可以用模型直接在用户的浏览器运行。TensorFlow.js 项目包括工具<code>tensorflowjs_converter</code>，它可以将 SavedModel 或 Keras 模型文件转换为 TensorFlow.js Layers 格式：这是一个路径包含了一组二进制格式的共享权重文件，和文件<code>model.json</code>，它描述了模型架构和稳重文件的链接。这个格式经过优化，可以快速在网页上下载。用户可以用 TensorFlow.js 库下载模型并做预测。下面的代码片段是个例子：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> tf <span class="hljs-keyword">from</span> <span class="hljs-string">'@tensorflow/tfjs'</span>;
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> tf <span class="hljs-keyword">from</span> <span class="hljs-string">'@tensorflow/tfjs'</span>;
 const model = <span class="hljs-keyword">await</span> tf.loadLayersModel(<span class="hljs-string">'https://example.com/tfjs/model.json'</span>);
 const image = tf.fromPixels(webcamElement);
 const prediction = model.predict(image);
@@ -755,7 +755,7 @@ const prediction = model.predict(image);
 <p><img src="img/513e35a4ee953fb3b03862206bce16fb.png" alt=""></img></p>
 <p>图 19-10 TensorFlow 使用 CUDA 和 cuDNN 控制 GPU，加速 DNN</p>
 <p>安装好 GPU 和需要的库之后，可以使用<code>nvidia-smi</code>命令检测 CUDA 是否正确安装好，和每块卡的运行：</p>
-<pre><code class="lang-py">$ nvidia-smi
+<pre><code class="lang-python">$ nvidia-smi
 Sun Jun  <span class="hljs-number">2</span> <span class="hljs-number">10</span>:05:<span class="hljs-number">22</span> <span class="hljs-number">2019</span>
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI <span class="hljs-number">418.67</span>       Driver Version: <span class="hljs-number">410.79</span>       CUDA Version: <span class="hljs-number">10.0</span>     |
@@ -776,7 +776,7 @@ Sun Jun  <span class="hljs-number">2</span> <span class="hljs-number">10</span>:
 </code></pre>
 <p>写作本书时，你还需要安装 GPU 版本的 TensorFlow（即，<code>tensorflow-gpu</code>库）；但是，趋势是将 CPU 版本和 GPU 版本合二为一，所以记得查看文档。因为安装每个库又长又容易出错，TensorFlow 还提供了一个 Docker 镜像，里面都装好了。但是为了让 Docker 容器能访问 GPU，还需要在主机上安装 Nvidia 驱动。</p>
 <p>要检测 TensorFlow 是否连接 GPU，如下检测：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
 <span class="hljs-meta">&gt;&gt;&gt; </span>tf.test.is_gpu_available()
 <span class="hljs-literal">True</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>tf.test.gpu_device_name()
@@ -800,7 +800,7 @@ Sun Jun  <span class="hljs-number">2</span> <span class="hljs-number">10</span>:
 <h3 id="管理-gpu-内存">管理 GPU 内存</h3>
 <p>TensorFlow 默认会在第一次计算时，使用可用 GPU 的所有内存。这么做是为了限制 GPU 内存碎片化。如果启动第二个 TensorFlow 程序（或任意需要 GPU 的程序），就会很快消耗掉所有内存。这种情况很少见，因为大部分时候是只跑一个 TensorFlow 程序：训练脚本，TF Serving 节点，或 Jupyter 笔记本。如果因为某种原因（比如，用同一台机器训练两个不同的模型）要跑多个程序，需要根据进程平分 GPU 内存。</p>
 <p>如果机器上有多块 GPU，解决方法是分配给每个进程。要这么做，可以设定<code>CUDA_VISIBLE_DEVICES</code>环境变量，让每个进程只看到对应的 GPU。还要设置<code>CUDA_DEVICE_ORDER</code>环境变量为<code>PCI_BUS_ID</code>，保证每个 ID 对应到相同的 GPU 卡。你可以启动两个程序，给每个程序分配一个 GPU，在两个独立的终端执行下面的命令：</p>
-<pre><code class="lang-py">$ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<span class="hljs-number">0</span>,<span class="hljs-number">1</span> python3 program_1.py
+<pre><code class="lang-python">$ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<span class="hljs-number">0</span>,<span class="hljs-number">1</span> python3 program_1.py
 <span class="hljs-comment"># and in another terminal:</span>
 $ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<span class="hljs-number">3</span>,<span class="hljs-number">2</span> python3 program_2.py
 </code></pre>
@@ -808,7 +808,7 @@ $ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<span class="hljs-number">3<
 <p><img src="img/2b2d0980ce5c33564b5eac1e8e631789.png" alt=""></img></p>
 <p>图 19-12 每个程序有两个 GPU</p>
 <p>另一个方法是告诉 TensorFlow 使用具体量的 GPU 内存。这必须在引入 TensorFlow 之后就这么做。例如，要让 TensorFlow 只使用每个 GPU 的 2G 内存，你必须创建虚拟 GPU 设备（也被称为逻辑 GPU 设备）每个物理 GPU 设备的内存限制为 2G（即，2048MB）:</p>
-<pre><code class="lang-py"><span class="hljs-keyword">for</span> gpu <span class="hljs-keyword">in</span> tf.config.experimental.list_physical_devices(<span class="hljs-string">"GPU"</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">for</span> gpu <span class="hljs-keyword">in</span> tf.config.experimental.list_physical_devices(<span class="hljs-string">"GPU"</span>):
     tf.config.experimental.set_virtual_device_configuration(
         gpu,
         [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=<span class="hljs-number">2048</span>)])
@@ -817,7 +817,7 @@ $ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<span class="hljs-number">3<
 <p><img src="img/88b23fdb63cdd70654407af7710c0ff3.png" alt=""></img></p>
 <p>图 19-13 每个程序都可以使用 4 个 GPU，每个 GPU 使用 2GB</p>
 <p>如果两个程序都运行时使用<code>nvidia-smi</code>命令，可以看到每个进程用了 2GB 的 GPU 内存：</p>
-<pre><code class="lang-py">$ nvidia-smi
+<pre><code class="lang-python">$ nvidia-smi
 [...]
 +-----------------------------------------------------------------------------+
 | Processes:                                                       GPU Memory |
@@ -830,12 +830,12 @@ $ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=<span class="hljs-number">3<
 [...]
 </code></pre>
 <p>另一种方法是让 TensorFlow 只在需要内存时再使用（必须在引入 TensorFlow 后就这么做）：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">for</span> gpu <span class="hljs-keyword">in</span> tf.config.experimental.list_physical_devices(<span class="hljs-string">"GPU"</span>):
+<pre><code class="lang-python"><span class="hljs-keyword">for</span> gpu <span class="hljs-keyword">in</span> tf.config.experimental.list_physical_devices(<span class="hljs-string">"GPU"</span>):
     tf.config.experimental.set_memory_growth(gpu, <span class="hljs-literal">True</span>)
 </code></pre>
 <p>另一种这么做的方法是设置环境变量<code>TF_FORCE_GPU_ALLOW_GROWTH</code>为<code>true</code>。这么设置后，TensorFlow 不会释放获取的内存（避免内存碎片化），直到程序结束。这种方法无法保证确定的行为（比如，一个程序内存超标会导致另一个程序崩溃），所以在生产中，最好使用前面的方法。但是，有时这个方法是有用的：例如，当用机器运行多个 Jupyter 笔记本，其中一些使用 TensorFlow。这就是为什么在 Colab Runtime 中将环境变量<code>TF_FORCE_GPU_ALLOW_GROWTH</code>设为<code>true</code>。</p>
 <p>最后，在某些情况下，你可能想将 GPU 分为两个或多个虚拟 GPU —— 例如，如果你想测试一个分发算法。下面的代码将第一个 GPU 分成了两个虚拟 GPU，每个有 2GB（必须引入 TensorFlow 之后就这么做）：</p>
-<pre><code class="lang-py">physical_gpus = tf.config.experimental.list_physical_devices(<span class="hljs-string">"GPU"</span>)
+<pre><code class="lang-python">physical_gpus = tf.config.experimental.list_physical_devices(<span class="hljs-string">"GPU"</span>)
 tf.config.experimental.set_virtual_device_configuration(
     physical_gpus[<span class="hljs-number">0</span>],
     [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=<span class="hljs-number">2048</span>),
@@ -854,7 +854,7 @@ tf.config.experimental.set_virtual_device_configuration(
 </li>
 </ul>
 <p>默认下，所有变量和运算会安置在第一块 GPU 上（<code>/gpu:0</code>），除了没有 GPU 核的变量和运算：这些要放到 CPU 上（<code>/cpu:0</code>）。张量或变量的属性<code>device</code>告诉了它所在的设备：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span>a = tf.Variable(<span class="hljs-number">42.0</span>)
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span>a = tf.Variable(<span class="hljs-number">42.0</span>)
 <span class="hljs-meta">&gt;&gt;&gt; </span>a.device
 <span class="hljs-string">'/job:localhost/replica:0/task:0/device:GPU:0'</span>
 <span class="hljs-meta">&gt;&gt;&gt; </span>b = tf.Variable(<span class="hljs-number">42</span>)
@@ -863,7 +863,7 @@ tf.config.experimental.set_virtual_device_configuration(
 </code></pre>
 <p>现在，可以放心地忽略前缀<code>/job:localhost/replica:0/task:0</code>（它可以让你在使用 TensorFlow 集群时，在其它机器上安置运算；本章后面会讨论工作、复制和任务）。可以看到，第一个变量放到 GPU 0 上，这是默认设备。但是，第二个变量放到 CPU 上：这是因为整数变量（或整数张量运算）没有 GPU 核。</p>
 <p>如果想把运算放到另一台非默认设备上，使用<code>tf.device()</code>上下文：</p>
-<pre><code class="lang-py"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">with</span> tf.device(<span class="hljs-string">"/cpu:0"</span>):
+<pre><code class="lang-python"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">with</span> tf.device(<span class="hljs-string">"/cpu:0"</span>):
 <span class="hljs-meta">... </span>    c = tf.Variable(<span class="hljs-number">42.0</span>)
 ...
 <span class="hljs-meta">&gt;&gt;&gt; </span>c.device
@@ -964,7 +964,7 @@ tf.config.experimental.set_virtual_device_configuration(
 <h3 id="使用-distribution-strategies-api-做规模训练">使用 Distribution Strategies API 做规模训练</h3>
 <p>许多模型都可以用单一 GPU 或 CPU 来训练。但如果训练太慢，可以将其分布到同一台机器上的多个 GPU 上。如果还是太慢，可以换成更强大的 GPU，或添加更多的 GPU。如果模型要做重计算（比如大矩阵乘法），强大的 GPU 算的更快，你还可以尝试 Google Cloud AI Platform 的 TPU，它运行这种模型通常更快。如果加不了 GPU，也使不了 TPU（例如，TPU 没有提升，或你想使用自己的硬件架构），则你可以尝试在多台服务器上训练，每台都有多个 GPU（如果这还不成，最后一种方法是添加并行模型，但需要更多尝试）。本节，我们会学习如何规模化训练模型，从单机多 GPU 开始（或 TPU），然后是多机多 GPU。</p>
 <p>幸好，TensorFlow 有一个非常简单的 API 做这项工作：Distribution Strategies API。要用多个 GPU 训练 Keras 模型（先用单机），用镜像策略的数据并行，创建一个对象<code>MirroredStrategy</code>，调用它的<code>scope()</code>方法，获取分布上下文，在上下文中包装模型的创建和编译。然后正常调用模型的<code>fit()</code>方法：</p>
-<pre><code class="lang-py">distribution = tf.distribute.MirroredStrategy()
+<pre><code class="lang-python">distribution = tf.distribute.MirroredStrategy()
 
 <span class="hljs-keyword">with</span> distribution.scope():
     mirrored_model = tf.keras.Sequential([...])
@@ -975,15 +975,15 @@ history = mirrored_model.fit(X_train, y_train, epochs=<span class="hljs-number">
 </code></pre>
 <p>在底层，<code>tf.keras</code>是分布式的，所以在这个<code>MirroredStrategy</code>上下文中，它知道要复制所有变量和运算到可用的 GPU 上。<code>fit()</code>方法，可以自动对所有模型复制分割训练批次，所以批次大小要可以被模型复制的数量整除。就是这样。比用一个 GPU，这么训练会快很多，而且代码变动很少。</p>
 <p>训练好模型后，就可以做预测了：调用<code>predict()</code>方法，就能自动在模型复制上分割批次，并行做预测（批次大小要能被模型复制的数量整除）。如果调用模型的<code>save()</code>方法，会像常规模型那样保存。所以加载时，在单设备上（默认是 GPU 0，如果没有 GPU，就是 CPU），就和常规模型一样。如果想加载模型，并在可用设备上运行，必须在分布上下文中调用<code>keras.models.load_model()</code>：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">with</span> distribution.scope():
+<pre><code class="lang-python"><span class="hljs-keyword">with</span> distribution.scope():
     mirrored_model = keras.models.load_model(<span class="hljs-string">"my_mnist_model.h5"</span>)
 </code></pre>
 <p>如果只想使用 GPU 设备的一部分，可以将列表传给<code>MirroredStrategy</code>的构造器：</p>
-<pre><code class="lang-py">distribution = tf.distribute.MirroredStrategy([<span class="hljs-string">"/gpu:0"</span>, <span class="hljs-string">"/gpu:1"</span>])
+<pre><code class="lang-python">distribution = tf.distribute.MirroredStrategy([<span class="hljs-string">"/gpu:0"</span>, <span class="hljs-string">"/gpu:1"</span>])
 </code></pre>
 <p>默认时，<code>MirroredStrategy</code>类使用 NVIDIA Collective Communications 库（NCCL）做 AllReduce 平均值运算，但可以设置<code>tf.distribute.HierarchicalCopyAllReduce</code>类的实例，或<code>tf.distribute.ReductionToOneDevice</code>类的实例的<code>cross_device_ops</code>参数，换其它的库。默认的 NCCL 是基于类<code>tf.distribute.NcclAllReduce</code>，它通常很快，但一来 GPU 的数量和类型，所以也可以试试其它选项。</p>
 <p>如果想用集中参数的数据并行，将<code>MirroredStrategy</code>替换为<code>CentralStorageStrategy</code>：</p>
-<pre><code class="lang-py">distribution = tf.distribute.experimental.CentralStorageStrategy()
+<pre><code class="lang-python">distribution = tf.distribute.experimental.CentralStorageStrategy()
 </code></pre>
 <p>你还可以设置<code>compute_devices</code>，指定作为工作器的设备（默认会使用所有的 GPU），还可以通过设置<code>parameter_device</code>，指定存储参数的设备（默认使用 CPU，或 GPU，如果只有一个 GPU 的话）。</p>
 <p>下面看看如何用 TensorFlow 集群训练模型。</p>
@@ -1000,7 +1000,7 @@ history = mirrored_model.fit(X_train, y_train, epochs=<span class="hljs-number">
 </li>
 </ul>
 <p>要启动 TensorFlow 集群，必须先指定。要定义每个任务的 IP 地址，TCP 端口，类型。例如，下面的集群配置定义了集群有三种任务（两个工作器一个参数服务器，见图 19-21）。集群配置是一个字典，每个工作一个键，值是任务地址（<code>IP:port</code>）列表：</p>
-<pre><code class="lang-py">cluster_spec = {
+<pre><code class="lang-python">cluster_spec = {
     <span class="hljs-string">"worker"</span>: [
         <span class="hljs-string">"machine-a.example.com:2222"</span>,  <span class="hljs-comment"># /job:worker/task:0</span>
         <span class="hljs-string">"machine-b.example.com:2222"</span>   <span class="hljs-comment"># /job:worker/task:1</span>
@@ -1015,7 +1015,7 @@ history = mirrored_model.fit(X_train, y_train, epochs=<span class="hljs-number">
 <p>警告：默认，集群中的每个任务都可能与其它任务通信，所以要配置好防火墙确保这些机器端口的通信（如果每台机器用相同的端口，就简单一些）。</p>
 </blockquote>
 <p>启动任务时，必须将集群配置给它，还要告诉它类型和索引（例如，工作器 0）。配置最简单的方法（集群配置和当前任务的类型和索引）是在启动 TensorFlow 前，设置环境变量<code>TF_CONFIG</code>。这是一个 JSON 编码的字典，包含集群配置（在键<code>"cluster"</code>下）、类型、任务索引（在键<code>"task"</code>下）。例如。下面的环境变量<code>TF_CONFIG</code>使用了刚才定义的集群，启动的任务是第一个工作器：</p>
-<pre><code class="lang-py"><span class="hljs-keyword">import</span> os
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> os
 <span class="hljs-keyword">import</span> json
 
 os.environ[<span class="hljs-string">"TF_CONFIG"</span>] = json.dumps({
@@ -1027,7 +1027,7 @@ os.environ[<span class="hljs-string">"TF_CONFIG"</span>] = json.dumps({
 <p>提示：通常要在 Python 外面定义环境变量<code>TF_CONFIG</code>，代码不用包含当前任务的类型和索引（这样可以让所有工作器使用相同的代码）。</p>
 </blockquote>
 <p>现在用集群训练一个模型。先用镜像策略。首先，给每个任务设定环境参数<code>TF_CONFIG</code>。因为没有参数服务器（去除集群配置中的<code>ps</code>键），所以通常每台机器只有一个工作器。还要保证每个任务的索引不同。最后，在每个工作器上运行下面的训练代码：</p>
-<pre><code class="lang-py">distribution = tf.distribute.experimental.MultiWorkerMirroredStrategy()
+<pre><code class="lang-python">distribution = tf.distribute.experimental.MultiWorkerMirroredStrategy()
 
 <span class="hljs-keyword">with</span> distribution.scope():
     mirrored_model = tf.keras.Sequential([...])
@@ -1040,7 +1040,7 @@ history = mirrored_model.fit(X_train, y_train, epochs=<span class="hljs-number">
 <p>你可以从两个 AllReduce 实现选择做分布策略：基于 gRPC 的 AllReduce 算法用于网络通信，和 NCCL 实现。最佳算法取决于工作器的数量、GPU 的数量和类型和网络。默认，TensorFlow 会选择最佳算法，但是如果想强制使用某种算法，将<code>CollectiveCommunication.RING</code>或<code>CollectiveCommunication.NCCL</code>（出自<code>tf.distribute.experimental</code>）传给策略构造器。</p>
 <p>如果想用带有参数服务器的异步数据并行，可以将策略变为<code>ParameterServerStrategy</code>，添加一个或多个参数服务器，给每个任务配置<code>TF_CONFIG</code>。尽管工作器是异步的，每个工作器的复制是同步工作的。</p>
 <p>最后，如果你能用 Google Cloud 的 TPU，可以如下创建<code>TPUStrategy</code>：</p>
-<pre><code class="lang-py">resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+<pre><code class="lang-python">resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
 tf.tpu.experimental.initialize_tpu_system(resolver)
 tpu_strategy = tf.distribute.experimental.TPUStrategy(resolver)
 </code></pre>
@@ -1055,7 +1055,7 @@ tpu_strategy = tf.distribute.experimental.TPUStrategy(resolver)
 <p>图 19-22 启动 Google Cloud Shell</p>
 <p>如果想在自己机器上安装 SDK，需要运行<code>gcloud init</code>启动：需要登录 GCP 准许权限，选择想要的 GCP 项目，还有想运行的地区。<code>gcloud</code>命令可以使用 GCP 所有功能。不用每次访问网页接口，可以写脚本开启或停止虚拟机、部署模型或做任意 GCP 动作。</p>
 <p>运行训练任务之前，你需要写训练代码，和之前的分布设置一样（例如，使用<code>ParameterServerStrategy</code>）。AI 平台会为每个 VM 设置<code>TF_CONFIG</code>。做好之后，就可以在 TF 集群部署运行了，命令行如下：</p>
-<pre><code class="lang-py">$ gcloud ai-platform jobs submit training my_job_20190531_164700 \
+<pre><code class="lang-python">$ gcloud ai-platform jobs submit training my_job_20190531_164700 \
     --region asia-southeast1 \
     --scale-tier PREMIUM_1 \
     --runtime-version <span class="hljs-number">2.0</span> \
@@ -1075,7 +1075,7 @@ tpu_strategy = tf.distribute.experimental.TPUStrategy(resolver)
 <p>如果想探索几个超参数的值，可以用参数指定超参数值，执行多个任务。但是，日过想探索许多超参数，最好使用 AI Platform 的超参数调节服务。</p>
 <h3 id="在-ai-platform-上做黑盒超参数调节">在 AI Platform 上做黑盒超参数调节</h3>
 <p>AI Platform 提供了强大的贝叶斯优化超参数调节服务，称为 <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fhoml.info%2Fvizier" target="_blank">Google Vizier</a>。要使用，创建任务时要传入 YAML 配置文件（<code>--config tuning.yaml</code>）。例如，可能如下：</p>
-<pre><code class="lang-py">trainingInput:
+<pre><code class="lang-python">trainingInput:
   hyperparameters:
     goal: MAXIMIZE
     hyperparameterMetricTag: accuracy
@@ -1165,7 +1165,7 @@ tpu_strategy = tf.distribute.experimental.TPUStrategy(resolver)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"十九、规模化训练和部署 TensorFlow 模型","level":"1.20","depth":1,"previous":{"title":"十八、强化学习","level":"1.19","depth":1,"path":"18.md","ref":"./18.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"19.md","mtime":"2024-08-23T21:05:56.821Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-08-24T12:29:35.670Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"十九、规模化训练和部署 TensorFlow 模型","level":"1.20","depth":1,"previous":{"title":"十八、强化学习","level":"1.19","depth":1,"path":"18.md","ref":"./18.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"19.md","mtime":"2025-01-05T17:59:46.697Z","type":"markdown"},"gitbook":{"version":"6.0.2","time":"2025-01-05T18:00:06.909Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
